@@ -3,15 +3,16 @@ import PropTypes from 'prop-types';
 
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
-
+import Typography from '@mui/material/Typography';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MailIcon from '@mui/icons-material/Mail';
+import SideMenuGenreFilter from '../Sidemenu-genre-filter/Sidemenu-genre-filter';
 import './App-sidemenu.css';
-import Toolbar from '@mui/material/Toolbar';
+
 
 
 const drawerWidth = 240;
@@ -26,13 +27,19 @@ function AppSidemenu(props) {
 
   const drawer = (
     <div>
-      {/* <Toolbar />
-      <Divider /> */}
+      <Typography
+            variant="div"
+            noWrap
+            component="div"
+            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+          >
+            Фильтр по времени
+          </Typography>
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
+        {['Неделя', 'Месяц', 'Год', 'Всё время'].map((text) => (
+          <ListItem onClick={(e) => props.filterSetter(e.target.id)} button key={text} id={text}>
             <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              
             </ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
@@ -40,14 +47,7 @@ function AppSidemenu(props) {
       </List>
       <Divider />
       <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+        <SideMenuGenreFilter genres={props.genres} filterSetter={props.filterSetter}/>
       </List>
     </div>
   );
