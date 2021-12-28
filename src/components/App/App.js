@@ -32,7 +32,11 @@ class App extends Component {
     } else {
       this.setState({
         data: [
-          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: 'тестовый жанр', timestamp: Math.round(Date.now()/1000)}
+          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: 'драма', timestamp: 1635449866},
+          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: 'боевик', timestamp: 1610307466},
+          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: 'боевик', timestamp: 1640633866},
+          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: 'драма', timestamp: 1590608266},
+          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: 'комедия', timestamp: Math.round(Date.now()/1000)},
         ]
       }) 
     }

@@ -58,12 +58,16 @@ export default function AppInfo({filmsToWatch, filterSetter, filterSearch}) {
   
   const filmsSwitcher = (num) => {
     const lastNum = num.toString().slice(-1);
-    if (num > 100 && lastNum === '1') {
+    if ((num > 100 && lastNum === '1') ||
+        num === 1) {
       return 'фильм'
-    } else if (num > 100 && 
+    } else if ((num > 100 && 
               (lastNum === '2' ||
               lastNum === '3' || 
-              lastNum === '4')) {
+              lastNum === '4')) ||
+              num === 2 ||
+              num === 3 ||
+              num === 4) {
       return 'фильма'
     } else {
       return 'фильмов'
