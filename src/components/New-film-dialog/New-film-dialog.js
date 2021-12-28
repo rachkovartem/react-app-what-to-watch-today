@@ -8,6 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {Fab} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import NewFilmDatePicker from '../New-film-date-picker/New-film-date-picker';
 
 
 
@@ -18,8 +19,9 @@ class NewFilmDialog extends React.Component {
       title: '',
       subtitle: '',
       genre: '',
-      timestamp: null,
-      open: false
+      timestamp: Math.round(Date.now()/1000),
+      open: false,
+      canClose: false
     }
   }
 
@@ -35,11 +37,24 @@ class NewFilmDialog extends React.Component {
     })
   };
 
+  timestampToPicker = () => {
+    const stamp = new Date(this.state.timestamp * 1000)
+    const newDate = `${stamp.getMonth() + 1}/${stamp.getDate()}/${stamp.getFullYear()}` 
+    return newDate
+  }
+
+  onDateChange = (value) => {
+    this.setState({
+      timestamp: Math.round(Date.parse(value)/1000)
+    }) 
+
+  }
+
   handleAdd = () => {
     const title = this.state.title;
     const subtitle = this.state.subtitle;
     const genre = this.state.genre.toLocaleLowerCase();
-    const timestamp = Math.round(Date.now()/1000);
+    const timestamp = this.state.timestamp;
     this.props.onAdd({title, subtitle, genre, timestamp});
     this.setState({
       open: false
@@ -49,9 +64,27 @@ class NewFilmDialog extends React.Component {
   onValueChange = (e) => {
     this.setState({
       [e.target.id]: e.target.value
+    }, () => {
+      if (this.state.title.length < 3 || this.state.genre.length < 3) {
+        this.setState({
+          canClose: false
+        })
+      } else {
+        this.setState({
+          canClose: true
+        })
+      }
     })
+    
   }
 
+  validationTextForm = (text) => {
+    if (text.length < 3) {
+      return true
+    } else {
+      return false
+    }
+  }
 
   render() {
     return (
@@ -67,12 +100,15 @@ class NewFilmDialog extends React.Component {
               </DialogContentText>
               <TextField
                   autoFocus
+                  required
+                  error={this.validationTextForm(this.state.title)}
                   margin="dense"
                   id="title"
                   label="Название"
                   type="text"
                   fullWidth
                   variant="standard"
+                  value={this.state.title}
                   onChange={this.onValueChange}
               />
               <TextField
@@ -85,18 +121,22 @@ class NewFilmDialog extends React.Component {
                   onChange={this.onValueChange}
               />
               <TextField
+                  required
+                  error={this.validationTextForm(this.state.genre)}
                   margin="dense"
                   id="genre"
                   label="Жанр"
                   type="text"
                   fullWidth
                   variant="standard"
+                  value={this.state.genre}
                   onChange={this.onValueChange}
               />
+              <NewFilmDatePicker timestampToPicker={this.timestampToPicker} onDateChange={this.onDateChange}/>
               </DialogContent>
               <DialogActions>
               <Button onClick={this.handleClose}>Отменить</Button>
-              <Button onClick={this.handleAdd}>Добавить</Button>
+              <Button disabled={this.state.canClose ? false : true} onClick={this.handleAdd}>Добавить</Button>
               </DialogActions>
           </Dialog>
       </div>

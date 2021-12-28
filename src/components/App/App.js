@@ -22,7 +22,6 @@ class App extends Component {
 
   componentDidMount() {
     if (localStorage.getItem('movies')) {
-      console.log('погнали')
       const newData = JSON.parse(localStorage.getItem('movies'))
       this.setState({
         data: newData.map((item) => {
@@ -31,7 +30,11 @@ class App extends Component {
         })
       })  
     } else {
-      console.log('нету')
+      this.setState({
+        data: [
+          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: 'тестовый жанр', timestamp: Math.round(Date.now()/1000)}
+        ]
+      }) 
     }
   }
   
