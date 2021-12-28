@@ -55,13 +55,21 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 export default function AppInfo({filmsToWatch, filterSetter, filterSearch}) {
-  let filterValue;
-  const onChangeUpdate = (e) => {
-    filterValue = e.target.value;
-    filterSetter(filterValue);
+  
+  const filmsSwitcher = (num) => {
+    const lastNum = num.toString().slice(-1);
+    if (num > 100 && lastNum === '1') {
+      return 'фильм'
+    } else if (num > 100 && 
+              (lastNum === '2' ||
+              lastNum === '3' || 
+              lastNum === '4')) {
+      return 'фильма'
+    } else {
+      return 'фильмов'
+    }
   }
 
-  
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -81,7 +89,7 @@ export default function AppInfo({filmsToWatch, filterSetter, filterSearch}) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            Нужно посмотреть {filmsToWatch} фильмов
+            Нужно посмотреть {filmsToWatch} {filmsSwitcher(filmsToWatch)}
           </Typography>
 
           <Search>
@@ -92,7 +100,7 @@ export default function AppInfo({filmsToWatch, filterSetter, filterSearch}) {
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
               value={filterSearch}
-              onChange={(e) => onChangeUpdate(e)}
+              onChange={(e) => filterSetter(e.target.value)}
             />
           </Search>
         </Toolbar>
