@@ -57,6 +57,9 @@ class NewFilmDialog extends React.Component {
     const timestamp = this.state.timestamp;
     this.props.onAdd({title, subtitle, genre, timestamp});
     this.setState({
+      title: '',
+      subtitle: '',
+      genre: '',
       open: false
     })
   }
