@@ -12,19 +12,34 @@ class App extends Component {
     super(props);
     this.state = {
       data: [
-        {title: 'Меняющие реальность', subtitle: 'доп инфы нет', id: nextId(), timestamp: 1635358962, genre: 'action'},
-        {title: 'Бумажный дом', subtitle: 'не помню, что такое', id: nextId(), timestamp: 1638296562, genre: 'drama'},
-        {title: 'Игра в кальмара', subtitle: 'спорный сирик', id: nextId(), timestamp: 1639160562, genre: 'action'},
-        {title: 'Новейший завет', subtitle: '2015', id: nextId(), timestamp: 1639161562, genre: 'comedy'},
-        {title: 'Главный герой', subtitle: 'хз чтоэто', id: nextId(), timestamp: 1636160512, genre: 'drama'},
-        {title: 'Вторжение', subtitle: '2007', id: nextId(), timestamp: 1635388962, genre: 'horror'},
-        {title: 'ДМБ 1 часть', subtitle: 'говорят фильм годный', id: nextId(), timestamp: 1635358942, genre: 'thriller'},
+        
       ],
-      filterDate: '',
+      filterDate: 'Всё время',
       filterGenre: [],
       filterSearch: ''
     }
   }
+
+  componentDidMount() {
+    if (localStorage.getItem('movies')) {
+      console.log('погнали')
+      const newData = JSON.parse(localStorage.getItem('movies'))
+      this.setState({
+        data: newData.map((item) => {
+          item.id = nextId()
+          return item
+        })
+      })  
+    } else {
+      console.log('нету')
+    }
+  }
+  
+  
+  localStorageSetter = (state) => {
+    localStorage.setItem('movies', JSON.stringify(state))
+  }
+
 
   genres = () => {
     return [...new Set(this.state.data.map(item => {
@@ -37,56 +52,97 @@ class App extends Component {
       return {
         data: data.filter(item => item.id !== id)
       } 
-    })
+    }, () => this.localStorageSetter(this.state.data))
   }
 
-  addItem = ({title, subtitle}) => {
+  addItem = ({title, subtitle, genre, timestamp}) => {
     this.setState(({data}) => {
       return {
         data: data.concat({
           title: title,
           subtitle: subtitle,
-          id: nextId()
+          id: nextId(),
+          genre: genre,
+          timestamp: timestamp
         })
       }
-    })
+    }, () => this.localStorageSetter(this.state.data) )
+    
   }
 
   filmsToWatch = () => {
     return this.state.data.length
   }
 
-  filterSetter = (key) => {
-    if (key ===  'Неделя' || 'Месяц' || 'Год' || 'Всё время') {
-      console.log(key)
-      this.setState({
-        filterDate: key
-      }) 
-    } else if (typeof key === 'array') {
-      this.setState({
-        filterGenre: key
-      }) 
-    } else {
-      this.setState({
-        filterSearch: key
-      }) 
+  filterGenreSetter = (key) => {
+    this.setState({
+      filterGenre: key
+    }) 
+  }
+
+  filterDateSetter = (key) => {
+    this.setState({
+      filterDate: key
+    }) 
+  }
+
+  filterSearchSetter = (key) => {
+    this.setState({
+      filterSearch: key
+    }) 
+  }
+
+  filterGenre = (data, filter) => {
+    if (filter.length === 0) {
+      return data
     }
-    
+    return data.filter((item) => {
+      return filter.some((genre) => {
+        return genre === item.genre
+      })
+    })
+  }
+
+  filterDate = (data, filter) => {
+    switch (filter) {
+      case 'Неделя':
+        return data.filter(item => (Date.now()/1000 - item.timestamp < 604800))
+      case 'Месяц':
+        return data.filter(item => (Date.now()/1000 - item.timestamp < 2629743))
+      case 'Год':
+        return data.filter(item => (Date.now()/1000 - item.timestamp < 31556926))
+      default:
+        return data
+    }
+  }
+
+  filtersReset = () => {
+    this.filterGenreSetter([])
+    this.filterDateSetter('Всё время')
+    this.filterSearchSetter('')
+  }
+
+  filterSearch = (data, filter) => {
+    return data.filter((item) => {
+      return (item.title.toLowerCase().includes(filter.toLowerCase()) 
+      || item.subtitle.toLowerCase().includes(filter.toLowerCase()))
+    })
   }
 
   render() {
-    const {data} = this.state;
-
+    const {data, filterGenre, filterDate, filterSearch} = this.state;
+    const filtredData = this.filterGenre(this.filterDate(this.filterSearch(data, filterSearch), filterDate), filterGenre);
     return(
       <Grid container spacing={2}>
       <Grid item xs={12}>
-        <AppInfo filmsToWatch={this.filmsToWatch()}/>
+        <AppInfo filmsToWatch={this.filmsToWatch()} filterSetter={this.filterSearchSetter} filterSearch={filterSearch}/>
       </Grid>
       <Grid item xs={2}>
-        <AppSidemenu genres={this.genres} filterSetter={this.filterSetter}/>
+        <AppSidemenu genres={this.genres} filterSetter={{genre: this.filterGenreSetter, date: this.filterDateSetter}} 
+        filtersReset={this.filtersReset} filterGenre={filterGenre} filterDate={filterDate}/>
       </Grid>
       <Grid item xs={10}>
-        <FilmList data={data} onAdd={this.addItem} onDelete={this.deleteItem}/>
+        <FilmList data={filtredData} onAdd={this.addItem} onDelete={this.deleteItem}/>
       </Grid>
     </Grid>
     )

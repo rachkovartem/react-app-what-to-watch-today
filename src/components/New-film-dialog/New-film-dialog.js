@@ -17,6 +17,8 @@ class NewFilmDialog extends React.Component {
     this.state = {
       title: '',
       subtitle: '',
+      genre: '',
+      timestamp: null,
       open: false
     }
   }
@@ -36,7 +38,9 @@ class NewFilmDialog extends React.Component {
   handleAdd = () => {
     const title = this.state.title;
     const subtitle = this.state.subtitle;
-    this.props.onAdd({title, subtitle});
+    const genre = this.state.genre.toLocaleLowerCase();
+    const timestamp = Math.round(Date.now()/1000);
+    this.props.onAdd({title, subtitle, genre, timestamp});
     this.setState({
       open: false
     })
@@ -52,7 +56,7 @@ class NewFilmDialog extends React.Component {
   render() {
     return (
       <div>
-          <Fab onClick={this.handleClickOpen} size="medium" color="primary" aria-label="add">
+          <Fab onClick={this.handleClickOpen} size="medium" color="primary" aria-label="add" sx={{ml: 2, mt: 2, width: 40, height: 40}}>
               <AddIcon />
           </Fab>
           <Dialog open={this.state.open} onClose={this.handleClose}>
@@ -75,6 +79,15 @@ class NewFilmDialog extends React.Component {
                   margin="dense"
                   id="subtitle"
                   label="Описание"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  onChange={this.onValueChange}
+              />
+              <TextField
+                  margin="dense"
+                  id="genre"
+                  label="Жанр"
                   type="text"
                   fullWidth
                   variant="standard"

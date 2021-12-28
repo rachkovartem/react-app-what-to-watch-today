@@ -53,7 +53,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 
-export default function AppInfo({filmsToWatch}) {
+
+export default function AppInfo({filmsToWatch, filterSetter, filterSearch}) {
+  let filterValue;
+  const onChangeUpdate = (e) => {
+    filterValue = e.target.value;
+    filterSetter(filterValue);
+  }
+
+  
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -63,7 +71,7 @@ export default function AppInfo({filmsToWatch}) {
             edge="start"
             color="inherit"
             aria-label="open drawer"
-            sx={{ mr: 2 }}
+            sx={{ display: { xs: 'block', sm: 'none' }, mr: 2 }}
           >
             <MenuIcon />
           </IconButton>
@@ -83,6 +91,8 @@ export default function AppInfo({filmsToWatch}) {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
+              value={filterSearch}
+              onChange={(e) => onChangeUpdate(e)}
             />
           </Search>
         </Toolbar>

@@ -37,9 +37,10 @@ class FilmList extends React.Component {
     const {onAdd, data} = this.props;
     return (
         <List>
-          <NewFilmDialog onAdd={onAdd}/>
+          
         
           {this.elements(data)}
+          <NewFilmDialog onAdd={onAdd}/>
         </List>
       );
     }

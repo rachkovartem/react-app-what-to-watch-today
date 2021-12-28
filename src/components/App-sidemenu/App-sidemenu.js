@@ -11,7 +11,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MailIcon from '@mui/icons-material/Mail';
 import SideMenuGenreFilter from '../Sidemenu-genre-filter/Sidemenu-genre-filter';
-import './App-sidemenu.css';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 
 
 
@@ -25,30 +26,40 @@ function AppSidemenu(props) {
     setMobileOpen(!mobileOpen);
   };
 
+  const selectedButton = (text) => {
+    if (props.filterDate === text) {
+      return true
+    } else {return false}
+  }
+
   const drawer = (
     <div>
       <Typography
             variant="div"
             noWrap
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            sx={{ textAlign: 'center', flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
             Фильтр по времени
-          </Typography>
+      </Typography>
       <List>
         {['Неделя', 'Месяц', 'Год', 'Всё время'].map((text) => (
-          <ListItem onClick={(e) => props.filterSetter(e.target.id)} button key={text} id={text}>
-            <ListItemIcon>
+          <ListItem onClick={(e) => props.filterSetter.date(text)} selected={selectedButton(text)} button key={text} id={text}>
+            {/* <ListItemIcon>
               
-            </ListItemIcon>
+            </ListItemIcon> */}
             <ListItemText primary={text} />
           </ListItem>
         ))}
       </List>
       <Divider />
       <List>
-        <SideMenuGenreFilter genres={props.genres} filterSetter={props.filterSetter}/>
+        <SideMenuGenreFilter genres={props.genres} filterSetter={props.filterSetter} filterGenre={props.filterGenre}/>
       </List>
+      <Divider />
+      <Stack>
+      <Button onClick={() => props.filtersReset()} sx={{mt: 1, ml: 'auto', mr: 'auto'}} variant="outlined">Сбросить фильтры</Button>
+      </Stack>
     </div>
   );
 
@@ -56,7 +67,7 @@ function AppSidemenu(props) {
 
     return (
         <div>
-            <Drawer
+          <Drawer
             container={container}
             variant="temporary"
             open={mobileOpen}
@@ -66,21 +77,23 @@ function AppSidemenu(props) {
             }}
             sx={{
             display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': {boxSizing: 'border-box', width: drawerWidth },
             }}
-        >
+          >
             {drawer}
-        </Drawer>
-        <Drawer
+          </Drawer>
+          <Drawer
             variant="permanent"
             sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': { position: { xs: 'fixed', sm: 'initial' }, boxSizing: 'border-box', 
+            // width: drawerWidth 
+            },
             }}
             open
-        >
+          >
             {drawer}
-        </Drawer>
+          </Drawer>
       </div>
         
     )

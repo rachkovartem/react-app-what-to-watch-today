@@ -5,6 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -35,6 +36,7 @@ export default function SideMenuGenreFilter(props) {
     const {
       target: { value },
     } = event;
+    props.filterSetter.genre(value);
     setPersonName(
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
@@ -49,12 +51,12 @@ export default function SideMenuGenreFilter(props) {
         <Select
           multiple
           displayEmpty
-          value={personName}
+          value={props.filterGenre}
           onChange={handleChange}
           input={<OutlinedInput />}
           renderValue={(selected) => {
             if (selected.length === 0) {
-              return <em>Выбрать фильтр по жанру</em>;
+              return <em>Фильтр по жанру</em>;
             }
 
             return selected.join(', ');
@@ -63,7 +65,7 @@ export default function SideMenuGenreFilter(props) {
           inputProps={{ 'aria-label': 'Without label' }}
         >
           <MenuItem disabled value="">
-            <em>Выбрать фильтр по жанру</em>
+            <em>Фильтр по жанру</em>
           </MenuItem>
           {names.map((name) => (
             <MenuItem
