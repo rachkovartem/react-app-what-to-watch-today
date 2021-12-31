@@ -9,6 +9,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import {Fab} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import NewFilmDatePicker from '../New-film-date-picker/New-film-date-picker';
+import KinopoiskServices from '../Services/KinopoiskServices';
+import Autocomplete from '@mui/material/Autocomplete';
+import nextId from "react-id-generator";
+import debounce from 'lodash.debounce';
+
 
 
 
@@ -21,9 +26,13 @@ class NewFilmDialog extends React.Component {
       genre: '',
       timestamp: Math.round(Date.now()/1000),
       open: false,
-      canClose: false
+      canClose: false,
+      filmOptions: [],
+      userTitleChoise: null
     }
   }
+
+  services = new KinopoiskServices();
 
   handleClickOpen = () => {
     this.setState({
@@ -64,25 +73,69 @@ class NewFilmDialog extends React.Component {
     })
   }
 
-  onValueChange = (e) => {
+  onValueTitleChange = (e, newValue) => {
     this.setState({
-      [e.target.id]: e.target.value
+      // [e.target.id]: e.target.value
+      title: newValue,
+      userTitleChoise: '',
+      canClose: false
     }, () => {
-      if (this.state.title.length < 3 || this.state.genre.length < 3) {
-        this.setState({
-          canClose: false
-        })
-      } else {
-        this.setState({
-          canClose: true
-        })
-      }
+      // if (this.state.title.length < 3 || this.state.genre.length < 3) {
+      //   this.setState({
+      //     canClose: false
+      //   })
+      // } else {
+      //   this.setState({
+      //     canClose: true
+      //   })
+      // }
     })
-    
+    this.dbGetFilmsAndSetState(newValue)
   }
 
-  validationTextForm = (text) => {
-    if (text.length < 3) {
+  onValueSubtitleChange = (e) => {
+    this.setState({
+      [e.target.id]: e.target.value
+    })
+  }
+  
+
+  dbGetFilmsAndSetState = debounce((e) => this.getFilmsAndSetState(e), 250, {
+    'leading': true,
+    'trailing': false
+  }); 
+
+
+  getFilmsAndSetState = async (input) => {
+    const response = await this.services.getFilmByKeyWord(input);
+    this.setState({filmOptions: response.films.map((item) => {
+
+      return {label: `${item.nameRu ? item.nameRu : ''}${item.nameEn ? ` (${item.nameEn})` : ''}, ${item.year}`,
+              id: item.filmId, 
+              genres: item.genres.map(item => (item.genre)),
+              posterUrlPreview: item.posterUrlPreview,
+              description: item.description,
+              key: nextId()}
+    })})
+  }
+
+  onUserChoise = (e, newValue) => {
+    this.setState({
+      userTitleChoise: newValue,
+      canClose: true,
+      subtitle: this.state.userTitleChoise.description
+    })
+    setTimeout(() => {
+      this.setState({
+        userTitleChoise: newValue,
+        canClose: true,
+        subtitle: this.state.userTitleChoise.description
+      })
+    }, 200)
+  }
+
+  validationTextForm = () => {
+    if (!this.state.userTitleChoise) {
       return true
     } else {
       return false
@@ -101,19 +154,17 @@ class NewFilmDialog extends React.Component {
               <DialogContentText>
                   Какой фильм нужно будет посмотреть?
               </DialogContentText>
-              <TextField
-                  autoFocus
-                  required
-                  error={this.validationTextForm(this.state.title)}
-                  margin="dense"
-                  id="title"
-                  label="Название"
-                  type="text"
-                  fullWidth
-                  variant="standard"
-                  value={this.state.title}
-                  onChange={this.onValueChange}
+
+              <Autocomplete
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                input={this.state.userTitleChoise}
+                onChange={this.onUserChoise}
+                inputValue={this.state.title}
+                onInputChange={this.onValueTitleChange}
+                options={this.state.filmOptions}
+                renderInput={(params) => this.TextFieldTitle(params)}
               />
+              
               <TextField
                   margin="dense"
                   id="subtitle"
@@ -121,7 +172,8 @@ class NewFilmDialog extends React.Component {
                   type="text"
                   fullWidth
                   variant="standard"
-                  onChange={this.onValueChange}
+                  value={this.state.subtitle ? this.state.subtitle : ''}
+                  onChange={this.onValueSubtitleChange}
               />
               <TextField
                   required
@@ -146,8 +198,26 @@ class NewFilmDialog extends React.Component {
     );
   }
   
+  TextFieldTitle = (params) => {
+    return (
+      <TextField
+        {...params}
+        autoFocus
+        required
+        error={this.validationTextForm()}
+        margin="dense"
+        id="title"
+        label="Название"
+        type="text"
+        fullWidth
+        variant="standard"
+      />
+    )
+  }
   
   
 }
+
+
 
 export default NewFilmDialog

@@ -136,6 +136,8 @@ class App extends Component {
     })
   }
 
+
+
   render() {
     const {data, filterGenre, filterDate, filterSearch} = this.state;
     const filtredData = this.filterGenre(this.filterDate(this.filterSearch(data, filterSearch), filterDate), filterGenre);
