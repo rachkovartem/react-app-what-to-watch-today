@@ -28,7 +28,7 @@ class NewFilmDialog extends React.Component {
       open: false,
       canClose: false,
       filmOptions: [],
-      userTitleChoise: null
+      userTitleChoise: ''
     }
   }
 
@@ -123,15 +123,17 @@ class NewFilmDialog extends React.Component {
     this.setState({
       userTitleChoise: newValue,
       canClose: true,
-      subtitle: this.state.userTitleChoise.description
+      subtitle: this.state.userTitleChoise ? this.state.userTitleChoise.description : '',
+      genre: this.state.userTitleChoise ? this.state.userTitleChoise.genres.join(', ') : ''
     })
     setTimeout(() => {
       this.setState({
         userTitleChoise: newValue,
         canClose: true,
-        subtitle: this.state.userTitleChoise.description
+        subtitle: this.state.userTitleChoise ? this.state.userTitleChoise.description : '',
+        genre: this.state.userTitleChoise ? this.state.userTitleChoise.genres.join(', ') : ''
       })
-    }, 200)
+    }, 300)
   }
 
   validationTextForm = () => {
@@ -156,7 +158,9 @@ class NewFilmDialog extends React.Component {
               </DialogContentText>
 
               <Autocomplete
-                isOptionEqualToValue={(option, value) => option.id === value.id}
+                isOptionEqualToValue={(option, value) => {
+                  return option.id === value.id
+                }}
                 input={this.state.userTitleChoise}
                 onChange={this.onUserChoise}
                 inputValue={this.state.title}
