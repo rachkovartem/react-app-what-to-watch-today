@@ -4,12 +4,9 @@ import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
 import SideMenuGenreFilter from '../Sidemenu-genre-filter/Sidemenu-genre-filter';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -19,12 +16,15 @@ import Button from '@mui/material/Button';
 const drawerWidth = 240;
 
 function AppSidemenu(props) {
-  const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const { window, drawerOpen, onClickDrawerToggle } = props;
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  //стоковое открытие на хуках, не использую пока
+
+  // const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  // const handleDrawerToggle = () => {
+  //   setMobileOpen(!mobileOpen);
+  // };
 
   const selectedButton = (text) => {
     if (props.filterDate === text) {
@@ -70,13 +70,13 @@ function AppSidemenu(props) {
           <Drawer
             container={container}
             variant="temporary"
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
+            open={drawerOpen}
+            onClose={onClickDrawerToggle}
             ModalProps={{
             keepMounted: true, // Better open performance on mobile.
             }}
             sx={{
-            display: { xs: 'block', sm: 'none' },
+            display: { xs: 'block', md: 'none' },
             '& .MuiDrawer-paper': {boxSizing: 'border-box', width: drawerWidth },
             }}
           >
@@ -85,7 +85,7 @@ function AppSidemenu(props) {
           <Drawer
             variant="permanent"
             sx={{
-            display: { xs: 'none', sm: 'block' },
+            display: { xs: 'none', md: 'block' },
             '& .MuiDrawer-paper': { position: { xs: 'fixed', sm: 'initial' }, boxSizing: 'border-box', 
             // width: drawerWidth 
             },

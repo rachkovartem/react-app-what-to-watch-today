@@ -62,7 +62,7 @@ class NewFilmDialog extends React.Component {
   handleAdd = () => {
     const title = this.state.title;
     const subtitle = this.state.subtitle;
-    const genre = this.state.genre.toLocaleLowerCase();
+    const genre = this.state.userTitleChoise.genres;
     const timestamp = this.state.timestamp;
     this.props.onAdd({title, subtitle, genre, timestamp});
     this.setState({
@@ -170,6 +170,7 @@ class NewFilmDialog extends React.Component {
               />
               
               <TextField
+                  multiline={true}
                   margin="dense"
                   id="subtitle"
                   label="Описание"
@@ -180,8 +181,9 @@ class NewFilmDialog extends React.Component {
                   onChange={this.onValueSubtitleChange}
               />
               <TextField
-                  required
-                  error={this.validationTextForm(this.state.genre)}
+                  disabled
+                  // required
+                  // error={this.validationTextForm(this.state.genre)}
                   margin="dense"
                   id="genre"
                   label="Жанр"

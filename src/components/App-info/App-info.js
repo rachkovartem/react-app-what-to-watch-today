@@ -54,7 +54,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 
-export default function AppInfo({filmsToWatch, filterSetter, filterSearch}) {
+export default function AppInfo({filmsToWatch, filterSetter, filterSearch, onClickDrawerToggle}) {
   
   const filmsSwitcher = (num) => {
     const lastNum = num.toString().slice(-1);
@@ -83,7 +83,8 @@ export default function AppInfo({filmsToWatch, filterSetter, filterSearch}) {
             edge="start"
             color="inherit"
             aria-label="open drawer"
-            sx={{ display: { xs: 'block', sm: 'none' }, mr: 2 }}
+            onClick={onClickDrawerToggle}
+            sx={{ display: { xs: 'block', md: 'none' }, mr: 2 }}
           >
             <MenuIcon />
           </IconButton>

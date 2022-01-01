@@ -10,10 +10,6 @@ import NewFilmDialog from '../New-film-dialog/New-film-dialog';
 class FilmList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      
-    }
-    
   }
   
 
@@ -37,8 +33,6 @@ class FilmList extends React.Component {
     const {onAdd, data} = this.props;
     return (
         <List>
-          
-        
           {this.elements(data)}
           <NewFilmDialog onAdd={onAdd}/>
         </List>

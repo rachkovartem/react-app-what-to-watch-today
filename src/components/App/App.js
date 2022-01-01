@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import './App.css';
-import { Grid } from '@mui/material';
+import { Grid, responsiveFontSizes } from '@mui/material';
 import nextId from "react-id-generator";
 import AppInfo from '../App-info/App-info';
 import FilmList from '../Film-list/Film-list';
@@ -15,9 +15,25 @@ class App extends Component {
         
       ],
       filterDate: 'Всё время',
-      filterGenre: [],
-      filterSearch: ''
+      filterGenre: [],  //массив с массивами, которые содержат несколько жанров каждого фильма
+      filterSearch: '',
+      drawerOpen: false
     }
+  }
+
+  // функция делает одномерный массив без повторений и из массива с массивами жанров
+  filterGenreSpreaded = (arr) => {
+    let arrSpreaded = []
+    arr.forEach((e) => {
+      e.forEach((e) => {
+        if (!arrSpreaded.some(arrItem => arrItem === e)) {
+          arrSpreaded.push(e)
+        }
+      })
+    });
+
+    return arrSpreaded
+
   }
 
   componentDidMount() {
@@ -32,11 +48,11 @@ class App extends Component {
     } else {
       this.setState({
         data: [
-          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: 'драма', timestamp: 1635449866},
-          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: 'боевик', timestamp: 1610307466},
-          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: 'боевик', timestamp: 1640633866},
-          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: 'драма', timestamp: 1590608266},
-          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: 'комедия', timestamp: Math.round(Date.now()/1000)},
+          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: ['драма'], timestamp: 1635449866},
+          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: ['боевик'], timestamp: 1610307466},
+          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: ['боевик'], timestamp: 1640633866},
+          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: ['драма'], timestamp: 1590608266},
+          {title: 'тестовый', subtitle: 'фильм', id: nextId(), genre: ['комедия'], timestamp: Math.round(Date.now()/1000)},
         ]
       }) 
     }
@@ -47,11 +63,17 @@ class App extends Component {
     localStorage.setItem('movies', JSON.stringify(state))
   }
 
-
+//функция возвращает массив неповторяющихся жанров вместо массива с массивами жанров каждого фильма
   genres = () => {
-    return [...new Set(this.state.data.map(item => {
-      return item.genre
-    }))]
+    let arr = []
+    this.state.data.forEach(item => {
+      item.genre.forEach((e) => {
+        if (!arr.some(arrItem => arrItem === e)) {
+          arr.push(e)
+        }
+      })
+    })
+    return arr
   }
 
   deleteItem = (id) => {
@@ -99,13 +121,42 @@ class App extends Component {
     }) 
   }
 
+  // filterGenre = (data, filter) => {
+  //   if (filter.length === 0) {
+  //     return data
+  //   }
+  //   return data.filter((item) => {
+
+  //     let res
+  //     item.genre.reduce((allFilmGenres, filmGenre) => {
+  
+  //       if (filter.some(filterGenre => filterGenre === filmGenre)) {
+  //         allFilmGenres.push(filmGenre)
+
+  //       }
+  //       let numOfMatch = 0;
+
+  //       allFilmGenres.forEach((filmGenre) => {
+  //         if (filter.some(filterGenre => filterGenre === filmGenre)) {
+  //           numOfMatch = numOfMatch + 1;
+  //         }
+  //       })
+
+  //       if (numOfMatch === filter.length) {
+  //         res = true
+  //       }
+
+  //       return allFilmGenres
+
+  //     }, [])
+  //     return res
+  //   })
+  // }
+
   filterGenre = (data, filter) => {
-    if (filter.length === 0) {
-      return data
-    }
-    return data.filter((item) => {
-      return filter.some((genre) => {
-        return genre === item.genre
+    return data.filter(film => {
+      return filter.every(filterGenre => {
+        return film.genre.includes(filterGenre)
       })
     })
   }
@@ -136,7 +187,13 @@ class App extends Component {
     })
   }
 
+  onClickDrawerToggle = () => {
+    this.setState(({drawerOpen}) => ({
+      drawerOpen: !drawerOpen
+    }))
+  }
 
+ 
 
   render() {
     const {data, filterGenre, filterDate, filterSearch} = this.state;
@@ -144,13 +201,13 @@ class App extends Component {
     return(
       <Grid container spacing={2}>
       <Grid item xs={12}>
-        <AppInfo filmsToWatch={this.filmsToWatch()} filterSetter={this.filterSearchSetter} filterSearch={filterSearch}/>
+        <AppInfo onClickDrawerToggle={this.onClickDrawerToggle} filmsToWatch={this.filmsToWatch()} filterSetter={this.filterSearchSetter} filterSearch={filterSearch}/>
       </Grid>
       <Grid item xs={2}>
-        <AppSidemenu genres={this.genres} filterSetter={{genre: this.filterGenreSetter, date: this.filterDateSetter}} 
+        <AppSidemenu onClickDrawerToggle={this.onClickDrawerToggle} drawerOpen={this.state.drawerOpen} genres={this.genres} filterSetter={{genre: this.filterGenreSetter, date: this.filterDateSetter}} 
         filtersReset={this.filtersReset} filterGenre={filterGenre} filterDate={filterDate}/>
       </Grid>
-      <Grid item xs={10}>
+      <Grid item xs={12} md={10}>
         <FilmList data={filtredData} onAdd={this.addItem} onDelete={this.deleteItem}/>
       </Grid>
     </Grid>
