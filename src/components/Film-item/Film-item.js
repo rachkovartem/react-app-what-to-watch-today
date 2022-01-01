@@ -31,7 +31,6 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
         transition: 'left 0.1s, right 0.1s, opacity 0.3s',
         top: `${window.scrollY + clientY - 200}px`,}
       let style = {}
-      console.log([poster.clientHeight, clientY])
       if (poster.clientHeight > clientY) {
         
         style = {

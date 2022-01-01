@@ -13,7 +13,6 @@ class KinopoiskServices {
         })
 
         const filmByKeyword = response.json().then(data => (data))
-        console.log('get api')
         return filmByKeyword
     }
 
