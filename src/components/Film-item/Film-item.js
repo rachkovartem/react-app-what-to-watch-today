@@ -22,7 +22,7 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete}) 
                   <DeleteIcon />
               </IconButton>
           }
-          sx={{display: {xs: 'grid', md: 'flex'}, gridTemplate: '1fr 1fr / repeat(12, 1fr)'}}
+          sx={{display: {xs: 'grid', md: 'flex'}, gridTemplate: 'repeat(3, auto) / repeat(12, 1fr)'}}
         >
           <ListItemAvatar sx={{gridArea: {xs: '1/1/2/2', sm: ''} }}>
             <Avatar>
@@ -38,7 +38,7 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete}) 
             variant="div"
             noWrap
             component="div"
-            sx={{width: {xs: '1', md: 1/4}, flexGrow: 1, display: { xs: 'block', md: 'block' }, gridArea: { xs: '2/1/3/9'}}}
+            sx={{width: {xs: '1', md: 1/4}, flexGrow: 1, display: { xs: 'block', md: 'block' }, gridArea: { xs: '2/1/3/12'}}}
           >
             Жанр: {genre.join(', ')}
           </Typography>
@@ -46,7 +46,7 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete}) 
             variant="div"
             noWrap
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'block', md: 'block' }, gridArea: { xs: '2/9/3/12'} }}
+            sx={{ flexGrow: 1, display: { xs: 'block', md: 'block' }, gridArea: { xs: '3/6/4/13'}, textAlign: 'right', fontSize:{xs: 10}}}
           >
             Добавлен: {dateToItem}
           </Typography>
