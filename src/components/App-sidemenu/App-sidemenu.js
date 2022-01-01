@@ -38,9 +38,9 @@ function AppSidemenu(props) {
             variant="div"
             noWrap
             component="div"
-            sx={{ textAlign: 'center', flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            sx={{ textAlign: 'center', flexGrow: 1, mt: {xs: 3, md: 1}, mr: 1, ml: 1, whiteSpace: 'normal'}}
           >
-            Фильтр по времени
+            Отобразить фильмы, добавленные за какой период?
       </Typography>
       <List>
         {['Неделя', 'Месяц', 'Год', 'Всё время'].map((text) => (
@@ -58,7 +58,10 @@ function AppSidemenu(props) {
       </List>
       <Divider />
       <Stack>
-      <Button onClick={() => props.filtersReset()} sx={{mt: 1, ml: 'auto', mr: 'auto'}} variant="outlined">Сбросить фильтры</Button>
+      <Button onClick={() => props.filtersReset()} sx={{mt: 4, ml: 'auto', mr: 'auto'}} 
+              variant="outlined">
+                Сбросить фильтры
+      </Button>
       </Stack>
     </div>
   );

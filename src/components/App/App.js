@@ -1,10 +1,12 @@
 import { Component } from 'react';
-import './App.css';
 import { Grid, responsiveFontSizes } from '@mui/material';
+
 import nextId from "react-id-generator";
 import AppInfo from '../App-info/App-info';
 import FilmList from '../Film-list/Film-list';
 import AppSidemenu from '../App-sidemenu/App-sidemenu';
+
+import './App.scss';
 
 
 class App extends Component {
@@ -84,7 +86,7 @@ class App extends Component {
     }, () => this.localStorageSetter(this.state.data))
   }
 
-  addItem = ({title, subtitle, genre, timestamp}) => {
+  addItem = ({title, subtitle, genre, timestamp, posterUrlPreview}) => {
     this.setState(({data}) => {
       return {
         data: data.concat({
@@ -92,7 +94,8 @@ class App extends Component {
           subtitle: subtitle,
           id: nextId(),
           genre: genre,
-          timestamp: timestamp
+          timestamp: timestamp,
+          posterUrlPreview: posterUrlPreview
         })
       }
     }, () => this.localStorageSetter(this.state.data) )

@@ -102,7 +102,7 @@ export default function AppInfo({filmsToWatch, filterSetter, filterSearch, onCli
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search…"
+              placeholder="Найти..."
               inputProps={{ 'aria-label': 'search' }}
               value={filterSearch}
               onChange={(e) => filterSetter(e.target.value)}

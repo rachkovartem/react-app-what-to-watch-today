@@ -47,7 +47,7 @@ export default function SideMenuGenreFilter(props) {
 
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 200, mt: 3 }}>
+      <FormControl sx={{ ml: 3, width: 189, mt: 3, mb: 3}}>
         <Select
           multiple
           displayEmpty

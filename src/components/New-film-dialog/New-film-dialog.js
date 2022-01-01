@@ -28,7 +28,8 @@ class NewFilmDialog extends React.Component {
       open: false,
       canClose: false,
       filmOptions: [],
-      userTitleChoise: ''
+      userTitleChoise: '',
+      posterUrlPreview: ''
     }
   }
 
@@ -60,15 +61,14 @@ class NewFilmDialog extends React.Component {
   }
 
   handleAdd = () => {
-    const title = this.state.title;
-    const subtitle = this.state.subtitle;
     const genre = this.state.userTitleChoise.genres;
-    const timestamp = this.state.timestamp;
-    this.props.onAdd({title, subtitle, genre, timestamp});
+    const {title, subtitle, timestamp, posterUrlPreview} = this.state
+    this.props.onAdd({title, subtitle, genre, timestamp, posterUrlPreview});
     this.setState({
       title: '',
       subtitle: '',
       genre: '',
+      posterUrlPreview: '',
       open: false
     })
   }
@@ -124,14 +124,16 @@ class NewFilmDialog extends React.Component {
       userTitleChoise: newValue,
       canClose: true,
       subtitle: this.state.userTitleChoise ? this.state.userTitleChoise.description : '',
-      genre: this.state.userTitleChoise ? this.state.userTitleChoise.genres.join(', ') : ''
+      genre: this.state.userTitleChoise ? this.state.userTitleChoise.genres.join(', ') : '',
+      posterUrlPreview: this.state.userTitleChoise ? this.state.userTitleChoise.posterUrlPreview : ''
     })
     setTimeout(() => {
       this.setState({
         userTitleChoise: newValue,
         canClose: true,
         subtitle: this.state.userTitleChoise ? this.state.userTitleChoise.description : '',
-        genre: this.state.userTitleChoise ? this.state.userTitleChoise.genres.join(', ') : ''
+        genre: this.state.userTitleChoise ? this.state.userTitleChoise.genres.join(', ') : '',
+        posterUrlPreview: this.state.userTitleChoise ? this.state.userTitleChoise.posterUrlPreview : ''
       })
     }, 300)
   }
@@ -197,7 +199,7 @@ class NewFilmDialog extends React.Component {
               </DialogContent>
               <DialogActions>
               <Button onClick={this.handleClose}>Отменить</Button>
-              <Button disabled={this.state.canClose ? false : true} onClick={this.handleAdd}>Добавить</Button>
+              <Button disabled={this.state.title === "" ? true : !this.state.canClose} onClick={this.handleAdd}>Добавить</Button>
               </DialogActions>
           </Dialog>
       </div>
