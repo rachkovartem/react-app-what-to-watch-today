@@ -83,11 +83,11 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
       <div className='Film-item__ratings-wrapper'>
         <div className='Film-item__rating-wrapper'>
           <img className='Film-item__logo' src={kinopoiskImg} alt="Лого кинопоиска"/>
-          <p className='Film-item__rating'>{kinopoisk}</p>
+          <p className='Film-item__rating'>{kinopoisk ? kinopoisk : '---'}</p>
         </div>
         <div className='Film-item__rating-wrapper'>
           <img className='Film-item__logo Film-item__logo_imdb' src={imdbImg} alt="Лого IMDB"/>
-          <p className='Film-item__rating'>{imdb}</p>
+          <p className='Film-item__rating'>{imdb ? imdb : '---'}</p>
         </div>
       </div>
     )

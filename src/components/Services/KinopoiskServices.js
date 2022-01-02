@@ -11,7 +11,6 @@ class KinopoiskServices {
     }
 
     getFilmByKeyWord = async (word, page = 1) => {
-        console.log('film keyword request')
         let response = await fetch(`${this._apiURL}v2.1/films/search-by-keyword?keyword=${word}&page=${page}`, this._apiOptions)
 
         const filmByKeyword = response.json().then(data => (data))
@@ -19,13 +18,14 @@ class KinopoiskServices {
     }
 
     dbGetFilmById = debounce((e) => this.getFilmById(e), 250)
-
+    
     getFilmById = async (id) => {
+
         let response
         try {
             response = await fetch(`${this._apiURL}v2.2/films/${id}`, this._apiOptions)
         } catch (err) {
-            throw new Error(err)
+            console.log(err)
         }
         
 

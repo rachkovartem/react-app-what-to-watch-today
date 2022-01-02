@@ -30,7 +30,8 @@ class NewFilmDialog extends React.Component {
       filmOptions: [],
       userTitleChoise: '',
       posterUrlPreview: '',
-      loading: false
+      loading: false, 
+      error: false
     }
   }
 
@@ -85,7 +86,8 @@ class NewFilmDialog extends React.Component {
       title: newValue,
       userTitleChoise: '',
       canClose: false,
-      loading: true
+      loading: true,
+     
     }, () => this.dbGetFilmsAndSetState(newValue))
 
   }
@@ -105,20 +107,34 @@ class NewFilmDialog extends React.Component {
   //label состоит из руского имени, английского и года выпуска
   //сохраняются только нужные ключи
   //чтобы получать больше инфы, нужно добавлять ключи
-  getFilmsAndSetState = async (input) => {
-    const response = await this.services.getFilmByKeyWord(input);
-    this.setState({filmOptions: response.films.map((item) => {
+  getFilmsAndSetState = (input) => {
+    
+    this.services.getFilmByKeyWord(input)
+      .then(response => {
+        this.setState({filmOptions: response.films.map((item) => {
 
-      return {label: `${item.nameRu ? item.nameRu : ''}${item.nameEn ? ` (${item.nameEn})` : ''}, ${item.year}`,
-              id: item.filmId, 
-              genres: item.genres.map(item => (item.genre)),
-              posterUrlPreview: item.posterUrlPreview,
-              description: item.description,
-              key: nextId()}
-    })})
-    this.setState({
-      loading: false
-    })
+          return {label: `${item.nameRu ? item.nameRu : ''}${item.nameEn ? ` (${item.nameEn})` : ''}, ${item.year}`,
+                  id: item.filmId, 
+                  genres: item.genres.map(item => (item.genre)),
+                  posterUrlPreview: item.posterUrlPreview,
+                  description: item.description,
+                  key: nextId()}
+        })})
+        this.setState({
+          error: false,
+          loading: false
+        })
+      })
+      .catch(err => {
+        this.setState({
+          filmOptions: [],
+          error: true
+        })
+        console.log(err)
+      })
+    
+    
+    
   }
 
   //когда пользователь выбирает один из предложенных фильмов, данные записываются из массива
@@ -180,7 +196,7 @@ class NewFilmDialog extends React.Component {
                 renderInput={(params) => this.TextFieldTitle(params)}
                 noOptionsText={'Не нашли такой фильм :('}
                 loading={this.state.loading}
-                loadingText={'Уже ищем...'}
+                loadingText={this.state.error ? 'Ошибка на сервере, попробуйте позже' : 'Уже ищем...'}
               />
               
               <TextField
