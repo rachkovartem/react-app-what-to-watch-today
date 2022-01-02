@@ -21,7 +21,6 @@ class KinopoiskServices {
     dbGetFilmById = debounce((e) => this.getFilmById(e), 250)
 
     getFilmById = async (id) => {
-        console.log('film id request')
         let response
         try {
             response = await fetch(`${this._apiURL}v2.2/films/${id}`, this._apiOptions)
