@@ -10,9 +10,14 @@ import Typography from '@mui/material/Typography';
 import MovieIcon from '@mui/icons-material/Movie';
 import LinesEllipsis from 'react-lines-ellipsis';
 
+import './Film-item.scss'
+import kinopoiskImg from '../../resources/img/kinopoisk.svg';
+import imdbImg from '../../resources/img/IMDB.svg'
 
 
-export default function FilmItem({title, subtitle, timestamp, genre, onDelete, posterUrlPreview}) {
+
+
+export default function FilmItem({title, subtitle, timestamp, genre, onDelete, posterUrlPreview, ratingImdb, ratingKinopoisk}) {
   const date = new Date(timestamp*1000);
   const dateToItem = `${date.getDate()}/${(date.getMonth()+1)}/${date.getFullYear()}`
   
@@ -70,12 +75,25 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
   }
 
   
-
+  const ratings = (kinopoisk = "---", imdb = "---") => {
+    return (
+      <div class='Film-item__ratings-wrapper'>
+        <div class='Film-item__rating-wrapper'>
+          <img class='Film-item__logo' src={kinopoiskImg} alt="Лого кинопоиска"/>
+          <p class='Film-item__rating'>{kinopoisk}</p>
+        </div>
+        <div class='Film-item__rating-wrapper'>
+          <img class='Film-item__logo Film-item__logo_imdb' src={imdbImg} alt="Лого IMDB"/>
+          <p class='Film-item__rating'>{imdb}</p>
+        </div>
+      </div>
+    )
+  }
   
 
   return (
       <ListItem
-        onMouseMove={onMouseMove}
+        
         secondaryAction={
             <IconButton onClick={onDelete} edge="end" aria-label="delete">
                 <DeleteIcon />
@@ -84,7 +102,8 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
         sx={{display: {xs: 'grid', md: 'flex'}, gridTemplate: 'repeat(3, auto) / repeat(12, 1fr)'}}
       >
         <ListItemAvatar sx={{gridArea: {xs: '1/1/2/2', sm: ''} }}>
-          <Avatar onMouseEnter={hoveredImgOpen ? null : () => {document.querySelector('body').style.position = 'relative'; setHoveredImgOpen(true)}}
+          <Avatar onMouseMove={onMouseMove}
+                  onMouseEnter={hoveredImgOpen ? null : () => {document.querySelector('body').style.position = 'relative'; setHoveredImgOpen(true)}}
                   onMouseLeave={hoveredImgOpen ? () => {document.querySelector('body').style.position = 'relative'; setHoveredImgOpen(false)} : null}>
             <React.Fragment>
               {
@@ -95,12 +114,8 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
               {hoveredImg()}
               
             </React.Fragment>
-
-            
-              
-
-
           </Avatar>
+          {ratings(ratingKinopoisk, ratingImdb)}
         </ListItemAvatar>
         <ListItemText
           primary={title}
@@ -143,5 +158,8 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
         </Typography>
       </ListItem>
   )
+
+
+
 }
 
