@@ -41,6 +41,7 @@ class NewFilmDialog extends React.Component {
     })
   };
   
+  //при нажатии на "отменить", меняется state open на false
   handleClose = () => {
     this.setState({
       open: false
@@ -60,10 +61,12 @@ class NewFilmDialog extends React.Component {
 
   }
 
+  //при нажатии на добавить данные отправляются в app
   handleAdd = () => {
     const genre = this.state.userTitleChoise.genres;
+    const {id} = this.state.userTitleChoise
     const {title, subtitle, timestamp, posterUrlPreview} = this.state
-    this.props.onAdd({title, subtitle, genre, timestamp, posterUrlPreview});
+    this.props.onAdd({title, subtitle, genre, timestamp, posterUrlPreview, id});
     this.setState({
       title: '',
       subtitle: '',
@@ -73,6 +76,7 @@ class NewFilmDialog extends React.Component {
     })
   }
 
+  //при введении сиволов, они заносятся в state и происходит запрос на апи кинопоиска (dbGetFilmsAndSetState)
   onValueTitleChange = (e, newValue) => {
 
     this.setState({
@@ -90,10 +94,15 @@ class NewFilmDialog extends React.Component {
     })
   }
   
-
+  //debounced запрос getFilmsAndSetState
+  //пока что не использую
   dbGetFilmsAndSetState = debounce((e) => this.getFilmsAndSetState(e), 250); 
 
-
+  //делает запрос апи и записывает в state массив с 20 фильмами, совпадающими
+  //по ключевым словам с инпутом
+  //label состоит из руского имени, английского и года выпуска
+  //сохраняются только нужные ключи
+  //чтобы получать больше инфы, нужно добавлять ключи
   getFilmsAndSetState = async (input) => {
     const response = await this.services.getFilmByKeyWord(input);
     this.setState({filmOptions: response.films.map((item) => {
@@ -107,6 +116,12 @@ class NewFilmDialog extends React.Component {
     })})
   }
 
+  //когда пользователь выбирает один из предложенных фильмов, данные записываются из массива
+  //со всеми фильмами в верхние state
+  // и дополнительное в userTitleChoise, откуда идёт вывод в input
+  //причём в userTitleCHoise хранится label (рус и англ названия + год выпуска)
+  //надо бы переделать все эти костыли, чтобы данные в окно передавались из userTitleChoise, а не
+  //лишний раз отправлялись в ещё один state. Осталось от первых версий без api
   onUserChoise = (e, newValue) => {
     this.setState({
       userTitleChoise: newValue,

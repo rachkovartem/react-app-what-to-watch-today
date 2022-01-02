@@ -1,10 +1,11 @@
 import { Component } from 'react';
-import { Grid, responsiveFontSizes } from '@mui/material';
+import { Grid } from '@mui/material';
 
-import nextId from "react-id-generator";
+
 import AppInfo from '../App-info/App-info';
 import FilmList from '../Film-list/Film-list';
 import AppSidemenu from '../App-sidemenu/App-sidemenu';
+import KinopoiskServices from '../Services/KinopoiskServices';
 
 import './App.scss';
 
@@ -23,6 +24,7 @@ class App extends Component {
     }
   }
 
+  services = new KinopoiskServices()
   // функция делает одномерный массив без повторений и из массива с массивами жанров
   filterGenreSpreaded = (arr) => {
     let arrSpreaded = []
@@ -105,6 +107,8 @@ class App extends Component {
     ]
   }
 
+
+
   componentDidMount() {    
     if (localStorage.getItem('movies')) {
       const newData = JSON.parse(localStorage.getItem('movies'))
@@ -113,18 +117,16 @@ class App extends Component {
         this.localStorageSetter(this.returnNewStockData())
       }
       this.setState({
-        data: newData.map((item) => {
-          item.id = nextId()
-          return item
-        })
-      })  
+        data: newData
+      })
+      this.updateRatingsFromServer()
     } else {
       this.setState({
         data: this.returnNewStockData()
       }) 
       
-
     }
+
   }
 
   
@@ -153,21 +155,54 @@ class App extends Component {
     }, () => this.localStorageSetter(this.state.data))
   }
 
-  addItem = ({title, subtitle, genre, timestamp, posterUrlPreview}) => {
+  addItem = async ({title, subtitle, genre, timestamp, posterUrlPreview, id}) => {
+    const response = await this.services.getFilmById(id)
     this.setState(({data}) => {
       return {
         data: data.concat({
           title: title,
           subtitle: subtitle,
-          id: nextId(),
+          id: id,
           genre: genre,
           timestamp: timestamp,
-          posterUrlPreview: posterUrlPreview
+          posterUrlPreview: posterUrlPreview,
+          ratingImdb: response.ratingImdb,
+          ratingKinopoisk: response.ratingKinopoisk
         })
       }
-    }, () => this.localStorageSetter(this.state.data) )
+    }, () => {
+      this.localStorageSetter(this.state.data)
+    })
     
   }
+  //функция обновляет данные с сервера
+  //перебирает весь data и обновляет рейтинги
+  //в идеале нужно это делать на сервере
+
+
+  updateRatingsFromServer = () => {
+    this.setState(({data}) => {
+      const newData = {
+        data: data.map((film) => {
+          let newFilm = film
+          this.services.getFilmById(newFilm.id)
+          .then((response) => {
+            newFilm.ratingImdb = response.ratingImdb
+            newFilm.ratingKinopoisk = response.ratingKinopoisk
+            
+          }, reasone => {
+            throw new Error ('Часть рейтингов фильмов не была обновлена из-за ограничесний сервера. Ошибка: ', reasone)
+          })
+          return newFilm
+
+          
+        })
+      } 
+      return newData
+    })
+  }
+
+  
 
   filmsToWatch = () => {
     return this.state.data.length
@@ -190,38 +225,6 @@ class App extends Component {
       filterSearch: key
     }) 
   }
-
-  // filterGenre = (data, filter) => {
-  //   if (filter.length === 0) {
-  //     return data
-  //   }
-  //   return data.filter((item) => {
-
-  //     let res
-  //     item.genre.reduce((allFilmGenres, filmGenre) => {
-  
-  //       if (filter.some(filterGenre => filterGenre === filmGenre)) {
-  //         allFilmGenres.push(filmGenre)
-
-  //       }
-  //       let numOfMatch = 0;
-
-  //       allFilmGenres.forEach((filmGenre) => {
-  //         if (filter.some(filterGenre => filterGenre === filmGenre)) {
-  //           numOfMatch = numOfMatch + 1;
-  //         }
-  //       })
-
-  //       if (numOfMatch === filter.length) {
-  //         res = true
-  //       }
-
-  //       return allFilmGenres
-
-  //     }, [])
-  //     return res
-  //   })
-  // }
 
   filterGenre = (data, filter) => {
     return data.filter(film => {

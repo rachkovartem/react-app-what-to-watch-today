@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
 import MovieIcon from '@mui/icons-material/Movie';
+import LinesEllipsis from 'react-lines-ellipsis';
 
 
 
@@ -24,12 +25,12 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
 
     let styles = () => {
       if (!poster) return {
-        
         opacity: 0, 
         left: `${clientX}px`, 
         position: 'absolute',
         transition: 'left 0.1s, right 0.1s, opacity 0.3s',
-        top: `${window.scrollY + clientY - 200}px`,}
+        top: `${window.scrollY + clientY - 200}px`
+      }
       let style = {}
       if (poster.clientHeight > clientY) {
         
@@ -103,16 +104,34 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
         </ListItemAvatar>
         <ListItemText
           primary={title}
-          secondary={subtitle}
+          secondary={<LinesEllipsis
+            text={subtitle}
+            maxLine='3'
+            ellipsis='...'
+            component='div'
+            trimRight
+            basedOn='letters'
+          />}
+          secondaryTypographyProps={{component: 'div', display: 'block', height: '3.75375rem'}}
           sx={{width:{ xs: 1, md: 1/4}, gridArea: {xs: '1/2/2/13', sm: ''}}}
         />
         <Typography
           variant="div"
           noWrap
           component="div"
-          sx={{width: {xs: '1', md: 1/4}, flexGrow: 1, display: { xs: 'block', md: 'block' }, gridArea: { xs: '2/1/3/12'}}}
+          sx={{
+            width: {xs: '1', md: 1/4},
+            flexGrow: 1, 
+            display: { xs: 'block', md: 'block' }, 
+            marginBottom: { xs: '8px'},
+            gridArea: { xs: '2/1/3/13'},
+            color: 'rgba(0, 0, 0, 0.6)',
+            whiteSpace: 'normal',
+            fontSize: '12px',
+            textAlign: 'right',
+          }}
         >
-          Жанр: {genre.join(', ')}
+          <div>Жанр: </div> <div>{genre.join(', ')}</div>
         </Typography>
         <Typography
           variant="div"
