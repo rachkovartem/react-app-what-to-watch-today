@@ -55,7 +55,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 export default function AppInfo({filmsToWatch, filterSetter, filterSearch, onClickDrawerToggle}) {
-  
+
   const filmsSwitcher = (num) => {
     const lastNum = num.toString().slice(-1);
     if ((num > 100 && lastNum === '1') ||

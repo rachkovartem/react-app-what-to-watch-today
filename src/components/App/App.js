@@ -20,7 +20,8 @@ class App extends Component {
       filterDate: 'Всё время',
       filterGenre: [],  //массив с массивами, которые содержат несколько жанров каждого фильма
       filterSearch: '',
-      drawerOpen: false
+      drawerOpen: false,
+      appInfoHeight: null
     }
   }
 
@@ -119,7 +120,14 @@ class App extends Component {
 
 
 
-  componentDidMount() {    
+  componentDidMount() {  
+    
+    const appInfo = document.querySelector('.getHeight');
+    const appInfoHeight = window.getComputedStyle(appInfo).height;
+    this.setState({
+      appInfoHeight: appInfoHeight.slice(0, -2)
+    })
+
     if (localStorage.getItem('movies')) {
       const newData = JSON.parse(localStorage.getItem('movies'))
       if (typeof newData[0].genre === 'string' || typeof newData[0].id === 'string') {
@@ -137,7 +145,6 @@ class App extends Component {
       }) 
       this.updateRatingsFromServer()
     }
-
   }
 
   
@@ -277,17 +284,17 @@ class App extends Component {
     }))
   }
 
- 
+  
 
   render() {
-    const {data, filterGenre, filterDate, filterSearch} = this.state;
+    const {data, filterGenre, filterDate, filterSearch, appInfoHeight} = this.state;
     const filtredData = this.filterGenre(this.filterDate(this.filterSearch(data, filterSearch), filterDate), filterGenre);
     return(
-      <Grid container spacing={2}>
-      <Grid item xs={12}>
+      <Grid container spacing={0} sx={{height: {md: `${window.innerHeight - appInfoHeight}px`}, alignItems: {md: 'flex-start'}}}>
+      <Grid item xs={12} classes={{root: 'getHeight'}} sx={{zIndex:{md: 10}}}>
         <AppInfo onClickDrawerToggle={this.onClickDrawerToggle} filmsToWatch={this.filmsToWatch()} filterSetter={this.filterSearchSetter} filterSearch={filterSearch}/>
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={2} sx={{pt: 0, zIndex:{md: 9}, borderRight:{md: '1px solid rgba(0, 0, 0, 0.12)'}, height: {md: '100%'}}}>
         <AppSidemenu onClickDrawerToggle={this.onClickDrawerToggle} drawerOpen={this.state.drawerOpen} genres={this.genres} filterSetter={{genre: this.filterGenreSetter, date: this.filterDateSetter}} 
         filtersReset={this.filtersReset} filterGenre={filterGenre} filterDate={filterDate}/>
       </Grid>

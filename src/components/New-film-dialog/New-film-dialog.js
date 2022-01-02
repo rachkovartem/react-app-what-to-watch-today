@@ -29,7 +29,8 @@ class NewFilmDialog extends React.Component {
       canClose: false,
       filmOptions: [],
       userTitleChoise: '',
-      posterUrlPreview: ''
+      posterUrlPreview: '',
+      loading: false
     }
   }
 
@@ -83,7 +84,8 @@ class NewFilmDialog extends React.Component {
       // [e.target.id]: e.target.value
       title: newValue,
       userTitleChoise: '',
-      canClose: false
+      canClose: false,
+      loading: true
     }, () => this.dbGetFilmsAndSetState(newValue))
 
   }
@@ -114,6 +116,9 @@ class NewFilmDialog extends React.Component {
               description: item.description,
               key: nextId()}
     })})
+    this.setState({
+      loading: false
+    })
   }
 
   //когда пользователь выбирает один из предложенных фильмов, данные записываются из массива
@@ -128,7 +133,8 @@ class NewFilmDialog extends React.Component {
       canClose: true,
       subtitle: this.state.userTitleChoise ? this.state.userTitleChoise.description : '',
       genre: this.state.userTitleChoise ? this.state.userTitleChoise.genres.join(', ') : '',
-      posterUrlPreview: this.state.userTitleChoise ? this.state.userTitleChoise.posterUrlPreview : ''
+      posterUrlPreview: this.state.userTitleChoise ? this.state.userTitleChoise.posterUrlPreview : '',
+      filmOptions: []
     })
     setTimeout(() => {
       this.setState({
@@ -172,6 +178,9 @@ class NewFilmDialog extends React.Component {
                 onInputChange={this.onValueTitleChange}
                 options={this.state.filmOptions}
                 renderInput={(params) => this.TextFieldTitle(params)}
+                noOptionsText={'Не нашли такой фильм :('}
+                loading={this.state.loading}
+                loadingText={'Уже ищем...'}
               />
               
               <TextField

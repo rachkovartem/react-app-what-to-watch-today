@@ -58,7 +58,7 @@ function AppSidemenu(props) {
       </List>
       <Divider />
       <Stack>
-      <Button onClick={() => props.filtersReset()} sx={{mt: 4, ml: 'auto', mr: 'auto'}} 
+      <Button onClick={() => props.filtersReset()} sx={{mt: '25px', ml: 'auto', mr: 'auto'}} 
               variant="outlined">
                 Сбросить фильтры
       </Button>
@@ -80,7 +80,7 @@ function AppSidemenu(props) {
             }}
             sx={{
             display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': {boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': {boxSizing: 'border-box', width: drawerWidth},
             }}
           >
             {drawer}
@@ -89,7 +89,7 @@ function AppSidemenu(props) {
             variant="permanent"
             sx={{
             display: { xs: 'none', md: 'block' },
-            '& .MuiDrawer-paper': { position: { xs: 'fixed', sm: 'initial' }, boxSizing: 'border-box', 
+            '& .MuiDrawer-paper': { position: { xs: 'fixed', sm: 'initial' }, boxSizing: 'border-box', border: 'none'
             // width: drawerWidth 
             },
             }}

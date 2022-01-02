@@ -4,6 +4,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { flexbox } from '@mui/system';
 
 
 const ITEM_HEIGHT = 48;
@@ -46,8 +47,8 @@ export default function SideMenuGenreFilter(props) {
   
 
   return (
-    <div>
-      <FormControl sx={{ ml: 3, width: 189, mt: 3, mb: 3}}>
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+      <FormControl sx={{ width: 189, m: '17px 0'}}>
         <Select
           multiple
           displayEmpty
@@ -56,7 +57,7 @@ export default function SideMenuGenreFilter(props) {
           input={<OutlinedInput />}
           renderValue={(selected) => {
             if (selected.length === 0) {
-              return <em>Фильтр по жанру</em>;
+              return <span>Фильтр по жанру</span>;
             }
 
             return selected.join(', ');
@@ -65,7 +66,7 @@ export default function SideMenuGenreFilter(props) {
           inputProps={{ 'aria-label': 'Without label' }}
         >
           <MenuItem disabled value="">
-            <em>Фильтр по жанру</em>
+            <span>Фильтр по жанру</span>
           </MenuItem>
           {names.map((name) => (
             <MenuItem
