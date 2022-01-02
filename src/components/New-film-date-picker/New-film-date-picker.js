@@ -6,8 +6,7 @@ import DatePicker from '@mui/lab/DatePicker';
 
 
 export default function NewFilmDatePicker(props) {
-  const [value, setValue] = React.useState(null);
-
+  
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DatePicker

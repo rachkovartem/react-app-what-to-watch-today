@@ -41,6 +41,7 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
       if (poster.clientHeight > clientY) {
         
         style = {
+          zIndex: '1000',
           position: 'absolute',
           left: `${clientX - poster.clientWidth - 15}px`,
           top: `${window.scrollY + clientY + 15}px`,
@@ -50,6 +51,7 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
         }
       } else {
         style = {
+          zIndex: '1000',
           position: 'absolute',
           left: `${clientX}px`,
           top: `${window.scrollY + clientY - poster.clientHeight}px`,
