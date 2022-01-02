@@ -96,7 +96,7 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
   const secondaryTypographyProps = () => {
     let mainProps = {
       component: 'div', 
-      display: 'block'
+      display: 'block',
     }
     if (fullDescrShowed) {
       return mainProps
@@ -111,10 +111,9 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
       return textOfSubtitle
      } else {
         return <LinesEllipsis
-
         text={textOfSubtitle}
         maxLine='3'
-        ellipsis='...показать больше'
+        ellipsis='...далее'
         component='div'
         trimRight
         basedOn='letters'
@@ -150,7 +149,7 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
           {ratings(ratingKinopoisk, ratingImdb)}
         </ListItemAvatar>
         <ListItemText
-                onClick={() => toggleFullDescrShowed(!fullDescrShowed)}
+          onClick={() => toggleFullDescrShowed(!fullDescrShowed)}
           primary={title}
           secondary={showedSubtitle(subtitle)}
           secondaryTypographyProps={secondaryTypographyProps()}
