@@ -74,23 +74,14 @@ class NewFilmDialog extends React.Component {
   }
 
   onValueTitleChange = (e, newValue) => {
+
     this.setState({
       // [e.target.id]: e.target.value
       title: newValue,
       userTitleChoise: '',
       canClose: false
-    }, () => {
-      // if (this.state.title.length < 3 || this.state.genre.length < 3) {
-      //   this.setState({
-      //     canClose: false
-      //   })
-      // } else {
-      //   this.setState({
-      //     canClose: true
-      //   })
-      // }
-    })
-    this.dbGetFilmsAndSetState(newValue)
+    }, () => this.dbGetFilmsAndSetState(newValue))
+
   }
 
   onValueSubtitleChange = (e) => {
@@ -100,13 +91,11 @@ class NewFilmDialog extends React.Component {
   }
   
 
-  dbGetFilmsAndSetState = debounce((e) => this.getFilmsAndSetState(e), 250, {
-    'leading': true,
-    'trailing': false
-  }); 
+  dbGetFilmsAndSetState = debounce((e) => this.getFilmsAndSetState(e), 250); 
 
 
   getFilmsAndSetState = async (input) => {
+    console.log(1)
     const response = await this.services.getFilmByKeyWord(input);
     this.setState({filmOptions: response.films.map((item) => {
 
