@@ -95,7 +95,6 @@ class NewFilmDialog extends React.Component {
 
 
   getFilmsAndSetState = async (input) => {
-    console.log(1)
     const response = await this.services.getFilmByKeyWord(input);
     this.setState({filmOptions: response.films.map((item) => {
 
