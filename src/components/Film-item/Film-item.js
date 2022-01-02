@@ -24,6 +24,7 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
   const [hoveredImgOpen, setHoveredImgOpen] = React.useState(false);
   const [clientX, setclientX] = React.useState(0)
   const [clientY, setclientY] = React.useState(0)
+  const [fullDescrShowed, toggleFullDescrShowed] = React.useState(false)
 
   const hoveredImg = () => {
     if (!hoveredImgOpen) return null 
@@ -77,19 +78,50 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
   
   const ratings = (kinopoisk = "---", imdb = "---") => {
     return (
-      <div class='Film-item__ratings-wrapper'>
-        <div class='Film-item__rating-wrapper'>
-          <img class='Film-item__logo' src={kinopoiskImg} alt="Лого кинопоиска"/>
-          <p class='Film-item__rating'>{kinopoisk}</p>
+      <div className='Film-item__ratings-wrapper'>
+        <div className='Film-item__rating-wrapper'>
+          <img className='Film-item__logo' src={kinopoiskImg} alt="Лого кинопоиска"/>
+          <p className='Film-item__rating'>{kinopoisk}</p>
         </div>
-        <div class='Film-item__rating-wrapper'>
-          <img class='Film-item__logo Film-item__logo_imdb' src={imdbImg} alt="Лого IMDB"/>
-          <p class='Film-item__rating'>{imdb}</p>
+        <div className='Film-item__rating-wrapper'>
+          <img className='Film-item__logo Film-item__logo_imdb' src={imdbImg} alt="Лого IMDB"/>
+          <p className='Film-item__rating'>{imdb}</p>
         </div>
       </div>
     )
   }
+
   
+  
+  const secondaryTypographyProps = () => {
+    let mainProps = {
+      component: 'div', 
+      display: 'block'
+    }
+    if (fullDescrShowed) {
+      return mainProps
+    } else {
+      mainProps.height = '3.75375rem'
+      return mainProps
+    }
+  } 
+
+  const showedSubtitle = (textOfSubtitle) => {
+    if (fullDescrShowed) {
+      return textOfSubtitle
+     } else {
+        return <LinesEllipsis
+
+        text={textOfSubtitle}
+        maxLine='3'
+        ellipsis='...показать больше'
+        component='div'
+        trimRight
+        basedOn='letters'
+      />
+     } 
+            
+  }
 
   return (
       <ListItem
@@ -118,16 +150,10 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
           {ratings(ratingKinopoisk, ratingImdb)}
         </ListItemAvatar>
         <ListItemText
+                onClick={() => toggleFullDescrShowed(!fullDescrShowed)}
           primary={title}
-          secondary={<LinesEllipsis
-            text={subtitle}
-            maxLine='3'
-            ellipsis='...'
-            component='div'
-            trimRight
-            basedOn='letters'
-          />}
-          secondaryTypographyProps={{component: 'div', display: 'block', height: '3.75375rem'}}
+          secondary={showedSubtitle(subtitle)}
+          secondaryTypographyProps={secondaryTypographyProps()}
           sx={{width:{ xs: 1, md: 1/4}, gridArea: {xs: '1/2/2/13', sm: ''}}}
         />
         <Typography
