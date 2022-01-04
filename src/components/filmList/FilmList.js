@@ -1,17 +1,14 @@
 import * as React from 'react';
 import List from '@mui/material/List';
-import FilmItem from '../Film-item/Film-item';
-import NewFilmDialog from '../New-film-dialog/New-film-dialog';
+import FilmItem from '../filmItem/FilmItem';
+import NewFilmDialog from '../newFilmDialog/NewFilmDialog';
 
 
 
 
 
 class FilmList extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  
+
 
   elements = (data) => {
     return (
@@ -20,6 +17,7 @@ class FilmList extends React.Component {
         return (
           <FilmItem
           key={id}
+          id={id}
           onDelete={() => this.props.onDelete(id)}
           {...itemProps}
           /> 

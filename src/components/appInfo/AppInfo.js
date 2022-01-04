@@ -54,7 +54,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 
-export default function AppInfo({filmsToWatch, filterSetter, filterSearch, onClickDrawerToggle}) {
+export default function AppInfo({filmsToWatch, setFilterSearch, filterSearch, onClickDrawerToggle}) {
 
   const filmsSwitcher = (num) => {
     const lastNum = num.toString().slice(-1);
@@ -105,7 +105,7 @@ export default function AppInfo({filmsToWatch, filterSetter, filterSearch, onCli
               placeholder="Найти..."
               inputProps={{ 'aria-label': 'search' }}
               value={filterSearch}
-              onChange={(e) => filterSetter(e.target.value)}
+              onChange={(e) => setFilterSearch(e.target.value)}
             />
           </Search>
         </Toolbar>

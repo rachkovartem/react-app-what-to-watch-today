@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import SideMenuGenreFilter from '../Sidemenu-genre-filter/Sidemenu-genre-filter';
+import SideMenuGenreFilter from '../sidemenuGenreFilter/SidemenuGenreFilter';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 

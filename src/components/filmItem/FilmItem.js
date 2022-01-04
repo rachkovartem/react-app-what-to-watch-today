@@ -9,15 +9,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
 import MovieIcon from '@mui/icons-material/Movie';
 import LinesEllipsis from 'react-lines-ellipsis';
+import { Link } from 'react-router-dom'
 
-import './Film-item.scss'
+import './FilmItem.scss'
 import kinopoiskImg from '../../resources/img/kinopoisk.svg';
 import imdbImg from '../../resources/img/IMDB.svg'
 
 
 
 
-export default function FilmItem({title, subtitle, timestamp, genre, onDelete, posterUrlPreview, ratingImdb, ratingKinopoisk}) {
+export default function FilmItem(props) {
+  const {title, subtitle, timestamp, genre, onDelete, posterUrlPreview, ratingImdb, ratingKinopoisk, id} = props;
   const date = new Date(timestamp*1000);
   const dateToItem = `${date.getDate()}/${(date.getMonth()+1)}/${date.getFullYear()}`
   
@@ -68,7 +70,7 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
     const poster = document.querySelector('.film-poster')
     const node = document.querySelector('body');
     return ReactDom.createPortal(
-      <img className="film-poster" src={posterUrlPreview}
+      <img alt="Постер фильма" className="film-poster" src={posterUrlPreview}
           style={styles()}/>, node);
   }
 
@@ -77,24 +79,6 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
     setclientY(e.clientY)
   }
 
-  
-  const ratings = (kinopoisk = "---", imdb = "---") => {
-    return (
-      <div className='Film-item__ratings-wrapper'>
-        <div className='Film-item__rating-wrapper'>
-          <img className='Film-item__logo' src={kinopoiskImg} alt="Лого кинопоиска"/>
-          <p className='Film-item__rating'>{kinopoisk ? kinopoisk : '---'}</p>
-        </div>
-        <div className='Film-item__rating-wrapper'>
-          <img className='Film-item__logo Film-item__logo_imdb' src={imdbImg} alt="Лого IMDB"/>
-          <p className='Film-item__rating'>{imdb ? imdb : '---'}</p>
-        </div>
-      </div>
-    )
-  }
-
-  
-  
   const secondaryTypographyProps = () => {
     let mainProps = {
       component: 'div', 
@@ -110,9 +94,10 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
 
   const showedSubtitle = (textOfSubtitle) => {
     if (fullDescrShowed) {
-      return textOfSubtitle
+      return <span onClick={() => toggleFullDescrShowed(!fullDescrShowed)}>{textOfSubtitle}</span>
      } else {
         return <LinesEllipsis
+        onClick={() => toggleFullDescrShowed(!fullDescrShowed)}
         text={textOfSubtitle}
         maxLine='3'
         ellipsis='...далее'
@@ -141,7 +126,7 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
             <React.Fragment>
               {
               posterUrlPreview ?
-              <img src={posterUrlPreview} style={{transform: 'scale(0.1)'}}/> :
+              <img alt={'Постер фильма'} src={posterUrlPreview} style={{transform: 'scale(0.1)'}}/> :
               <MovieIcon />
               }
               {hoveredImg()}
@@ -151,8 +136,12 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
           {ratings(ratingKinopoisk, ratingImdb)}
         </ListItemAvatar>
         <ListItemText
-          onClick={() => toggleFullDescrShowed(!fullDescrShowed)}
-          primary={title}
+          
+          primary={
+          <Link 
+          className='film-item__title'
+          to={`/film/${id}`}>{title}</Link>
+          }
           secondary={showedSubtitle(subtitle)}
           secondaryTypographyProps={secondaryTypographyProps()}
           sx={{width:{ xs: 1, md: 1/4}, gridArea: {xs: '1/2/2/13', sm: ''}}}
@@ -190,3 +179,17 @@ export default function FilmItem({title, subtitle, timestamp, genre, onDelete, p
 
 }
 
+const ratings = (kinopoisk = "---", imdb = "---") => {
+  return (
+    <div className='Film-item__ratings-wrapper'>
+      <div className='Film-item__rating-wrapper'>
+        <img className='Film-item__logo' src={kinopoiskImg} alt="Лого кинопоиска"/>
+        <p className='Film-item__rating'>{kinopoisk ? kinopoisk : '---'}</p>
+      </div>
+      <div className='Film-item__rating-wrapper'>
+        <img className='Film-item__logo Film-item__logo_imdb' src={imdbImg} alt="Лого IMDB"/>
+        <p className='Film-item__rating'>{imdb ? imdb : '---'}</p>
+      </div>
+    </div>
+  )
+}
