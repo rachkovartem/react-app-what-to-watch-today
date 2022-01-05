@@ -18,6 +18,11 @@ const AccordionAboutFilm = (props) => {
     const [expanded, setExpanded] = useState('');
     const [videos, setVideos] = useState([]);
     const [youtubeVideoCount, setYoutubeVideoCount] = useState(0);
+    const [videoChoise, setVideoChoise] = useState('');
+
+    const handleChangeVideo = (event) => {
+        setVideoChoise(event.target.value);
+    };
 
     const {loading, error, clearError, getVideosById} = KinopoiskServices();
 
@@ -65,11 +70,7 @@ const AccordionAboutFilm = (props) => {
 
     //настройки инпута в аккордионе 
 
-    const [videoChoise, setVideoChoise] = useState('');
-
-    const handleChangeVideo = (event) => {
-        setVideoChoise(event.target.value);
-    };
+   
 
 
     useEffect(async () => {
@@ -77,10 +78,11 @@ const AccordionAboutFilm = (props) => {
         setVideos(res.items);
     }, [])
 
-    let newFilmsYoutube
+    let newFilmsYoutube = 0;
     useEffect(() => {
         setYoutubeVideoCount(newFilmsYoutube.length)
-    }, [newFilmsYoutube])
+    }, [videos])
+    
 
     const renderCarosel = (videos, site) => {
         switch (site) {
@@ -128,7 +130,7 @@ const AccordionAboutFilm = (props) => {
                                 displayEmpty
                             >
                                 <MenuItem disabled value="">
-                                    {youtubeVideoCount ? <>Выберите ролик</> : <>Видео не найдены</>}
+                                    {youtubeVideoCount > 0 ? <>Выберите ролик</> : <>Видео не найдены</>}
                                 </MenuItem>
                                 {renderCarosel(videos, 'youtube')}
                                 
@@ -137,7 +139,7 @@ const AccordionAboutFilm = (props) => {
                         
                         {videoChoise ? iframe(videoChoise) : null }
                         {!videoChoise && youtubeVideoCount > 0 ? <IframeSkeleton/> : null}
-                        {!videoChoise && youtubeVideoCount > 0 ? <em>*Точная причина неизвестна - вероятнее всего ролик удалён с Youtube</em> : null}
+                        {videoChoise && youtubeVideoCount > 0 ? <em>*Точная причина неизвестна - вероятнее всего ролик удалён с Youtube</em> : null}
                         
                 </AccordionDetails>
             </Accordion>
