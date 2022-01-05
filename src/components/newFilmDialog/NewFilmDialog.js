@@ -13,10 +13,7 @@ import NewFilmDatePicker from '../newFilmDatePicker/NewFilmDatePicker';
 import KinopoiskServices from '../../services/KinopoiskServices';
 import Autocomplete from '@mui/material/Autocomplete';
 import nextId from "react-id-generator";
-import debounce from 'lodash.debounce';
-
-
-
+import useDebounce from '../../hooks/debounce';
 
 
 const NewFilmDialog = (props) => {
@@ -37,7 +34,6 @@ const NewFilmDialog = (props) => {
     setTimeStamp(Math.round(Date.parse(value)/1000))
   }
 
-
   const handleAdd = () => {
     const genre = userChoise.genres;
     const title = userChoise.label;
@@ -48,10 +44,14 @@ const NewFilmDialog = (props) => {
     setOpen(false);
   }
 
+  const debouncedTitle = useDebounce(title, 250) 
 
   useEffect(() => {
-    dbGetFilmsAndSetState(title);
-  }, [title])
+    if (title && !loading) {
+      getFilmsAndSetState(title)
+    }
+}, [debouncedTitle])
+
 
   const onValueSubtitleChange = (e) => {
     setUserChoise((prevChoise => {
@@ -61,12 +61,9 @@ const NewFilmDialog = (props) => {
       
     }))
   }
-  
-  const dbGetFilmsAndSetState = debounce((e) => getFilmsAndSetState(e), 250); 
-
+ 
 
   const getFilmsAndSetState = (input) => {
-    
     getFilmByKeyWord(input)
       .then(response => {
         const newFilmOptions = response.films.map((item) => {
@@ -82,6 +79,8 @@ const NewFilmDialog = (props) => {
       })
       .catch(setFilmOptions([])) 
   }
+
+  
 
 
   const validationTextForm = () => {
@@ -109,6 +108,24 @@ const NewFilmDialog = (props) => {
     )
   }
 
+  const loadingCatcher = (loading) => {
+    let res = loading
+    if (loading) {
+      setTimeout(() => {
+        res = false
+        return res
+      }, 250)
+    }
+
+    if (!loading) {
+      setTimeout(() => {
+        res = true
+        return res
+      }, 250)
+    }
+    return res
+  }
+
   return (
     <div>
         <Fab onClick={() => setOpen(true)} 
@@ -130,13 +147,14 @@ const NewFilmDialog = (props) => {
                 return option.id === value.id
               }}
               input={userChoise}
+              
               onChange={(e, newValue) => setUserChoise(newValue)}
               inputValue={title}
               onInputChange={(e, newValue) => setTitle(newValue)}
               options={filmOptions}
               renderInput={(params) => TextFieldTitle(params)}
               noOptionsText={'Не нашли такой фильм :('}
-              loading={loading}
+              loading={loadingCatcher(loading)}
               loadingText={error ? 'Ошибка на сервере, попробуйте позже' : 'Уже ищем...'}
             />
             

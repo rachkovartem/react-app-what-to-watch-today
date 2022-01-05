@@ -9,7 +9,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import nextId from 'react-id-generator';
+import kinopoisk from '../../resources/img/kinopoisk.svg'
+import imdb from '../../resources/img/IMDB.svg';
 
+import AccordionAboutFilm from '../accordionAboutFilm/AccordionAboutFilm';
 import Spinner from '../spinner/Spinner';
 import './AboutFilm.scss'
 
@@ -33,34 +36,42 @@ const AboutFilm = () => {
     useEffect(() => {
         updateFilm(id)
     }, []) 
+
+
+    //accordion
+
+    
     
 
-    const spinner = loading && !error && !filmLoaded ? <Spinner/> : null;
-    const mainContent = !loading && !error && filmLoaded ? mainBlock(film) : null;
+    const spinner = loading && !error && !filmLoaded ? <Spinner/> : '';
+    const descriptionBlock = !loading && !error && filmLoaded ? descriptionBlockView(film) : '';
+    const rightGridContent = !loading && !error && filmLoaded ? rightBlock(film) : '';
+    const poster = !loading && !error && filmLoaded ? <img className="about-film__poster" src={film.posterUrl} alt={film.nameRu}/> : '';
 
-    const poster = !loading && !error && filmLoaded ? <img className="about-film__poster" src={film.posterUrl} alt={film.nameRu}/> : null;
+    
 
     return (
         <>
-            <Grid 
-            item 
-            xs={3}
-            sx={{display: 'flex',}}
-            >
+            <Grid item xs={3} sx={{display: 'flex'}}>
+
                 {poster}
+
             </Grid>
 
-            <Grid 
-            item 
-            xs={6}
-            >
+            <Grid item xs={6}>
+
                 {spinner}
-                {mainContent}
+                {descriptionBlock}
+
+
+                <AccordionAboutFilm/>
+
+
+
             </Grid>
-            <Grid 
-            item 
-            xs={3}
-            >
+            <Grid item xs={3}>
+
+                {rightGridContent}
                 
             </Grid>
         </>
@@ -69,40 +80,153 @@ const AboutFilm = () => {
 }
 
 
-const mainBlock = (film) => {
-    const {nameRu, nameEn, nameOriginal, year, countries} = film;
-    const stringCountries = countries.map(item => item.country).join(', ')
+const descriptionBlockView = (film) => {
+    const {nameRu, nameEn, nameOriginal, type} = film;
+
+    const isType = (type) => {
+        switch (type) {
+            case 'FILM':
+            return 'Фильм'
+
+            case 'VIDEO':
+            return 'Видео'
+
+            case 'TV_SERIES':
+            return 'Сериал'
+
+            case 'MINI_SERIES':
+            return 'Мини-сериал'
+
+            case 'TV_SHOW':
+            return 'ТВ-шоу'
+
+            default:
+            return null
+        }
+    } 
+
+    const tableRows = () => {
+        const {year, filmLength, serial, endYear, startYear, description, countries, genres} = film
+        const stringCountries = countries.map(item => item.country).join(', ');
+        const stringGenres = genres.map(item => item.genre).join(', ');
+        return <>
+        <TableRow
+                key={nextId()}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                    <TableCell component="th" scope="row">Год произовдства</TableCell>
+                    <TableCell align="right">{year}</TableCell>
+            </TableRow>
+    
+            <TableRow
+                key={nextId()}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                    <TableCell component="th" scope="row">Страна</TableCell>
+                    <TableCell align="right">{stringCountries}</TableCell>
+            </TableRow>
+    
+            <TableRow
+                key={nextId()}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                    <TableCell component="th" scope="row">Длительность</TableCell>
+                    <TableCell align="right">{filmLength} мин.</TableCell>
+            </TableRow>
+    
+            <TableRow
+                key={nextId()}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                    <TableCell component="th" scope="row">Жанры</TableCell>
+                    <TableCell align="right">{stringGenres}</TableCell>
+            </TableRow>
+    
+            {serial ? <TableRow
+                key={nextId()}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                    <TableCell component="th" scope="row">Первый сезон</TableCell>
+                    <TableCell align="right">{startYear} г.</TableCell>
+                </TableRow>
+                : null
+            }
+    
+            {serial ? <TableRow
+                key={nextId()}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                    <TableCell component="th" scope="row">Последний сезон</TableCell>
+                    <TableCell align="right">{endYear ? endYear : 'Ещё снимается'} г.</TableCell>
+                </TableRow>
+                : null
+            }
+    
+            <TableRow
+                key={nextId()}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                
+                    <TableCell component="th" scope="row">Описание</TableCell>
+                    <TableCell align="right">{description}</TableCell>
+                    
+                    
+            </TableRow>
+        </>
+    }
+
     return (
         <>
-            <h1>{nameRu}</h1>
-            <p>{nameOriginal || nameEn}</p>
+            <h1 className="about-film__title">{nameRu}</h1>
+            <div className="about-film__second-title-wrapper">
+                <p className="about-film__second-title">{nameOriginal || nameEn}</p>
+                <p className="about-film__type">{isType(type)}</p>
+            </div>
+            
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableBody>
                         
-                        <TableRow
-                        key={nextId()}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell component="th" scope="row">Год произовдства</TableCell>
-                            <TableCell align="right">{year}</TableCell>
-                        </TableRow>
-
-                        <TableRow
-                        key={nextId()}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell component="th" scope="row">Страна</TableCell>
-                            <TableCell align="right">{stringCountries}</TableCell>
-                        </TableRow>
+                        {tableRows(film)}
 
                     </TableBody>
                 </Table>
             </TableContainer>
+
+
         </>
     )
 }
 
+
+const rightBlock = (film) => {
+
+    const ratingStyle = (rating) => {
+        if (rating >= 7) {
+            return {color: '#3bb33b'}
+        }
+        if (rating >= 5 && rating < 7) {
+            return {color: '#777'}
+        }
+        if (rating < 5) {
+            return {color: '#ff1717'}
+        } else {return {color: '#000'}}
+    }
+
+    return (
+        <div className='about-film__ratings-wrapper'>
+            <div className='about-film__rating-wrapper'>
+                <img className='about-film__logo about-film__logo_kinopoisk' src={kinopoisk} alt="Кинопоиск" />
+                <p className='about-film__rating' style={ratingStyle(film.ratingKinopoisk)}>{film.ratingKinopoisk}</p>
+            </div>
+            <div className='about-film__rating-wrapper'>
+                <img className='about-film__logo about-film__logo_IMDB' src={imdb} alt="IMDB" />
+                <p className='about-film__rating' style={ratingStyle(film.ratingImdb)}>{film.ratingImdb}</p>
+            </div>
+        </div>
+    )
+    
+}
 
 
 export default AboutFilm;

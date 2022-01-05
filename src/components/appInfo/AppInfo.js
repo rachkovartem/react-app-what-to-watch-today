@@ -1,12 +1,14 @@
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useLocation } from 'react-router-dom'
+import ArrowBackSharpIcon from '@mui/icons-material/ArrowBackSharp';
+import { useLocation, Link } from 'react-router-dom'
 
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -82,7 +84,7 @@ export default function AppInfo({filmsToWatch, setFilterSearch, filterSearch, on
       sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
     >
       Нужно посмотреть {filmsToWatch} {filmsSwitcher(filmsToWatch)}
-    </Typography> : ''
+    </Typography> : null
     
   const searchInput = location.pathname === '/' ? <Search>
     <SearchIconWrapper>
@@ -94,22 +96,35 @@ export default function AppInfo({filmsToWatch, setFilterSearch, filterSearch, on
       value={filterSearch}
       onChange={(e) => setFilterSearch(e.target.value)}
     />
-  </Search> : ''
+  </Search> : null
+
+  const filtersMenuButton = location.pathname === '/' ? <IconButton
+  size="large"
+  edge="start"
+  color="inherit"
+  aria-label="open drawer"
+  onClick={onClickDrawerToggle}
+  sx={{ display: { xs: 'block', md: 'none' }, mr: 2 }}
+>
+  <MenuIcon />
+</IconButton> : null
+
+  const backButton = location.pathname === '/' ? null : <Link style={{textDecoration: 'none'}} to="/">
+    <Button 
+    sx={{backgroundColor: '#8e8e8e'}} 
+    color="primary" 
+    variant="contained" 
+    startIcon={<ArrowBackSharpIcon />}>
+      Назад
+  </Button>
+  </Link>
 
   return (
     <Box  sx={{ flexGrow: 1 }}>
       <AppBar classes={{root: 'getHeight'}} sx={{position:{xs: 'static', md: 'fixed'}}}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={onClickDrawerToggle}
-            sx={{ display: { xs: 'block', md: 'none' }, mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
+          {backButton}
+          {filtersMenuButton}
           {filmsCounter}
           {searchInput}
         </Toolbar>

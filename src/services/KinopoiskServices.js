@@ -13,6 +13,7 @@ const KinopoiskServices = () => {
         },
     }
 
+
     const getFilmByKeyWord = async (word, page = 1) => {
         
         let response = await request(`${_apiURL}v2.1/films/search-by-keyword?keyword=${word}&page=${page}`, _apiOptions.method, _apiOptions.headers)
@@ -20,7 +21,6 @@ const KinopoiskServices = () => {
         return response
     }
 
-    
     const getFilmById = async (id) => {
         let response
         try {
