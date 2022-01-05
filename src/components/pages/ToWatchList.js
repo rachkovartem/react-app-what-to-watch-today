@@ -3,17 +3,19 @@ import { Grid } from '@mui/material';
 
 import FilmList from '../filmList/FilmList';
 import AppSidemenu from '../appSidemenu/AppSideMenu';
-import KinopoiskServices from '../services/KinopoiskServices';
+import KinopoiskServices from '../../services/KinopoiskServices';
 import ErrorBoundary from '../errorBoundary/ErrorBoundary'
 
 import './ToWatchList.scss';
 
 
 const ToWatchList = (props) => {
-  const { drawerOpen, setDrawerOpen, setFilmsToWatch, setFilterSearch, filterSearch} = props;
+  const { drawerOpen, setDrawerOpen, setFilmsToWatch, setFilterSearch, filterSearch, appInfoHeight} = props;
   const [data, setData] = useState([]);
   const [filterDate, setFilterDate] = useState('Всё время');
   const [filterGenre, setFilterGenre] = useState([]);
+  const [sideMenuWidth, setSideMenuWidth] = useState(236);
+  const [sideMenuHeight, setSideMenuHeight] = useState()
 
   const {getFilmById} = KinopoiskServices();
 
@@ -98,7 +100,8 @@ const ToWatchList = (props) => {
     let newData
     if (localStorage.getItem('movies')) {
       newData = JSON.parse(localStorage.getItem('movies'))
-      if (typeof newData[0].genre === 'string' || typeof newData[0].id === 'string') {
+      if (!newData[0] || typeof newData[0].genre === 'string' || typeof newData[0].id === 'string') {
+        
         localStorage.clear()
         newData = returnNewStockData()
       }
@@ -221,14 +224,36 @@ const ToWatchList = (props) => {
   }
 
   const filtredData = onFilterGenre(onFilterDate(onFilterSearch(data, filterSearch), filterDate), filterGenre)
+
+  useEffect(() => {
+    const gridSideMenu = document.querySelector('.getGridSideMenuWidth');
+    const gridSideMenuWidth = window.getComputedStyle(gridSideMenu).width;
+    setSideMenuWidth(gridSideMenuWidth.slice(0, -2));
+  }, [])
+
+  useEffect(() => {
+    const sideMenu = document.querySelector('.sideMenuHeight');
+    const sideMenuHeight = window.getComputedStyle(sideMenu).height;
+    setSideMenuHeight(+sideMenuHeight.slice(0, -2));
+  }, [])
   
+  const gridSxOverflowSideMenu = sideMenuHeight > window.innerHeight ? 'scroll' : 'initial'
+
   return (
     <>
   
       <Grid 
         item 
+        classes={{root: 'getGridSideMenuWidth'}}
         xs={2} 
-        sx={{pt: 0, zIndex:{md: 9}, borderRight:{md: '1px solid rgba(0, 0, 0, 0.12)'}, height: {md: '100%'}}}>
+        sx={{pt: 0, 
+            zIndex:{md: 9}, 
+            borderRight:{md: '1px solid rgba(0, 0, 0, 0.12)'}, 
+            height: {md: '100%'}, 
+            position:{md: 'fixed'},
+            paddingTop: {md: `${appInfoHeight}px`,
+            overflow: gridSxOverflowSideMenu}
+            }}>
         <ErrorBoundary>
           <AppSidemenu 
           onClickDrawerToggle={() => setDrawerOpen(drawerOpen => !drawerOpen)} 
@@ -244,7 +269,10 @@ const ToWatchList = (props) => {
       <Grid 
         item 
         xs={12} 
-        md={10}>
+        md={10}
+        sx={{
+          marginLeft:{md: `${sideMenuWidth}px`}
+        }}>
         <ErrorBoundary>
           <FilmList 
           data={filtredData} 

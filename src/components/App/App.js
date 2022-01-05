@@ -39,16 +39,21 @@ const App = () => {
         <Grid 
           container 
           spacing={0} 
-          sx={{height: 
-          {md: `${window.innerHeight - appInfoHeight}px`},
-          alignItems: {md: 'flex-start'},
-          alignContent: {md: 'flex-start'}}}>
+          sx={{
+            height: {md: `${window.innerHeight - appInfoHeight}px`},
+            alignItems: {md: 'flex-start'},
+            alignContent: {md: 'flex-start'}
+          }}>
           <Grid 
             
             item 
             xs={12} 
-            sx={{zIndex:{md: 10}, paddingTop: {md: `${appInfoHeight}px`},
-            width: '100%'}}>
+            sx={{
+              zIndex:{md: 10}, 
+              paddingTop: 
+              {md: `${appInfoHeight}px`},
+              width: '100%'
+            }}>
             <AppInfo
             onClickDrawerToggle={onClickDrawerToggle} 
             filmsToWatch={filmsToWatch} 
@@ -65,6 +70,7 @@ const App = () => {
               setFilmsToWatch={setFilmsToWatch}
               setFilterSearch={setFilterSearch}
               filterSearch={filterSearch}
+              appInfoHeight={appInfoHeight}
               />}/>
             <Route path="/film/:id" element={<AboutFilm/>}/>
             <Route path="*" element={<Page404/>}/>

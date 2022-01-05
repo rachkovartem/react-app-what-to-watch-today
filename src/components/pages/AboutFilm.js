@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Grid, Box } from '@mui/material';
-import KinopoiskServices from '../services/KinopoiskServices';
+import KinopoiskServices from '../../services/KinopoiskServices';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';

@@ -18,14 +18,6 @@ const drawerWidth = 240;
 function AppSidemenu(props) {
   const { window, drawerOpen, onClickDrawerToggle } = props;
 
-  //стоковое открытие на хуках, не использую пока
-
-  // const [mobileOpen, setMobileOpen] = React.useState(false);
-
-  // const handleDrawerToggle = () => {
-  //   setMobileOpen(!mobileOpen);
-  // };
-
   const selectedButton = (text) => {
     if (props.filterDate === text) {
       return true
@@ -86,6 +78,7 @@ function AppSidemenu(props) {
             {drawer}
           </Drawer>
           <Drawer
+            classes={{root: 'sideMenuHeight'}}
             variant="permanent"
             sx={{
             display: { xs: 'none', md: 'block' },
