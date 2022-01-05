@@ -38,7 +38,6 @@ export default function SideMenuGenreFilter(props) {
     } = event;
     props.filterSetter.genre(value);
     setPersonName(
-      // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
   };
@@ -49,6 +48,7 @@ export default function SideMenuGenreFilter(props) {
     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
       <FormControl sx={{ width: 189, m: '17px 0'}}>
         <Select
+        
           multiple
           displayEmpty
           value={props.filterGenre}

@@ -38,16 +38,12 @@ const AboutFilm = () => {
     }, []) 
 
 
-    //accordion
 
-    
-    
-
-    const spinner = loading && !error && !filmLoaded ? <Spinner/> : '';
-    const descriptionBlock = !loading && !error && filmLoaded ? descriptionBlockView(film) : '';
-    const rightGridContent = !loading && !error && filmLoaded ? rightBlock(film) : '';
-    const poster = !loading && !error && filmLoaded ? <img className="about-film__poster" src={film.posterUrl} alt={film.nameRu}/> : '';
-
+    const spinner = loading && !error && !filmLoaded ? <Spinner/> : null;
+    const descriptionBlock = !loading && !error && filmLoaded ? descriptionBlockView(film) : null;
+    const rightGridContent = !loading && !error && filmLoaded ? rightBlock(film) : null;
+    const poster = !loading && !error && filmLoaded ? <img className="about-film__poster" src={film.posterUrl} alt={film.nameRu}/> : null;
+    const accordion = !loading && !error && filmLoaded ? <AccordionAboutFilm id={id}/> : null;
     
 
     return (
@@ -62,11 +58,7 @@ const AboutFilm = () => {
 
                 {spinner}
                 {descriptionBlock}
-
-
-                <AccordionAboutFilm/>
-
-
+                {accordion}
 
             </Grid>
             <Grid item xs={3}>

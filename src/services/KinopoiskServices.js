@@ -15,24 +15,21 @@ const KinopoiskServices = () => {
 
 
     const getFilmByKeyWord = async (word, page = 1) => {
-        
         let response = await request(`${_apiURL}v2.1/films/search-by-keyword?keyword=${word}&page=${page}`, _apiOptions.method, _apiOptions.headers)
-
         return response
     }
 
     const getFilmById = async (id) => {
-        let response
-        try {
-            response = await request(`${_apiURL}v2.2/films/${id}`, _apiOptions.method, _apiOptions.headers)
-        } catch (err) {
-            console.log(err)
-        }
-
+        let response = await request(`${_apiURL}v2.2/films/${id}`, _apiOptions.method, _apiOptions.headers)
         return response
     }
 
-    return {loading, error, request, clearError, getFilmByKeyWord, getFilmById}
+    const getVideosById = async(id) => {
+        let response = await request(`${_apiURL}v2.2/films/${id}/videos`, _apiOptions.method, _apiOptions.headers)
+        return response
+    }
+
+    return {loading, error, request, clearError, getFilmByKeyWord, getFilmById, getVideosById}
 }
 
 export default KinopoiskServices;
