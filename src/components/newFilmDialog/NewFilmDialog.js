@@ -35,7 +35,6 @@ class NewFilmDialog extends React.Component {
     }
   }
 
-  services = new KinopoiskServices();
 
   handleClickOpen = () => {
     this.setState({
@@ -108,8 +107,8 @@ class NewFilmDialog extends React.Component {
   //сохраняются только нужные ключи
   //чтобы получать больше инфы, нужно добавлять ключи
   getFilmsAndSetState = (input) => {
-    
-    this.services.getFilmByKeyWord(input)
+    const {getFilmByKeyWord} = KinopoiskServices();
+    getFilmByKeyWord(input)
       .then(response => {
         this.setState({filmOptions: response.films.map((item) => {
 

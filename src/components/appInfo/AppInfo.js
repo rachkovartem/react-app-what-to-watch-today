@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useLocation } from 'react-router-dom'
 
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -52,9 +53,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-
-
 export default function AppInfo({filmsToWatch, setFilterSearch, filterSearch, onClickDrawerToggle}) {
+
+  let location = useLocation()
 
   const filmsSwitcher = (num) => {
     const lastNum = num.toString().slice(-1);
@@ -74,9 +75,30 @@ export default function AppInfo({filmsToWatch, setFilterSearch, filterSearch, on
     }
   }
 
+  const filmsCounter = location.pathname === '/' ? <Typography
+      variant="h6"
+      noWrap
+      component="div"
+      sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+    >
+      Нужно посмотреть {filmsToWatch} {filmsSwitcher(filmsToWatch)}
+    </Typography> : ''
+    
+  const searchInput = location.pathname === '/' ? <Search>
+    <SearchIconWrapper>
+      <SearchIcon />
+    </SearchIconWrapper>
+    <StyledInputBase
+      placeholder="Найти..."
+      inputProps={{ 'aria-label': 'search' }}
+      value={filterSearch}
+      onChange={(e) => setFilterSearch(e.target.value)}
+    />
+  </Search> : ''
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+    <Box  sx={{ flexGrow: 1 }}>
+      <AppBar classes={{root: 'getHeight'}} sx={{position:{xs: 'static', md: 'fixed'}}}>
         <Toolbar>
           <IconButton
             size="large"
@@ -88,26 +110,8 @@ export default function AppInfo({filmsToWatch, setFilterSearch, filterSearch, on
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-          >
-            Нужно посмотреть {filmsToWatch} {filmsSwitcher(filmsToWatch)}
-          </Typography>
-
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Найти..."
-              inputProps={{ 'aria-label': 'search' }}
-              value={filterSearch}
-              onChange={(e) => setFilterSearch(e.target.value)}
-            />
-          </Search>
+          {filmsCounter}
+          {searchInput}
         </Toolbar>
       </AppBar>
     </Box>

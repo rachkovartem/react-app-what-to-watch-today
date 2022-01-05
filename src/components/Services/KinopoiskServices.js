@@ -1,8 +1,11 @@
-import debounce from 'lodash.debounce';
+import { useHttp } from '../../hooks/hook.http';
 
-class KinopoiskServices {
-    _apiURL = 'https://kinopoiskapiunofficial.tech/api/'
-    _apiOptions = {
+const KinopoiskServices = () => {
+
+    const {loading, error, request, clearError} = useHttp();
+
+    const _apiURL = 'https://kinopoiskapiunofficial.tech/api/'
+    const _apiOptions = {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -10,30 +13,26 @@ class KinopoiskServices {
         },
     }
 
-    getFilmByKeyWord = async (word, page = 1) => {
-        let response = await fetch(`${this._apiURL}v2.1/films/search-by-keyword?keyword=${word}&page=${page}`, this._apiOptions)
+    const getFilmByKeyWord = async (word, page = 1) => {
+        
+        let response = await request(`${_apiURL}v2.1/films/search-by-keyword?keyword=${word}&page=${page}`, _apiOptions.method, _apiOptions.headers)
 
-        const filmByKeyword = response.json().then(data => (data))
-        return filmByKeyword
+        return response
     }
 
-    dbGetFilmById = debounce((e) => this.getFilmById(e), 250)
     
-    getFilmById = async (id) => {
-
+    const getFilmById = async (id) => {
         let response
         try {
-            response = await fetch(`${this._apiURL}v2.2/films/${id}`, this._apiOptions)
+            response = await request(`${_apiURL}v2.2/films/${id}`, _apiOptions.method, _apiOptions.headers)
         } catch (err) {
             console.log(err)
         }
-        
 
-        const filmByKeyword = response.json().then(data => (data))
-        return filmByKeyword
+        return response
     }
 
-
+    return {loading, error, request, clearError, getFilmByKeyWord, getFilmById}
 }
 
 export default KinopoiskServices;

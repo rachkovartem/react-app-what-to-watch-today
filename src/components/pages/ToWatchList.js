@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Grid } from '@mui/material';
 
-
-import AppInfo from '../appInfo/AppInfo';
 import FilmList from '../filmList/FilmList';
 import AppSidemenu from '../appSidemenu/AppSideMenu';
 import KinopoiskServices from '../services/KinopoiskServices';
@@ -11,16 +9,13 @@ import ErrorBoundary from '../errorBoundary/ErrorBoundary'
 import './ToWatchList.scss';
 
 
-const ToWatchList = () => {
-
+const ToWatchList = (props) => {
+  const { drawerOpen, setDrawerOpen, setFilmsToWatch, setFilterSearch, filterSearch} = props;
   const [data, setData] = useState([]);
   const [filterDate, setFilterDate] = useState('Всё время');
   const [filterGenre, setFilterGenre] = useState([]);
-  const [filterSearch, setFilterSearch] = useState('');
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [appInfoHeight, setAppInfoHeight] = useState([]);
 
-  const services = new KinopoiskServices()
+  const {getFilmById} = KinopoiskServices();
 
   const returnNewStockData = () => {
     return [
@@ -100,12 +95,8 @@ const ToWatchList = () => {
   }
 
   useEffect(() => {
-    const appInfo = document.querySelector('.getHeight');
-    const appInfoHeight = window.getComputedStyle(appInfo).height;
-    
-    setAppInfoHeight(appInfoHeight.slice(0, -2));
     let newData
-    if (localStorage.getItem('movies') && typeof localStorage.getItem('movies') === 'array') {
+    if (localStorage.getItem('movies')) {
       newData = JSON.parse(localStorage.getItem('movies'))
       if (typeof newData[0].genre === 'string' || typeof newData[0].id === 'string') {
         localStorage.clear()
@@ -143,10 +134,11 @@ const ToWatchList = () => {
 
   useEffect(() => {
     localStorageSetter(data)
+    setFilmsToWatch(data.length)
   }, [data])
 
   const addItem = async ({title, subtitle, genre, timestamp, posterUrlPreview, id}) => {
-    const response = await services.getFilmById(id)
+    const response = await getFilmById(id)
     setData((prevData) => {
       return prevData.concat({
         title: title,
@@ -172,7 +164,7 @@ const ToWatchList = () => {
     if (data.length === 0) return
     const newData = data.map((film) => {
       let newFilm = film
-      services.getFilmById(newFilm.id)
+      getFilmById(newFilm.id)
       .then((response) => {
         newFilm.ratingImdb = response.ratingImdb
         newFilm.ratingKinopoisk = response.ratingKinopoisk
@@ -186,10 +178,6 @@ const ToWatchList = () => {
     
   }
 
-  const filmsToWatch = () => {
-    return data.length
-  }
-
   const filterGenreSetter = (key) => {
     setFilterGenre(key);
   }
@@ -197,7 +185,6 @@ const ToWatchList = () => {
   const filterDateSetter = (key) => {
     setFilterDate(key);
   }
-
 
   const onFilterGenre = (data, filter) => {
     return data.filter(film => {
@@ -233,62 +220,41 @@ const ToWatchList = () => {
     })
   }
 
-  const onClickDrawerToggle = () => {
-    setDrawerOpen(drawerOpen => !drawerOpen)
-  }
-
   const filtredData = onFilterGenre(onFilterDate(onFilterSearch(data, filterSearch), filterDate), filterGenre)
   
   return (
-    <Grid 
-      container 
-      spacing={0} 
-      sx={{height: {md: `${window.innerHeight - appInfoHeight}px`}, alignItems: {md: 'flex-start'}}}>
-      <Grid 
-        item 
-        xs={12} 
-        classes={{root: 'getHeight'}} 
-        sx={{zIndex:{md: 10}}}>
-          <ErrorBoundary>
-            <AppInfo 
-            onClickDrawerToggle={onClickDrawerToggle} 
-            filmsToWatch={filmsToWatch()} 
-            setFilterSearch={setFilterSearch} 
-            filterSearch={filterSearch}/>
-          </ErrorBoundary>
-        
-      </Grid>
+    <>
+  
       <Grid 
         item 
         xs={2} 
         sx={{pt: 0, zIndex:{md: 9}, borderRight:{md: '1px solid rgba(0, 0, 0, 0.12)'}, height: {md: '100%'}}}>
-          <ErrorBoundary>
-            <AppSidemenu 
-            onClickDrawerToggle={onClickDrawerToggle} 
-            drawerOpen={drawerOpen} 
-            genres={genres} 
-            filterSetter={{genre: filterGenreSetter, date: filterDateSetter}} 
-            filtersReset={filtersReset} 
-            filterGenre={filterGenre} 
-            filterDate={filterDate}/>
-          </ErrorBoundary>
+        <ErrorBoundary>
+          <AppSidemenu 
+          onClickDrawerToggle={() => setDrawerOpen(drawerOpen => !drawerOpen)} 
+          drawerOpen={drawerOpen} 
+          genres={genres} 
+          filterSetter={{genre: filterGenreSetter, date: filterDateSetter}} 
+          filtersReset={filtersReset} 
+          filterGenre={filterGenre} 
+          filterDate={filterDate}/>
+        </ErrorBoundary>
         
       </Grid>
       <Grid 
         item 
         xs={12} 
         md={10}>
-           <ErrorBoundary>
-              <FilmList 
-              data={filtredData} 
-              onAdd={addItem} 
-              onDelete={deleteItem}/>
-           </ErrorBoundary>
+        <ErrorBoundary>
+          <FilmList 
+          data={filtredData} 
+          onAdd={addItem} 
+          onDelete={deleteItem}/>
+        </ErrorBoundary>
         
       </Grid>
-    </Grid>
+    </>
   )
-
 }
 
 
