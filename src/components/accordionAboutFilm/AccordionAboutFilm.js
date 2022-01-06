@@ -4,14 +4,14 @@ import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import { useState, useEffect, Fragment } from 'react';
+import { useState, useEffect } from 'react';
 import KinopoiskServices from '../../services/KinopoiskServices';
 import Button from '@mui/material/Button';
 import Skeleton from '@mui/material/Skeleton';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+
 
 const AccordionAboutFilm = (props) => {
     const { id } = props;
@@ -19,6 +19,7 @@ const AccordionAboutFilm = (props) => {
     const [videos, setVideos] = useState([]);
     const [youtubeVideoCount, setYoutubeVideoCount] = useState(0);
     const [videoChoise, setVideoChoise] = useState('');
+    const [kinopoiskVideosCount, setKinopoiskVideosCount] = useState(0);
 
     const handleChangeVideo = (event) => {
         setVideoChoise(event.target.value);
@@ -79,12 +80,16 @@ const AccordionAboutFilm = (props) => {
     }, [])
 
     let newFilmsYoutube = 0;
+    let newFilmsKinopoisk = 0
     useEffect(() => {
+        
         setYoutubeVideoCount(newFilmsYoutube.length)
+        setKinopoiskVideosCount(newFilmsKinopoisk.length)
     }, [videos])
-    
 
-    const renderCarosel = (videos, site) => {
+  
+
+    const renderMenuItems = (videos, site) => {
         switch (site) {
             case 'youtube': 
                 newFilmsYoutube = videos.filter(video => video.site === 'YOUTUBE').map(video => {
@@ -94,25 +99,23 @@ const AccordionAboutFilm = (props) => {
                     }
                 })
                 
-                return newFilmsYoutube.map(item => carouselYoutube(item.key, item.name))
+                return newFilmsYoutube.map(item => menuItemYoutube(item.key, item.name))
             
 
             case 'kinopoisk': 
-                const newFilmsKinopoisk = videos.filter(video => video.site === 'KINOPOISK_WIDGET').map(video => {
+                newFilmsKinopoisk = videos.filter(video => video.site === 'KINOPOISK_WIDGET').map(video => {
                     return {
                         url: video.url,
                         name:video.name
                     }
                 })    
-                return newFilmsKinopoisk.map(item => carouselKinopoisk(item.url, item.name))
+                return newFilmsKinopoisk.map(item => menuItemKinopoisk(item.url, item.name))
         }
     }
 
-
-
     return (
         <div>
-            <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+            <Accordion style={{marginTop: '30px'}} expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
                 <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
                 <Typography>Видео о фильме на Youtube</Typography>
                 </AccordionSummary>
@@ -132,11 +135,10 @@ const AccordionAboutFilm = (props) => {
                                 <MenuItem disabled value="">
                                     {youtubeVideoCount > 0 ? <>Выберите ролик</> : <>Видео не найдены</>}
                                 </MenuItem>
-                                {renderCarosel(videos, 'youtube')}
+                                {renderMenuItems(videos, 'youtube')}
                                 
                             </Select>
                         </FormControl>
-                        
                         {videoChoise ? iframe(videoChoise) : null }
                         {!videoChoise && youtubeVideoCount > 0 ? <IframeSkeleton/> : null}
                         {videoChoise && youtubeVideoCount > 0 ? <em>*Точная причина неизвестна - вероятнее всего ролик удалён с Youtube</em> : null}
@@ -150,10 +152,12 @@ const AccordionAboutFilm = (props) => {
                 </AccordionSummary>
                 <AccordionDetails style={{display: 'flex', flexDirection: 'column', gap: '15px' }}>
 
-                {renderCarosel(videos, 'kinopoisk')}
+                {kinopoiskVideosCount > 0 ? renderMenuItems(videos, 'kinopoisk') : <>Видео не найдены</>}
  
                 </AccordionDetails>
             </Accordion>
+
+
         </div>
     )
 
@@ -172,17 +176,17 @@ const IframeSkeleton = () => {
     
 }
 
-const carouselYoutube = (videoKey, name) => {
+const menuItemYoutube = (videoKey, name) => {
     return <MenuItem value={videoKey} key={name}>
     {name}
     </MenuItem>        
 }
 
 const iframe = (videoKey) => {
-    return <iframe width="100%" height="315" src={`https://www.youtube.com/embed/${videoKey}`} title='YouTube video player' frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+    return <iframe className='iframe' width="100%" height="315" src={`https://www.youtube.com/embed/${videoKey}`} title='YouTube video player' frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
 }
 
-const carouselKinopoisk = (url, name) => {
+const menuItemKinopoisk = (url, name) => {
 
     return <Button variant="outlined" size="small" key={name}>
     <a style={{textDecoration: 'none', color: 'inherit'}}  href={url} target='blank'>{name}</a>

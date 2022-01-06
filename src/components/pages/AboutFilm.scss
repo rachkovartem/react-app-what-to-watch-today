@@ -14,9 +14,9 @@
 }
 
 .about-film__ratings-wrapper {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
     margin-top: 50px;
     font-size: 30px;
     font-weight: bold;
@@ -24,23 +24,91 @@
 }
 
 .about-film__rating {
-    margin: 0 50px 0 0;
+    margin: 0 0 0 0;
 }
 
 .about-film__logo {
     height: 50px;
     margin-left: 50px;
+    margin-right: 50px;
 }
 
 .about-film__logo_kinopoisk {
     height: 50px;
     margin-left: 75px;
+    margin-right: 75px;
 }
 
 .about-film__rating-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: left;
     align-items: center;
     width: 100%;
 }
 
+
+@media screen and (max-width: 900px) {
+
+    .about-film__ratings-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+        font-size: 30px;
+        font-weight: bold;
+        gap: 50px;
+    }
+
+    .about-film__rating {
+        margin: 0 50px 0 0;
+    }
+
+    .about-film__logo {
+        max-height: 50px;
+        margin-left: 0;
+    }
+    .about-film__logo_kinopoisk {
+        height: 50px;
+        margin-left: 25px;
+    }
+
+
+    .about-film__ratings-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-top: 0;
+    }
+
+    .about-film__rating-wrapper {
+        justify-content: flex-start;
+    }
+
+    .about-film__poster {
+        max-width: 90%;
+        margin: 10px auto 0 auto;
+    }
+
+
+    
+
+}
+
+
+@media screen and (max-width: 500px) {
+    
+    .about-film__ratings-wrapper {
+        display: flex;
+
+    }
+
+    .about-film__logo {
+        margin-right: 14px;
+    }
+    .about-film__logo_kinopoisk {
+        margin-right: 37px;
+    }
+
+    .about-film__rating {
+        margin: 0;
+    }
+}

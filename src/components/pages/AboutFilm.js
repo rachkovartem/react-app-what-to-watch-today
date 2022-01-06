@@ -14,6 +14,7 @@ import imdb from '../../resources/img/IMDB.svg';
 
 import AccordionAboutFilm from '../accordionAboutFilm/AccordionAboutFilm';
 import Spinner from '../spinner/Spinner';
+import ImagesGallery from '../imagesGallery/ImagesGallery'
 import './AboutFilm.scss'
 
 const AboutFilm = () => {
@@ -44,24 +45,30 @@ const AboutFilm = () => {
     const rightGridContent = !loading && !error && filmLoaded ? rightBlock(film) : null;
     const poster = !loading && !error && filmLoaded ? <img className="about-film__poster" src={film.posterUrl} alt={film.nameRu}/> : null;
     const accordion = !loading && !error && filmLoaded ? <AccordionAboutFilm id={id}/> : null;
-    
+    const gallery = !loading && !error && filmLoaded ? <ImagesGallery id={id}/> : null;
 
     return (
         <>
-            <Grid item xs={3} sx={{display: 'flex'}}>
+            <Grid item xs={6} md={3} >
 
                 {poster}
 
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={6} sx={{display: {xs: 'flex',md: 'none'}, justifyContent: 'center'}}>
 
-                {spinner}
-                {descriptionBlock}
-                {accordion}
+                {rightGridContent}
 
             </Grid>
-            <Grid item xs={3}>
+
+            <Grid item xs={12}  md={6} sx={{padding: {xs: '0 25px'}}}>
+
+                {descriptionBlock}
+                {spinner}
+                {gallery}
+                {accordion}
+            </Grid>
+            <Grid item xs={3} sx={{display: {xs: 'none', md: 'flex'}}}>
 
                 {rightGridContent}
                 
@@ -160,7 +167,7 @@ const descriptionBlockView = (film) => {
                 >
                 
                     <TableCell component="th" scope="row">Описание</TableCell>
-                    <TableCell align="right">{description}</TableCell>
+                    <TableCell align="justify">{description}</TableCell>
                     
                     
             </TableRow>
@@ -176,7 +183,7 @@ const descriptionBlockView = (film) => {
             </div>
             
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <Table sx={{ minWidth: '100%' }} aria-label="simple table">
                     <TableBody>
                         
                         {tableRows(film)}

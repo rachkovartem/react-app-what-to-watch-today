@@ -3,6 +3,7 @@ import { useHttp } from '../hooks/hook.http';
 const KinopoiskServices = () => {
 
     const {loading, error, request, clearError} = useHttp();
+    
 
     const _apiURL = 'https://kinopoiskapiunofficial.tech/api/'
     const _apiOptions = {
@@ -24,12 +25,19 @@ const KinopoiskServices = () => {
         return response
     }
 
-    const getVideosById = async(id) => {
+    const getVideosById = async (id) => {
         let response = await request(`${_apiURL}v2.2/films/${id}/videos`, _apiOptions.method, _apiOptions.headers)
         return response
     }
 
-    return {loading, error, request, clearError, getFilmByKeyWord, getFilmById, getVideosById}
+    const getImagesById = async (id, type, timeout, page = 1) => {
+         
+        
+        let response = await request(`${_apiURL}v2.2/films/${id}/images?type=${type}&page=${page}`, _apiOptions.method, _apiOptions.headers, timeout)
+        return response
+    }
+
+    return {loading, error, request, clearError, getFilmByKeyWord, getFilmById, getVideosById, getImagesById}
 }
 
 export default KinopoiskServices;
