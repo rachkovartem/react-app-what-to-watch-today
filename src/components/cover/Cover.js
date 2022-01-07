@@ -1,19 +1,20 @@
 import aboutposter from '../../resources/img/aboutposter.jpg'
 
-const Cover = () => {
+const Cover = (props) => {
+  const {title, image} = props;
     return (
-        <section class="cover">
-          <div class="container">
-            <div class="container__poster-wrapper">
-              <img class="container__poster" src={aboutposter} alt="Постер"/>
+        <section className="cover">
+          <div className="container">
+            <div className="container__poster-wrapper">
+              <img className="container__poster" src={image} alt="Постер"/>
             </div>
-            <div class="cover__title-wrapper">
-              <div class="cover__breadcrumbs">
-                <a class="cover__breadcrumb" href="#">Movieiti</a>
+            <div className="cover__title-wrapper">
+              <div className="cover__breadcrumbs">
+                <a className="cover__breadcrumb" href="#">Movieiti</a>
                 <span>/</span>
-                <a class="cover__breadcrumb" href="#">Movies</a>
+                <a className="cover__breadcrumb" href="#">Movies</a>
               </div>
-              <h1 class="cover__title">Большой Лебовски</h1>
+              <h1 className="cover__title">{title}</h1>
             </div>
           </div>
         </section>
