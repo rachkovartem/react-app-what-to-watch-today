@@ -1,0 +1,52 @@
+.ratings {
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    border-radius: 8px;
+    padding: 6px;
+    transition: opacity 2s ease-out;
+    cursor: default;
+    &:hover {
+        opacity: 0.3;
+    }
+}
+
+.ratings_position_initial {
+    position: initial;
+    width: min-content;
+    margin-bottom: 24px;
+    &:hover {
+        opacity: initial;
+    }
+}
+
+.rating-icon {
+    height: 16px;
+    border-radius: 8px;
+}
+
+.rating-icon_big {
+    height: 27px;
+}
+
+.rating-icon_margin_left {
+    margin-left: 10px;
+}
+
+.rating {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.rating_big {
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+

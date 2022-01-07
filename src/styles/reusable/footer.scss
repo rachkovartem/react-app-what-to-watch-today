@@ -1,0 +1,57 @@
+.footer {
+    padding: 80px 20px;
+    width: 100%;
+    background: var(--grey-900-80);
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.footer__disclamer {
+    color: var(--grey-400);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.5;
+    text-align: center; 
+    
+}
+
+.footer__link {
+    position: relative;
+    text-decoration: none;
+    color: var(--primary-400);
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: .02em;  
+      
+    &::after {
+        content: "";
+        background: #7c6ef6;
+        background: var(--primary-400);
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 0;
+        height: 3px;
+        z-index: -1;
+        -webkit-transition: .3s cubic-bezier(.75,.25,.25,.75);
+        -o-transition: .3s cubic-bezier(.75,.25,.25,.75);
+        transition: .3s cubic-bezier(.75,.25,.25,.75);
+    }
+    &:hover::after {
+        width: 100%;
+        z-index: 1;
+    }
+}
+
+.footer__github {
+    color: var(--grey-400);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.5;
+    text-align: center;  
+}

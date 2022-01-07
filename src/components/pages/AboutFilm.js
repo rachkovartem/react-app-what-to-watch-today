@@ -15,7 +15,10 @@ import imdb from '../../resources/img/IMDB.svg';
 import AccordionAboutFilm from '../accordionAboutFilm/AccordionAboutFilm';
 import Spinner from '../spinner/Spinner';
 import ImagesGallery from '../imagesGallery/ImagesGallery'
-import './AboutFilm.scss'
+import Cover from '../cover/Cover';
+import Description from '../description/Description'
+import Footer from '../footer/Footer';
+// import './AboutFilm.scss'
 
 const AboutFilm = () => {
 
@@ -48,32 +51,12 @@ const AboutFilm = () => {
     const gallery = !loading && !error && filmLoaded ? <ImagesGallery id={id}/> : null;
 
     return (
-        <>
-            <Grid item xs={6} md={3} >
+       <>
+       <Cover/>
 
-                {poster}
-
-            </Grid>
-
-            <Grid item xs={6} sx={{display: {xs: 'flex',md: 'none'}, justifyContent: 'center'}}>
-
-                {rightGridContent}
-
-            </Grid>
-
-            <Grid item xs={12}  md={6} sx={{padding: {xs: '0 25px'}}}>
-
-                {descriptionBlock}
-                {spinner}
-                {gallery}
-                {accordion}
-            </Grid>
-            <Grid item xs={3} sx={{display: {xs: 'none', md: 'flex'}}}>
-
-                {rightGridContent}
-                
-            </Grid>
-        </>
+       <Description/>
+       <Footer/>
+       </>
         
     )
 }

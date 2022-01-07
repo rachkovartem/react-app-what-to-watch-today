@@ -30,10 +30,28 @@ class FilmList extends React.Component {
   render() {
     const {onAdd, data} = this.props;
     return (
-        <List>
-          {this.elements(data)}
-          <NewFilmDialog onAdd={onAdd}/>
-        </List>
+        // <ul>
+        //   {this.elements(data)}
+        //   <NewFilmDialog onAdd={onAdd}/>
+        // </ul>
+
+        <section className="film-list">
+          <div className="container">
+            <div className="film-list__wrapper">
+              <ul className="film-list__grid">
+              {this.elements(data)}
+              <FilmItem onAdd={onAdd}/>
+              
+              </ul>
+            </div>
+
+          </div>
+
+        </section>
+
+
+
+
       );
     }
 }

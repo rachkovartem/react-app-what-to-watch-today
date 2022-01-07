@@ -6,6 +6,9 @@ import AppSidemenu from '../appSidemenu/AppSideMenu';
 import KinopoiskServices from '../../services/KinopoiskServices';
 import ErrorBoundary from '../errorBoundary/ErrorBoundary'
 
+import Search from '../search/Search';
+import Footer from '../footer/Footer'
+
 import './ToWatchList.scss';
 
 
@@ -227,22 +230,32 @@ const ToWatchList = (props) => {
 
   useEffect(() => {
     const gridSideMenu = document.querySelector('.getGridSideMenuWidth');
-    const gridSideMenuWidth = window.getComputedStyle(gridSideMenu).width;
-    setSideMenuWidth(gridSideMenuWidth.slice(0, -2));
+    // const gridSideMenuWidth = window.getComputedStyle(gridSideMenu).width;
+    // setSideMenuWidth(gridSideMenuWidth.slice(0, -2));
   }, [])
 
   useEffect(() => {
     const sideMenu = document.querySelector('.sideMenuHeight');
-    const sideMenuHeight = window.getComputedStyle(sideMenu).height;
-    setSideMenuHeight(+sideMenuHeight.slice(0, -2));
+    // const sideMenuHeight = window.getComputedStyle(sideMenu).height;
+    // setSideMenuHeight(+sideMenuHeight.slice(0, -2));
   }, [])
   
   const gridSxOverflowSideMenu = sideMenuHeight > window.innerHeight ? 'scroll' : 'initial'
 
+
+    
+
+  
+
+
+
+
+
+
   return (
     <>
-  
-      <Grid 
+      <Search/>
+      {/* <Grid 
         item 
         classes={{root: 'getGridSideMenuWidth'}}
         xs={2} 
@@ -253,7 +266,7 @@ const ToWatchList = (props) => {
             position:{md: 'fixed'},
             paddingTop: {md: `${appInfoHeight}px`,
             overflow: gridSxOverflowSideMenu}
-            }}>
+            }}> */}
         <ErrorBoundary>
           <AppSidemenu 
           onClickDrawerToggle={() => setDrawerOpen(drawerOpen => !drawerOpen)} 
@@ -265,22 +278,22 @@ const ToWatchList = (props) => {
           filterDate={filterDate}/>
         </ErrorBoundary>
         
-      </Grid>
-      <Grid 
+      {/* </Grid> */}
+      {/* <Grid 
         item 
         xs={12} 
         md={10}
         sx={{
           marginLeft:{md: `${sideMenuWidth}px`}
-        }}>
+        }}> */}
         <ErrorBoundary>
           <FilmList 
           data={filtredData} 
           onAdd={addItem} 
           onDelete={deleteItem}/>
         </ErrorBoundary>
-        
-      </Grid>
+        <Footer/>
+      {/* </Grid> */}
     </>
   )
 }

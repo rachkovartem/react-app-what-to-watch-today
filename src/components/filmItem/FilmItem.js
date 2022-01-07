@@ -1,19 +1,12 @@
 import ReactDom from 'react-dom';
 import * as React from 'react';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Typography from '@mui/material/Typography';
-import MovieIcon from '@mui/icons-material/Movie';
 import LinesEllipsis from 'react-lines-ellipsis';
 import { Link } from 'react-router-dom'
 
 import './FilmItem.scss'
 import kinopoiskImg from '../../resources/img/kinopoisk.svg';
-import imdbImg from '../../resources/img/IMDB.svg'
+import imdbImg from '../../resources/img/IMDB.svg';
+import poster from '../../resources/img/poster.jpg'
 
 
 
@@ -31,47 +24,13 @@ export default function FilmItem(props) {
   const hoveredImg = () => {
     if (!hoveredImgOpen) return null 
 
-    let styles = () => {
-      if (!poster) return {
-        opacity: 0, 
-        left: `${clientX}px`, 
-        position: 'absolute',
-        transition: 'left 0.1s, right 0.1s, opacity 0.3s',
-        top: `${window.scrollY + clientY - 200}px`
-      }
-      let style = {}
-      if (poster.clientHeight > clientY) {
-        
-        style = {
-          zIndex: '1000',
-          position: 'absolute',
-          left: `${clientX - poster.clientWidth - 15}px`,
-          top: `${window.scrollY + clientY + 15}px`,
-          transition: 'opacity 0.3s',
-          opacity: 1,
-          height: 200
-        }
-      } else {
-        style = {
-          zIndex: '1000',
-          position: 'absolute',
-          left: `${clientX}px`,
-          top: `${window.scrollY + clientY - poster.clientHeight}px`,
-          transition: 'opacity 0.3s',
-          opacity: 1,
-          height: 200
-        }
-      }
- 
-      return style
-
-    } 
+    
 
     const poster = document.querySelector('.film-poster')
     const node = document.querySelector('body');
     return ReactDom.createPortal(
       <img alt="Постер фильма" className="film-poster" src={posterUrlPreview}
-          style={styles()}/>, node);
+          />, node);
   }
 
   const onMouseMove = (e) => {
@@ -110,69 +69,94 @@ export default function FilmItem(props) {
   }
 
   return (
-      <ListItem
+<>
+            <li className="film">
+            <div className="ratings">
+              <img className="rating-icon" src={kinopoiskImg} alt="Кинопоиск"/>
+              <span className="rating">8.8</span>
+              <img className="rating-icon" src={imdbImg} alt="IMDB"/>
+              <span className="rating">9</span>
+            </div>
+            <Link to={`/film/${id}`} className="film__poster-link" href="#">
+            <img className="film__poster" src={posterUrlPreview} alt="Обложка"/>
+            </Link>
+            <a className="film__title-link" href="#"><h2 className="film__title">{title}</h2></a>
+            <div className="film__descr">Описание</div>
+            <div className="film__descr-text">{subtitle}</div>
+            <div className="film__delete-icon"><svg  aria-hidden="true" focusable="false" data-prefix="far" data-icon="trash-alt" className="svg-inline--fa fa-trash-alt fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41 0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z"></path></svg>
+            </div>
+          </li>
+
+
+
+          </>
+
+
+
+
+      // <li style={{maxWidth:'100%'}}
         
-        secondaryAction={
-            <IconButton onClick={onDelete} edge="end" aria-label="delete">
-                <DeleteIcon />
-            </IconButton>
-        }
-        sx={{display: {xs: 'grid', md: 'flex'}, gridTemplate: 'repeat(3, auto) / repeat(12, 1fr)'}}
-      >
-        <ListItemAvatar sx={{gridArea: {xs: '1/1/2/2', sm: ''} }}>
-          <Avatar onMouseMove={onMouseMove}
-                  onMouseEnter={hoveredImgOpen ? null : () => {document.querySelector('body').style.position = 'relative'; setHoveredImgOpen(true)}}
-                  onMouseLeave={hoveredImgOpen ? () => {document.querySelector('body').style.position = 'relative'; setHoveredImgOpen(false)} : null}>
-            <React.Fragment>
-              {
-              posterUrlPreview ?
-              <img alt={'Постер фильма'} src={posterUrlPreview} style={{transform: 'scale(0.1)'}}/> :
-              <MovieIcon />
-              }
-              {hoveredImg()}
+      //   secondaryAction={
+      //       <IconButton onClick={onDelete} edge="end" aria-label="delete">
+      //           <DeleteIcon />
+      //       </IconButton>
+      //   }
+      //   sx={{display: {xs: 'grid', md: 'flex'}, gridTemplate: 'repeat(3, auto) / repeat(12, 1fr)'}}
+      // >
+      //   <ListItemAvatar sx={{gridArea: {xs: '1/1/2/2', sm: ''} }}>
+      //     <Avatar onMouseMove={onMouseMove}
+      //             onMouseEnter={hoveredImgOpen ? null : () => {document.querySelector('body').style.position = 'relative'; setHoveredImgOpen(true)}}
+      //             onMouseLeave={hoveredImgOpen ? () => {document.querySelector('body').style.position = 'relative'; setHoveredImgOpen(false)} : null}>
+      //       <React.Fragment>
+      //         {
+      //         posterUrlPreview ?
+      //         <img alt={'Постер фильма'} src={posterUrlPreview} style={{transform: 'scale(0.1)'}}/> :
+      //         <MovieIcon />
+      //         }
+      //         {hoveredImg()}
               
-            </React.Fragment>
-          </Avatar>
-          {ratings(ratingKinopoisk, ratingImdb)}
-        </ListItemAvatar>
-        <ListItemText
+      //       </React.Fragment>
+      //     </Avatar>
+      //     {ratings(ratingKinopoisk, ratingImdb)}
+      //   </ListItemAvatar>
+      //   <ListItemText
           
-          primary={
-          <Link 
-          className='film-item__title'
-          to={`/film/${id}`}>{title}</Link>
-          }
-          secondary={showedSubtitle(subtitle)}
-          secondaryTypographyProps={secondaryTypographyProps()}
-          sx={{width:{ xs: 1, md: 1/4}, gridArea: {xs: '1/2/2/13', sm: ''}}}
-        />
-        <Typography
-          variant="div"
-          noWrap
-          component="div"
-          sx={{
-            width: {xs: '1', md: 1/4},
-            flexGrow: 1, 
-            display: { xs: 'block', md: 'block' }, 
-            marginBottom: { xs: '8px'},
-            gridArea: { xs: '2/1/3/13'},
-            color: 'rgba(0, 0, 0, 0.6)',
-            whiteSpace: 'normal',
-            fontSize: '12px',
-            textAlign: 'right',
-          }}
-        >
-          <div>Жанр: </div> <div>{genre.join(', ')}</div>
-        </Typography>
-        <Typography
-          variant="div"
-          noWrap
-          component="div"
-          sx={{ flexGrow: 1, display: { xs: 'block', md: 'block' }, gridArea: { xs: '3/6/4/13'}, textAlign: 'right', fontSize:{xs: 10}}}
-        >
-          Добавлен: {dateToItem}
-        </Typography>
-      </ListItem>
+      //     primary={
+      //     <Link 
+      //     className='film-item__title'
+      //     to={`/film/${id}`}>{title}</Link>
+      //     }
+      //     secondary={showedSubtitle(subtitle)}
+      //     secondaryTypographyProps={secondaryTypographyProps()}
+      //     sx={{width:{ xs: 1, md: 1/4}, gridArea: {xs: '1/2/2/13', sm: ''}}}
+      //   />
+      //   <Typography
+      //     variant="div"
+      //     noWrap
+      //     component="div"
+      //     sx={{
+      //       width: {xs: '1', md: 1/4},
+      //       flexGrow: 1, 
+      //       display: { xs: 'block', md: 'block' }, 
+      //       marginBottom: { xs: '8px'},
+      //       gridArea: { xs: '2/1/3/13'},
+      //       color: 'rgba(0, 0, 0, 0.6)',
+      //       whiteSpace: 'normal',
+      //       fontSize: '12px',
+      //       textAlign: 'right',
+      //     }}
+      //   >
+      //     <div>Жанр: </div> <div>{genre.join(', ')}</div>
+      //   </Typography>
+      //   <Typography
+      //     variant="div"
+      //     noWrap
+      //     component="div"
+      //     sx={{ flexGrow: 1, display: { xs: 'block', md: 'block' }, gridArea: { xs: '3/6/4/13'}, textAlign: 'right', fontSize:{xs: 10}}}
+      //   >
+      //     Добавлен: {dateToItem}
+      //   </Typography>
+      // </li>
   )
 
 
