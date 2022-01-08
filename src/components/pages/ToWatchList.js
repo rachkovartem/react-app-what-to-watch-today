@@ -7,9 +7,9 @@ import KinopoiskServices from '../../services/KinopoiskServices';
 import ErrorBoundary from '../errorBoundary/ErrorBoundary'
 
 import Search from '../search/Search';
+import NewFilmDialog from '../newFilmDialog/NewFilmDialog';
 import Footer from '../footer/Footer'
 
-import './ToWatchList.scss';
 
 
 const ToWatchList = (props) => {
@@ -254,19 +254,8 @@ const ToWatchList = (props) => {
 
   return (
     <>
-      <Search/>
-      {/* <Grid 
-        item 
-        classes={{root: 'getGridSideMenuWidth'}}
-        xs={2} 
-        sx={{pt: 0, 
-            zIndex:{md: 9}, 
-            borderRight:{md: '1px solid rgba(0, 0, 0, 0.12)'}, 
-            height: {md: '100%'}, 
-            position:{md: 'fixed'},
-            paddingTop: {md: `${appInfoHeight}px`,
-            overflow: gridSxOverflowSideMenu}
-            }}> */}
+      <Search setFilterSearch={setFilterSearch} filterSearch={filterSearch}/>
+   
         <ErrorBoundary>
           <AppSidemenu 
           onClickDrawerToggle={() => setDrawerOpen(drawerOpen => !drawerOpen)} 
@@ -278,22 +267,16 @@ const ToWatchList = (props) => {
           filterDate={filterDate}/>
         </ErrorBoundary>
         
-      {/* </Grid> */}
-      {/* <Grid 
-        item 
-        xs={12} 
-        md={10}
-        sx={{
-          marginLeft:{md: `${sideMenuWidth}px`}
-        }}> */}
+      
         <ErrorBoundary>
           <FilmList 
           data={filtredData} 
           onAdd={addItem} 
           onDelete={deleteItem}/>
+          <NewFilmDialog onAdd={addItem}/>
         </ErrorBoundary>
         <Footer/>
-      {/* </Grid> */}
+   
     </>
   )
 }

@@ -1,8 +1,10 @@
 import {  BrowserRouter,  Routes,  Route } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useDebugValue } from "react";
+import { createTheme } from '@mui/material';
+
 import { ToWatchList, Page404, AboutFilm } from "../pages"
 import Header from '../header/Header';
-import { Grid, ThemeProvider, createTheme } from '@mui/material';
+import AppSidemenu from '../appSidemenu/AppSideMenu';
 
 const theme = createTheme({
   palette: {
@@ -21,22 +23,52 @@ const App = () => {
   const [filmsToWatch, setFilmsToWatch] = useState(0)
   const [filterSearch, setFilterSearch] = useState('');
 
+
+  useEffect(() => {
+    if (drawerOpen) {
+      document.querySelector('.header__hamburger').classList.add('header__hamburger_active')
+    } 
+    if (!drawerOpen) {
+      document.querySelector('.header__hamburger').classList.remove('header__hamburger_active')
+    }
+    
+    
+  },[drawerOpen])
+
   const onClickDrawerToggle = () => {
     setDrawerOpen(drawerOpen => !drawerOpen)
+    onOpenedDriverBodyWidth()
   }
 
   useEffect(() => {
+    onOpenedDriverBodyWidth()
+  }, [drawerOpen])
+
+  const onOpenedDriverBodyWidth = () => {
+
+    if (drawerOpen) {
+      document.querySelector('html').style.overflowY = 'scroll';
+  
+    }
+
+    if (!drawerOpen) {
+      document.querySelector('html').style.overflowY = '';
+      
+    }
+    
+  }
+
+  useEffect(() => {
+
     const appInfo = document.querySelector('.getHeight');
     // const appInfoHeight = window.getComputedStyle(appInfo).height;
     setAppInfoHeight(appInfoHeight.slice(0, -2));
   }, [])
-  
 
+  
   return (
     
     <BrowserRouter>
-      
-       
           
             <Header
             onClickDrawerToggle={onClickDrawerToggle} 
@@ -64,6 +96,8 @@ const App = () => {
     </BrowserRouter>
   )
 }
+
+
 
 
 export default App

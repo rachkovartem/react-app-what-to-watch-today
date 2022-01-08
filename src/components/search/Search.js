@@ -1,9 +1,9 @@
 import search from '../../resources/icons/search.svg'
 
 
-const Search = () => {
+const Search = (props) => {
 
-    
+   const {setFilterSearch, filterSearch} = props;
     
 
 
@@ -17,7 +17,7 @@ const Search = () => {
             <div className="input-form">
               <img className="input-form__icon" src={search} alt="Поиск"/>
               
-              <input autoComplete="off" placeholder="название фильма или описание" id="search" type="text" className="input-form__input"/>
+              <input value={filterSearch ? filterSearch : ''} onChange={(e) => setFilterSearch(e.target.value)} autoComplete="off" placeholder="название фильма или описание" id="search" type="text" className="input-form__input"/>
               <label className="input-form__label" htmlFor="search">Поиск по записанным фильмам</label>
             </div>
             

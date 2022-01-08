@@ -1,0 +1,362 @@
+@import '../../styles/variables.scss';
+
+.film-list__add-button {
+    --delay: 0.3s;
+    --transition: opacity var(--delay), background-color var(--delay), border-color var(--delay);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 5;
+    right: 130px;
+    bottom: 60px;
+    width: 56px;
+    height: 56px;
+    background-color: var(--primary-400);
+    background-size: cover;
+    border: 2px solid var(--primary-400);
+    border-radius: 100%;
+    transition: var(--transition);
+    opacity: 0.8;
+    cursor: pointer;
+    &:hover {
+        background-color: var(--primary-400);
+        border-color: var(--primary-500);
+        transition: var(--transition);
+        opacity: 1;
+    }
+    &:active {
+        background-color: var(--primary-500);
+        border-color: var(--primary-500);
+        transition:  var(--transition);
+        opacity: 1;
+        
+    }
+    svg {
+        width: 100%;
+        height: 100%;
+        transform-origin: center;
+        transform: rotate(45deg) scale(1.2);
+    }
+}
+
+
+    //извращения со стилизацией элементов MUI
+
+    
+
+.MuiModal-root .MuiDialog-container .MuiPaper-root {
+    background-color: var(--grey-800);
+    font-size: 24px;
+    line-height: 1.3;
+    border-radius: 12px;
+    overflow: hidden;
+    letter-spacing: -0.015em;
+    color: var(--grey-100);
+    
+
+
+    .MuiButton-root {
+        color: var(--grey-100);
+    }
+
+    //скролл
+    .MuiDialogContent-root {
+        scrollbar-color: var(--grey-600) var(--grey-900);     /* «цвет ползунка» «цвет полосы скроллбара» */
+        scrollbar-width: 3px;  /* толщина */
+    }
+     
+
+    .MuiDialogContent-root::-webkit-scrollbar {
+        width: 3px; /* ширина для вертикального скролла */
+        height: 2px; /* высота для горизонтального скролла */
+        background-color: var(--grey-900);
+    }
+
+    .MuiDialogContent-root::-webkit-scrollbar-thumb {
+        background-color: var(--grey-600);
+        border-radius: 9em;
+        box-shadow: inset 1px 1px 10px --grey-600;
+    }
+
+    //инпуты
+
+
+    //название
+    .MuiAutocomplete-root {
+       
+        
+        .MuiFormControl-root {
+            background: rgba(0, 0, 0, 0.1);
+            border: 2px solid;
+            border-radius: 12px;
+            border-color: var(--grey-500);
+            .MuiInputLabel-root {
+                padding-left: 20px;
+                padding-top: 1px;
+                color: var(--grey-100);
+                transition: margin 100ms linear, color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+                
+            }
+
+            .MuiInputLabel-root+.css-kfl01f-MuiInputBase-root-MuiInput-root {
+                margin-top: 15px;
+            }
+
+            .Mui-focused {
+                margin-top: 8px;
+            }
+            
+            .MuiInput-root {
+                padding: 3px 15px 13px 15px;
+                color: var(--grey-100);
+                
+                .css-1x51dt5-MuiInputBase-input-MuiInput-input {
+                    max-width: 92%;
+                }
+
+                .MuiAutocomplete-endAdornment {
+                    top: calc(50% - 21px);
+                   
+                }
+
+                &::after {
+                    display: none;
+                }
+                &::before {
+                    display: none;
+                    border: none;
+                    border-radius: 12px;
+                    border-color: var(--grey-500);
+                }
+
+                
+            }
+            .Mui-error {
+                border: none;
+                color: var(--grey-100);
+                
+                &:after {
+                    border: none;
+                }
+            }
+            .MuiAutocomplete-endAdornment {
+                button {
+                    color: var(--grey-100);
+                }
+            }
+        }
+
+        .MuiFormControl-root-primary-border {
+            border-color: var( --primary-700);
+        }
+
+       
+
+        
+    }
+    //автозаполнение
+
+    
+
+    //описание
+    .MuiFormControl-root {
+        background: rgba(0, 0, 0, 0.1);
+        border: 2px solid;
+        border-radius: 12px;
+        border-color: var(--grey-500);
+        .MuiInputLabel-root {
+            padding-left: 20px;
+            padding-top: 1px;
+            color: var(--grey-100);
+            transition: margin 100ms linear, color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+            margin-top: 8px;
+            top: -9px;
+        }
+
+            .Mui-focused {
+            margin-top: 8px;
+            
+        }
+
+        .css-r718il-MuiInputBase-root-MuiInput-root {
+            margin-top: 15px;
+        }
+        
+        .MuiInput-root {
+            padding: 3px 15px 13px 15px;
+            color: var(--grey-100);
+
+            .css-66dh3a-MuiInputBase-input-MuiInput-input {
+                padding: 4px 4px 4px 0;
+            }
+            
+            .MuiAutocomplete-endAdornment {
+                top: calc(50% - 21px);
+                
+            }
+
+            &::after {
+                display: none;
+            }
+            &::before {
+                display: none;
+                border: none;
+                border-radius: 12px;
+                border-color: var(--grey-500);
+            }
+
+            
+        }
+        .Mui-error {
+            border: none;
+            color: var(--grey-100);
+            
+            &:after {
+                border: none;
+            }
+        }
+        .MuiAutocomplete-endAdornment {
+            button {
+                color: var(--grey-100);
+            }
+        }
+
+        
+    }
+
+    .MuiFormControl-root-primary-border-subtitle {
+        border-color: var( --primary-700);
+    }
+
+    //жанры
+    .Mui_textfield_genres {
+        background: rgba(0, 0, 0, 0.1);
+        border: 2px dotted;
+        border-radius: 12px;
+        border-color: var(--grey-500);
+       
+
+        .MuiInput-root {
+            .MuiInput-input {
+                color: var(--grey-100);
+                padding: 4px 0 4px;
+            }
+        }
+        
+        
+    }
+
+    .css-1x51dt5-MuiInputBase-input-MuiInput-input.Mui-disabled {
+        -webkit-text-fill-color: var(--grey-300);
+        color: var(--grey-100);
+        
+    }
+
+    //календарь
+    .css-1o6saow-MuiFormControl-root-MuiTextField-root {
+        background: rgba(0, 0, 0, 0.1);
+        border: none;
+
+
+        .MuiSvgIcon-root {
+            color: var(--grey-100);
+        }
+
+        .MuiInputLabel-root {
+            padding-left: 0;
+            top: -9px;
+        }
+        
+        .MuiOutlinedInput-root {
+            margin-top: 0;
+            color: var(--grey-100);
+            .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+                border-width: 2px;
+                border-color: var(--grey-500);
+                border-radius: 12px
+            }
+            .css-1d3z3hw-MuiOutlinedInput-notchedOutline-primary {
+                border-color: var(--primary-700);
+            }
+
+            
+        }
+
+        
+    }
+
+    //кнопка добавить
+   
+    .css-s0g3bv-MuiButtonBase-root-MuiButton-root:disabled {
+        color: var(--grey-600);
+    }
+
+}
+
+
+//автозаполнение
+.MuiAutocomplete-popper {
+    
+    .MuiPaper-root {
+        background-color: var(--grey-700);
+        color:  var(--grey-100);
+        -webkit-text-fill-color: var(--grey-100);
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        border-top: 4px;
+        margin-top: -10px;
+        scrollbar-color: var(--grey-600) var(--grey-900);     /* «цвет ползунка» «цвет полосы скроллбара» */
+        scrollbar-width: 3px;  /* толщина */
+        
+        .MuiAutocomplete-loading {
+            color: var(--grey-100);
+            -webkit-text-fill-color: var(--grey-100);
+        }
+        .MuiAutocomplete-loading::-webkit-scrollbar {
+            width: 3px; /* ширина для вертикального скролла */
+            height: 2px; /* высота для горизонтального скролла */
+            background-color: var(--grey-900);
+        }
+    }
+   
+   
+    .MuiPaper-root::-webkit-scrollbar {
+        width: 3px; /* ширина для вертикального скролла */
+        height: 2px; /* высота для горизонтального скролла */
+        background-color: var(--grey-900);
+    }
+
+    .MuiPaper-root::-webkit-scrollbar-thumb {
+        background-color: var(--grey-600);
+        border-radius: 9em;
+        box-shadow: inset 1px 1px 10px --grey-600;
+    }
+    .css-bckmzb-MuiAutocomplete-popper::-webkit-scrollbar {
+        width: 3px; /* ширина для вертикального скролла */
+        height: 2px; /* высота для горизонтального скролла */
+        background-color: var(--grey-900)!important;
+    }
+}
+
+.MuiAutocomplete-popper div div::-webkit-scrollbar {
+    width: 3px; /* ширина для вертикального скролла */
+    height: 2px; /* высота для горизонтального скролла */
+    background-color: var(--grey-900);
+}
+
+.MuiAutocomplete-popper div div::-webkit-scrollbar-thumb {
+    background-color: var(--grey-600);
+    border-radius: 9em;
+    box-shadow: inset 1px 1px 10px --grey-600;
+}
+.MuiAutocomplete-popper div div::-webkit-scrollbar {
+    width: 3px; /* ширина для вертикального скролла */
+    height: 2px; /* высота для горизонтального скролла */
+    background-color: var(--grey-900)!important;
+}
+
+
+// .MuiAutocomplete-popper.css-bckmzb-MuiAutocomplete-popper
+// .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.MuiAutocomplete-paper.css-c8bbto-MuiPaper-root-MuiAutocomplete-paper
+// .MuiAutocomplete-noOptions.css-6wwd73-MuiAutocomplete-noOptions

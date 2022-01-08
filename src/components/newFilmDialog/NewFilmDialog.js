@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -7,22 +7,90 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import {Fab} from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import NewFilmDatePicker from '../newFilmDatePicker/NewFilmDatePicker';
 import KinopoiskServices from '../../services/KinopoiskServices';
 import Autocomplete from '@mui/material/Autocomplete';
 import nextId from "react-id-generator";
 import useDebounce from '../../hooks/debounce';
+import { ThemeProvider, createTheme } from '@mui/material';
+
+import './NewFilmDialog.scss';
+import { set } from 'lodash';
+
+
+
+
+
 
 
 const NewFilmDialog = (props) => {
+
+
+  const theme = createTheme({
+    typography: {
+      fontFamily: [
+        'Montserrat',
+        '-apple-system',
+        'BlinkMacSystemFont', 
+        'Segoe UI', 
+        'Roboto', 
+        'Oxygen', 
+        'Ubuntu', 
+        'Cantarell', 
+        'Open Sans', 
+        'Helvetica Neue', 
+        'sans-serif'
+      ].join(','),
+    },
+    palette: {
+      primary: {
+        main: "#362c92",
+        contrastText: "#fff"
+      },
+      secondary: {
+        main: "#362c92"
+      },
+      error: {
+        main: "#362c92"
+      },
+      warning: {
+        main: "#362c92"
+      },
+      info: {
+        main: "#362c92"
+      },
+      success: {
+        main: "#362c92"
+      },
+
+    }
+  });
+
   const {loading, error, getFilmByKeyWord} = KinopoiskServices();
   const [title, setTitle] = useState('');
   const [timestamp, setTimeStamp] = useState(() => Math.round(Date.now()/1000));
   const [open, setOpen] = useState(false);
   const [filmOptions, setFilmOptions] = useState([]);
   const [userChoise, setUserChoise] = useState(null);
+  const titleInput = useRef(null);
+
+  // useEffect(() => {
+  //   console.dir(titleInput.current)
+  //   if (titleInput.current) {
+  //     titleInput.current.children[0].addEventListener('focus', onFocusInput());
+  //     titleInput.current.children[0].addEventListener('blur', outFocusInput());
+  //     // document.querySelector('.css-1x51dt5-MuiInputBase-input-MuiInput-input').addEventListener('focus', onFocusInput())
+  //     // document.querySelector('.css-1x51dt5-MuiInputBase-input-MuiInput-input').addEventListener('blur', outFocusInput())
+  //   }
+  // },[open])
+
+  // useEffect(() => {   
+  //   return () => {
+  //     document.querySelector('.css-1x51dt5-MuiInputBase-input-MuiInput-input').removeEventListener('focus', onFocusInput);
+  //     document.querySelector('.css-1x51dt5-MuiInputBase-input-MuiInput-input').removeEventListener('blur', outFocusInput);
+  //   }
+  // }, [])
+   
 
   const timestampToPicker = () => {
     const stamp = new Date(timestamp * 1000)
@@ -52,6 +120,31 @@ const NewFilmDialog = (props) => {
     }
 }, [debouncedTitle])
 
+  const onFocusInputTitle = (e) => {
+    e.target.parentNode.parentNode.classList.add('MuiFormControl-root-primary-border')
+    // document.querySelector('.css-1z10yd4-MuiFormControl-root-MuiTextField-root').classList.add('MuiFormControl-root-primary-border')
+  }
+
+  const outFocusInputTitle = (e) => {
+    e.target.parentNode.parentNode.classList.remove('MuiFormControl-root-primary-border')
+    // document.querySelector('.css-1z10yd4-MuiFormControl-root-MuiTextField-root').classList.remove('MuiFormControl-root-primary-border')
+  }
+
+
+  const onFocusInputSubtitle = (e) => {
+    e.target.parentNode.parentNode.classList.add('MuiFormControl-root-primary-border-subtitle')
+    // document.querySelector('.css-1z10yd4-MuiFormControl-root-MuiTextField-root').classList.add('MuiFormControl-root-primary-border')
+  }
+
+  const outFocusInputSubtitle = (e) => {
+    e.target.parentNode.parentNode.classList.remove('MuiFormControl-root-primary-border-subtitle')
+    // document.querySelector('.css-1z10yd4-MuiFormControl-root-MuiTextField-root').classList.remove('MuiFormControl-root-primary-border')
+  }
+  
+
+  
+
+  
 
   const onValueSubtitleChange = (e) => {
     setUserChoise((prevChoise => {
@@ -97,6 +190,8 @@ const NewFilmDialog = (props) => {
         {...params}
         autoFocus
         required
+        onFocus={onFocusInputTitle}
+        onBlur={outFocusInputTitle}
         error={validationTextForm()}
         margin="dense"
         id="title"
@@ -104,6 +199,8 @@ const NewFilmDialog = (props) => {
         type="text"
         fullWidth
         variant="standard"
+        // sx={{color: '#c3c8d4'}}
+        // color='secondary'
       />
     )
   }
@@ -126,66 +223,74 @@ const NewFilmDialog = (props) => {
     return res
   }
 
+ 
+
   return (
     <div>
-        <Fab onClick={() => setOpen(true)} 
-            size="medium" 
-            color="primary" 
-            aria-label="add" 
-            sx={{ml: 2, mt: 2, width: 40, height: 40}}>
-            <AddIcon />
-        </Fab>
+        <button className="film-list__add-button" onClick={() => setOpen(true)}>
+          <svg rotate="45" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7.75781 7.75732L16.2431 16.2426" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M7.75781 16.2426L16.2431 7.75732" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+        <ThemeProvider theme={theme}>
         <Dialog open={open} onClose={() => setOpen(false)}>
             <DialogTitle>Запланировать фильм</DialogTitle>
             <DialogContent>
-            <DialogContentText>
-                Какой фильм нужно будет посмотреть?
-            </DialogContentText>
+              <DialogContentText sx={{color: 'var(--grey-100)'}}>
+                  Какой фильм нужно будет посмотреть?
+              </DialogContentText>
 
-            <Autocomplete
-              isOptionEqualToValue={(option, value) => {
-                return option.id === value.id
-              }}
-              input={userChoise}
+              <Autocomplete
+                ref={titleInput}
+                isOptionEqualToValue={(option, value) => {
+                  return option.id === value.id
+                }}
+                input={userChoise}
+                
+                onChange={(e, newValue) => setUserChoise(newValue)}
+                inputValue={title}
+                onInputChange={(e, newValue) => setTitle(newValue)}
+                options={filmOptions}
+                renderInput={(params) => TextFieldTitle(params)}
+                noOptionsText={'Не нашли такой фильм :('}
+                loading={loadingCatcher(loading)}
+                loadingText={error ? 'Ошибка на сервере, попробуйте позже' : 'Уже ищем...'}
+              />
               
-              onChange={(e, newValue) => setUserChoise(newValue)}
-              inputValue={title}
-              onInputChange={(e, newValue) => setTitle(newValue)}
-              options={filmOptions}
-              renderInput={(params) => TextFieldTitle(params)}
-              noOptionsText={'Не нашли такой фильм :('}
-              loading={loadingCatcher(loading)}
-              loadingText={error ? 'Ошибка на сервере, попробуйте позже' : 'Уже ищем...'}
-            />
-            
-            <TextField
-                multiline={true}
-                margin="dense"
-                id="subtitle"
-                label="Описание"
-                type="text"
-                fullWidth
-                variant="standard"
-                value={userChoise ? userChoise.description : ''}
-                onChange={onValueSubtitleChange}
-            />
-            <TextField
-                disabled
-                margin="dense"
-                id="genre"
-                label="Жанр"
-                type="text"
-                fullWidth
-                variant="standard"
-                value={userChoise ? userChoise.genres.join(', ') : ''}
-            />
-            <NewFilmDatePicker timestampToPicker={timestampToPicker} onDateChange={onDateChange}/>
+              <TextField
+                  onFocus={onFocusInputSubtitle}
+                  onBlur={outFocusInputSubtitle}
+                  multiline={true}
+                  margin="dense"
+                  id="subtitle"
+                  label="Описание"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  value={userChoise ? userChoise.description : ''}
+                  onChange={onValueSubtitleChange}
+              />
+              <TextField
+                  classes={{root: "Mui_textfield_genres"}}
+                  inputProps={{color: 'white'}}
+                  disabled
+                  margin="dense"
+                  id="genre"
+                  label="Жанр"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  value={userChoise ? userChoise.genres.join(', ') : ''}
+              />
+              <NewFilmDatePicker timestampToPicker={timestampToPicker} onDateChange={onDateChange}/>
             </DialogContent>
             <DialogActions>
             <Button onClick={() => setOpen(false)}>Отменить</Button>
             <Button disabled={userChoise ? false : true} onClick={handleAdd}>Добавить</Button>
             </DialogActions>
         </Dialog>
+        </ThemeProvider>
     </div>
   );  
 }

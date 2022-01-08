@@ -1,8 +1,5 @@
 import { styled, alpha } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
@@ -11,7 +8,9 @@ import ArrowBackSharpIcon from '@mui/icons-material/ArrowBackSharp';
 import { useLocation, Link } from 'react-router-dom';
 import { Fragment } from 'react';
 
+
 import SearchIcon from '@mui/icons-material/Search';
+
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -56,7 +55,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function AppInfo({filmsToWatch, setFilterSearch, filterSearch, onClickDrawerToggle}) {
+export default function Header({filmsToWatch, setFilterSearch, filterSearch, onClickDrawerToggle}) {
 
   let location = useLocation()
 
@@ -120,45 +119,28 @@ export default function AppInfo({filmsToWatch, setFilterSearch, filterSearch, on
   </Button>
   </Link>
 
-    const filmDescr = document.querySelectorAll('.film__descr');
+   
 
     const onClickHamburger = (e) => {
-        e.currentTarget.classList.toggle('header__hamburger_active')
+      e.currentTarget.classList.toggle('header__hamburger_active')
     }
 
-    filmDescr.forEach((el) => {
-        el.addEventListener('mouseover', (e) => {
-            e.target.parentNode.children[4].style.height = window.getComputedStyle(e.target.parentNode.children[1]).height;
-        })
-    })
+   
 
-
-
+    const haburgerStyle = location.pathname === '/' ? {display: ""} : {display: "none"};
+    console.log(location.pathname)
 
   return (
       <Fragment>
-        {header(onClickDrawerToggle, filmsSwitcher, filmsToWatch, onClickHamburger)}
+        {header(onClickDrawerToggle, filmsSwitcher, filmsToWatch, onClickHamburger, haburgerStyle, location)}
       </Fragment>
     
 
-
-
-
-    // <Box  sx={{ flexGrow: 1 }}>
-    //   <AppBar classes={{root: 'getHeight'}} sx={{position:{xs: 'static', md: 'fixed'}}}>
-    //     <Toolbar>
-    //       {backButton}
-    //       {filtersMenuButton}
-    //       {filmsCounter}
-    //       {searchInput}
-    //     </Toolbar>
-    //   </AppBar>
-    // </Box>
   );
 }
 
 
-const header = (onClickDrawerToggle, filmsSwitcher, filmsToWatch, onClickHamburger) => {
+const header = (onClickDrawerToggle, filmsSwitcher, filmsToWatch, haburgerStyle, location) => {
   return (
   <section className="header">
           <div className="container">
@@ -168,16 +150,16 @@ const header = (onClickDrawerToggle, filmsSwitcher, filmsToWatch, onClickHamburg
                 <nav className="header__nav-menu">
                   <ul className="header__nav-menu-list">
                     <li className="header__nav-menu-list-item">
-                      <a href="#" className="header__nav-el">О проекте</a>
+                      <a  href="#" className="header__nav-el">Главная</a>
                     </li>
                     <li className="header__nav-menu-list-item">
-                      <a href="#" className="header__nav-el">Аккаунт</a>
+                      <a  href="#" className="header__nav-el">Профиль</a>
                     </li>
                   </ul>
                 </nav>
   
               
-                <div onClick={(e) => {onClickDrawerToggle(); onClickHamburger(e)}} className="header__hamburger">
+                <div onClick={(e) => {onClickDrawerToggle()}} className="header__hamburger">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
                     <g strokeWidth="6.5" strokeLinecap="round">
                       <path

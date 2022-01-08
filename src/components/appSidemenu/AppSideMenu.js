@@ -11,7 +11,7 @@ import SideMenuGenreFilter from '../sidemenuGenreFilter/SidemenuGenreFilter';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
-
+import './AppSideMenu.scss'
 
 const drawerWidth = 240;
 
@@ -62,37 +62,27 @@ function AppSidemenu(props) {
 
     return (
 
-      <></>
-      //   <div style={{display: 'none'}}>
-      //     <Drawer
-      //       container={container}
-      //       variant="temporary"
-      //       open={drawerOpen}
-      //       onClose={onClickDrawerToggle}
-      //       ModalProps={{
-      //       keepMounted: true, // Better open performance on mobile.
-      //       }}
-      //       sx={{
-      //       display: { xs: 'block', md: 'none' },
-      //       '& .MuiDrawer-paper': {boxSizing: 'border-box', width: drawerWidth},
-      //       }}
-      //     >
-      //       {drawer}
-      //     </Drawer>
-      //     <Drawer
-      //       classes={{root: 'sideMenuHeight'}}
-      //       variant="permanent"
-      //       sx={{
-      //       display: { xs: 'none', md: 'block' },
-      //       '& .MuiDrawer-paper': { position: { xs: 'fixed', sm: 'initial' }, boxSizing: 'border-box', border: 'none'
-      //       // width: drawerWidth 
-      //       },
-      //       }}
-      //       open
-      //     >
-      //       {drawer}
-      //     </Drawer>
-      // </div>
+      
+        <div style={{display: 'none'}}>
+          <Drawer
+            anchor='right'
+            container={container}
+            variant="temporary"
+            open={drawerOpen}
+            onClose={onClickDrawerToggle}
+            ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+            }}
+            sx={{
+            display: 'block',
+            left: 'initial',
+            right: '0',
+            '& .MuiDrawer-paper': {boxSizing: 'border-box', width: drawerWidth},
+            }}
+          >
+            {drawer}
+          </Drawer>
+      </div>
         
     )
 }

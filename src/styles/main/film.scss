@@ -70,6 +70,8 @@
     color: var(--primary-400);
     transition: color 0.6s ease-in-out;
     align-self: flex-start;
+    margin-top: auto;
+    padding-top: 16px;
     
     &:hover {
         cursor: help; 
@@ -78,13 +80,15 @@
 
     &:hover ~ div {
         opacity: 1;
-        z-index: 500;
-        transition: opacity 0.5s ease-in-out;
     }
 
+    
 }
 
 
+.LinesEllipsis {
+    margin: 0;
+}
 
 .film__descr-text {
     position: absolute;
@@ -99,9 +103,9 @@
     border-radius: 12px;
     color: var(--grey-200);
     font-weight: 500;
-    font-size: 14px;
+    font-size: 17px;
     font-style: normal;
-    line-height: 1.2;
+    line-height: 1.15;
     opacity: 0;
     background-color: var(--grey-700-80);
     border-radius: 12px;
@@ -110,18 +114,24 @@
     overflow: hidden;
     transition: opacity 0.5s ease-in-out;
     &:hover {
+        opacity: 1;
         transition: opacity 0.5s ease-in-out;
     }
 }
+
+
 
 .film__delete-icon {
     height: 20px;
     width: 20px;
     position: absolute;
-    right: 18px;
-    bottom: 18px;
+    right: 20px;
+    bottom: 20px;
     color: var(--grey-50);
     cursor: pointer;
+    svg {
+        object-position: center;
+    }
 
     
     &:active {
@@ -129,7 +139,11 @@
     }
 }
 
-
+@media screen and (max-width: 1199px) {
+    .film__title {
+        font-size: 13px;
+    }
+}
 
 @media screen and (max-width: 639px) {
     .film__title {
@@ -138,6 +152,10 @@
 
     .film__descr {
         font-size: 14px;
+    }
+
+    .film__descr-text {
+        font-size: 12px;
     }
 }
 

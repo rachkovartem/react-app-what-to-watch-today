@@ -1,16 +1,14 @@
 import * as React from 'react';
-import List from '@mui/material/List';
 import FilmItem from '../filmItem/FilmItem';
-import NewFilmDialog from '../newFilmDialog/NewFilmDialog';
 
 
 
 
 
-class FilmList extends React.Component {
+const FilmList = (props) => {
 
-
-  elements = (data) => {
+  const {onAdd, data} = props;
+  const elements = (data) => {
     return (
       data.map(item => {
         const {id, ...itemProps} = item;
@@ -18,7 +16,8 @@ class FilmList extends React.Component {
           <FilmItem
           key={id}
           id={id}
-          onDelete={() => this.props.onDelete(id)}
+          onDelete={() => props.onDelete(id)}
+          onAdd={onAdd}
           {...itemProps}
           /> 
         )
@@ -26,34 +25,29 @@ class FilmList extends React.Component {
     )
     
   }
+  
+    
 
-  render() {
-    const {onAdd, data} = this.props;
-    return (
-        // <ul>
-        //   {this.elements(data)}
-        //   <NewFilmDialog onAdd={onAdd}/>
-        // </ul>
+  return (
 
-        <section className="film-list">
-          <div className="container">
-            <div className="film-list__wrapper">
-              <ul className="film-list__grid">
-              {this.elements(data)}
-              <FilmItem onAdd={onAdd}/>
-              
-              </ul>
-            </div>
-
+      <section className="film-list">
+        <div className="container">
+          <div className="film-list__wrapper">
+            <ul className="film-list__grid">
+            {elements(data)}
+            
+            </ul>
           </div>
 
-        </section>
+        </div>
+
+      </section>
 
 
 
 
-      );
-    }
+    );
+  
 }
 
 export default FilmList

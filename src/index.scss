@@ -43,9 +43,25 @@ body {
     background-image: url('./resources/img/bg.png');
     background-repeat: repeat-y;
     color: var(--grey-50);
+    background-size: cover;
 
 }
+body::-webkit-scrollbar {
+    width: 3px; /* ширина для вертикального скролла */
+    height: 2px; /* высота для горизонтального скролла */
+    background-color: var(--grey-900);
+}
 
+body::-webkit-scrollbar-thumb {
+    background-color: var(--grey-600);
+    border-radius: 9em;
+    box-shadow: inset 1px 1px 10px --grey-600;
+}
+body::-webkit-scrollbar {
+    width: 3px; /* ширина для вертикального скролла */
+    height: 2px; /* высота для горизонтального скролла */
+    background-color: var(--grey-900)!important;
+}
 img {
     vertical-align: middle;
     border-style: none;

@@ -1,4 +1,6 @@
-import aboutposter from '../../resources/img/aboutposter.jpg'
+import { Link } from "react-router-dom";
+
+
 
 const Cover = (props) => {
   const {title, image} = props;
@@ -10,9 +12,9 @@ const Cover = (props) => {
             </div>
             <div className="cover__title-wrapper">
               <div className="cover__breadcrumbs">
-                <a className="cover__breadcrumb" href="#">Movieiti</a>
-                <span>/</span>
-                <a className="cover__breadcrumb" href="#">Movies</a>
+                <Link to='/'  className="cover__breadcrumb">Movie List</Link>
+                <span> / </span>
+                <a disabled className="cover__breadcrumb" href="#">Movies</a>
               </div>
               <h1 className="cover__title">{title}</h1>
             </div>
