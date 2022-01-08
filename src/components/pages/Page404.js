@@ -1,4 +1,3 @@
-import './Page404.scss';
 import pageNotFound from '../../resources/img/404.png'
 
 const Page404 = () => {

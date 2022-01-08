@@ -1,3 +1,5 @@
+import './Cover.scss';
+
 import { Link } from "react-router-dom";
 
 

@@ -1,3 +1,6 @@
+import './Search.scss'
+import './InputForm.scss'
+
 import search from '../../resources/icons/search.svg'
 
 

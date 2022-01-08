@@ -1,3 +1,6 @@
+import './Description.scss'
+import './Ratings.scss'
+
 import kinopoiskImg from '../../resources/img/kinopoisk.svg';
 import imdbImg from '../../resources/img/IMDB.svg';
 

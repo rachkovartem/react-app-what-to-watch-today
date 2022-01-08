@@ -1,3 +1,6 @@
+import './Ratings.scss'
+import './FilmItem.scss'
+
 import {useState} from 'react';
 import LinesEllipsis from 'react-lines-ellipsis';
 import { Link } from 'react-router-dom'

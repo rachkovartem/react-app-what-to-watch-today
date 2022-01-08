@@ -1,3 +1,5 @@
+import './AppSideMenu.scss'
+
 import * as React from 'react';
 import PropTypes from 'prop-types';
 
@@ -11,7 +13,7 @@ import SideMenuGenreFilter from '../sidemenuGenreFilter/SidemenuGenreFilter';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
-import './AppSideMenu.scss'
+
 
 const drawerWidth = 240;
 

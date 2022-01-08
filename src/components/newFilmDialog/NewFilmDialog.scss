@@ -40,6 +40,32 @@
     }
 }
 
+@media screen and (max-width: 1199px) {
+    .film-list__add-button {
+        right: 70px;
+        bottom: 70px;
+    }
+    
+} 
+
+@media screen and (max-width: 768px) {
+    .film-list__add-button {
+        right: 50px;
+        bottom: 50px;
+    }
+    
+} 
+    
+@media screen and (max-width: 425px) {
+    .film-list__add-button {
+        right: 30px;
+        bottom: 30px;
+        width: 50px;
+        height: 50px;
+    }
+    
+} 
+
 
     //извращения со стилизацией элементов MUI
 

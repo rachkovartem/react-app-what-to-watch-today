@@ -1,21 +1,9 @@
 import {  BrowserRouter,  Routes,  Route } from "react-router-dom";
-import { useState, useEffect, useDebugValue } from "react";
+import { useState, useEffect } from "react";
 import { createTheme } from '@mui/material';
 
 import { ToWatchList, Page404, AboutFilm } from "../pages"
 import Header from '../header/Header';
-import AppSidemenu from '../appSidemenu/AppSideMenu';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      light: '#8e8e8e',
-      main: '#78909c',
-      dark: '#373737',
-      contrastText: '#fff',
-    }
-  }
-});
 
 const App = () => {
   const [appInfoHeight, setAppInfoHeight] = useState([]);
@@ -96,7 +84,6 @@ const App = () => {
     </BrowserRouter>
   )
 }
-
 
 
 

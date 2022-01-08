@@ -1,24 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Grid, Box } from '@mui/material';
 import KinopoiskServices from '../../services/KinopoiskServices';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import nextId from 'react-id-generator';
 import kinopoisk from '../../resources/img/kinopoisk.svg'
 import imdb from '../../resources/img/IMDB.svg';
-
-import AccordionAboutFilm from '../accordionAboutFilm/AccordionAboutFilm';
 import Spinner from '../spinner/Spinner';
-import ImagesGallery from '../imagesGallery/ImagesGallery'
 import Cover from '../cover/Cover';
 import Description from '../description/Description'
 import Footer from '../footer/Footer';
-// import './AboutFilm.scss'
 
 const AboutFilm = () => {
 
@@ -108,14 +96,6 @@ const AboutFilm = () => {
 
     
 
-    
-
-    const spinner = loading && !error && !filmLoaded ? <Spinner/> : null;
- 
-    const rightGridContent = !loading && !error && filmLoaded ? rightBlock(film) : null;
-    const poster = !loading && !error && filmLoaded ? <img className="about-film__poster" src={film.posterUrl} alt={film.nameRu}/> : null;
-    const accordion = !loading && !error && filmLoaded ? <AccordionAboutFilm id={id}/> : null;
-    const gallery = !loading && !error && filmLoaded ? <ImagesGallery id={id}/> : null;
 
     return (
        <>

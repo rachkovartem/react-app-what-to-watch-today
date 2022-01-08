@@ -143,6 +143,62 @@
     .film__title {
         font-size: 13px;
     }
+    .film__poster {
+        height: 318px;
+    }
+}
+
+@media screen and (max-width: 1023px) {
+    
+    .film__poster {
+        height: 360px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    
+    .film__poster {
+        height: 390px;
+    }
+
+
+}
+
+@media screen and (max-width: 585px) {
+    
+    .film__poster {
+        height: 355px;
+    }
+
+
+}
+
+
+@media screen and (max-width: 500px) {
+    
+    .film__poster {
+        height: 300px;
+    }
+
+
+}
+
+@media screen and (max-width: 450px) {
+    
+    .film__poster {
+        height: 260px;
+    }
+
+
+}
+
+@media screen and (max-width: 400px) {
+    
+    .film__poster {
+        height: 400px;
+    }
+
+
 }
 
 @media screen and (max-width: 639px) {

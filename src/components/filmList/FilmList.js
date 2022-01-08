@@ -1,3 +1,6 @@
+import './FilmList.scss'
+import './Ratings.scss'
+
 import * as React from 'react';
 import FilmItem from '../filmItem/FilmItem';
 
