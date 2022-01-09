@@ -1,11 +1,12 @@
 import './Ratings.scss'
 import './FilmItem.scss'
 
-import {useState} from 'react';
+import Skeleton from '@mui/material/Skeleton';
 import LinesEllipsis from 'react-lines-ellipsis';
-import { Link } from 'react-router-dom'
-
-
+import { Link } from 'react-router-dom';
+import { Transition } from 'react-transition-group';
+import { useRef } from 'react';
+import { useDomLoading } from '../../hooks/domLoading';
 import kinopoiskImg from '../../resources/img/kinopoisk.svg';
 import imdbImg from '../../resources/img/IMDB.svg';
 
@@ -13,12 +14,12 @@ import imdbImg from '../../resources/img/IMDB.svg';
 
 
 
+
 export default function FilmItem(props) {
-  const {title, subtitle, timestamp, genre, onDelete, posterUrlPreview, ratingImdb, ratingKinopoisk, id} = props;
+  const {title, subtitle, timestamp, genre, onDelete, posterUrlPreview, ratingImdb, ratingKinopoisk, id, style} = props;
   const date = new Date(timestamp*1000);
   const dateToItem = `${date.getDate()}/${(date.getMonth()+1)}/${date.getFullYear()}`
-  
-  
+  const  domLoaded = useDomLoading()
 
   const onDescrAction = (e) => {
     if (e._reactName === 'onMouseLeave') {
@@ -44,17 +45,27 @@ export default function FilmItem(props) {
     basedOn='letters'
   />)
 
-  return (
-      <>
-            <li className="film">
+
+  
+  
+  const posterView = !posterUrlPreview || domLoaded? 
+  <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)'}} variant='rectangular'>
+    <img className="film__poster" src={posterUrlPreview} alt="Обложка"/>
+  </Skeleton> :
+    <img className="film__poster" src={posterUrlPreview} alt="Обложка"/>
+
+  return ( 
+          <li style={style} className="film">
             <div className="ratings">
               <img className="rating-icon" src={kinopoiskImg} alt="Кинопоиск"/>
               <span className="rating">{ratingKinopoisk}</span>
               <img className="rating-icon" src={imdbImg} alt="IMDB"/>
               <span className="rating">{ratingImdb}</span>
             </div>
-            <Link to={`/film/${id}`} className="film__poster-link" href="#">
-            <img className="film__poster" src={posterUrlPreview} alt="Обложка"/>
+            <Link to={`/film/${id}`}>
+              <div className="film__poster-link">
+                {posterView}
+              </div>
             </Link>
             <a className="film__title-link" href="#"><h2 className="film__title">{title}</h2></a>
             <div onClick={onDescrAction} 
@@ -64,10 +75,10 @@ export default function FilmItem(props) {
             <div onClick={() => onDelete(id)} className="film__delete-icon"><svg  aria-hidden="true" focusable="false" data-prefix="far" data-icon="trash-alt" className="svg-inline--fa fa-trash-alt fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41 0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z"></path></svg>
             </div>
           </li>
-
-
-
-          </>
+          
+  
+   
+        
 
   )
 

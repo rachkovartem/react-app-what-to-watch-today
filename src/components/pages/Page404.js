@@ -1,7 +1,9 @@
 import pageNotFound from '../../resources/img/404.png'
+import { useLocation } from 'react-router';
 
-const Page404 = () => {
-    
+const Page404 = (setCurrentLocation) => {
+   const location = useLocation()
+   setCurrentLocation(location.pathname) 
 
   return (
     <div>

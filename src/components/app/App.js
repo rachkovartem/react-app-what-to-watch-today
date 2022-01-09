@@ -1,6 +1,6 @@
-import {  BrowserRouter,  Routes,  Route } from "react-router-dom";
+import { Routes,  Route } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { createTheme } from '@mui/material';
+
 
 import { ToWatchList, Page404, AboutFilm } from "../pages"
 import Header from '../header/Header';
@@ -10,9 +10,19 @@ const App = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [filmsToWatch, setFilmsToWatch] = useState(0)
   const [filterSearch, setFilterSearch] = useState('');
+  const [domContentLoaded, setDomContentLoaded] = useState(false);
+
+
+  const onDomLoaded = () => {
+    setDomContentLoaded(true);    
+  }
+
+  window.addEventListener('load', onDomLoaded)
+  
 
 
   useEffect(() => {
+    if (!drawerOpen) {return}
     if (drawerOpen) {
       document.querySelector('.header__hamburger').classList.add('header__hamburger_active')
     } 
@@ -35,7 +45,7 @@ const App = () => {
   const onOpenedDriverBodyWidth = () => {
 
     if (drawerOpen) {
-      document.querySelector('html').style.overflowY = 'scroll';
+      // document.querySelector('html').style.overflowY = 'scroll';
   
     }
 
@@ -45,43 +55,46 @@ const App = () => {
     }
     
   }
-
-  useEffect(() => {
-
-    const appInfo = document.querySelector('.getHeight');
-    // const appInfoHeight = window.getComputedStyle(appInfo).height;
-    setAppInfoHeight(appInfoHeight.slice(0, -2));
-  }, [])
-
   
-  return (
-    
-    <BrowserRouter>
-          
-            <Header
-            onClickDrawerToggle={onClickDrawerToggle} 
-            filmsToWatch={filmsToWatch} 
-            setFilterSearch={setFilterSearch} 
-            filterSearch={filterSearch}
-            />
-         
-          <Routes>
-            <Route 
-              path="/" 
-              element={<ToWatchList 
-              drawerOpen={drawerOpen} 
-              setDrawerOpen={setDrawerOpen}
-              setFilmsToWatch={setFilmsToWatch}
-              setFilterSearch={setFilterSearch}
+  const View = () => {
+    if (domContentLoaded) {
+      return (
+       
+            <>
+              <Header
+              onClickDrawerToggle={onClickDrawerToggle} 
+              filmsToWatch={filmsToWatch} 
+              setFilterSearch={setFilterSearch} 
               filterSearch={filterSearch}
-              appInfoHeight={appInfoHeight}
-              />}/>
-            <Route path="/film/:id" element={<AboutFilm/>}/>
-            <Route path="*" element={<Page404/>}/>
-          </Routes>
+              />
+          
+            <Routes>
+              <Route 
+                path="/" 
+                element={<ToWatchList 
+                drawerOpen={drawerOpen} 
+                setDrawerOpen={setDrawerOpen}
+                setFilmsToWatch={setFilmsToWatch}
+                setFilterSearch={setFilterSearch}
+                filterSearch={filterSearch}
+                appInfoHeight={appInfoHeight}
+
+                />}/>
+              <Route path="/film/:id" element={<AboutFilm />}/>
+              <Route path="*" element={<Page404 />}/>
+            </Routes>
+            </>
         
-      
-    </BrowserRouter>
+     
+      )}
+    
+  }
+
+  return (
+    <>
+    {View()}
+    </>
+    
   )
 }
 

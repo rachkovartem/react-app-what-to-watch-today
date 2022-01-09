@@ -1,26 +1,26 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, } from 'react-router-dom';
 import KinopoiskServices from '../../services/KinopoiskServices';
 import kinopoisk from '../../resources/img/kinopoisk.svg'
 import imdb from '../../resources/img/IMDB.svg';
-import Spinner from '../spinner/Spinner';
+
 import Cover from '../cover/Cover';
 import Description from '../description/Description'
 import Footer from '../footer/Footer';
 
-const AboutFilm = () => {
+const AboutFilm = ({}) => {
 
     const {loading, error, clearError, getFilmById, getImagesById} = KinopoiskServices();
     const {id} = useParams();
     const [film, setFilm] = useState({});
     const [filmLoaded, setFilmLoaded] = useState(false)
-
     const [ images, setImages ] = useState({});
-    const [countsOfImages, setCountsOfImages] = useState([]);
     const [imagesUpdated, setImagesUpdated] = useState(false)
     const [countsOfImagesUpdated, setCountsOfImagesUpdated] = useState(false)
     const [stringCountries, setStringCountries] = useState('');
     const [stringGenres, setStringGenres] = useState('');
+
+  
 
     const updateFilm = (id) => {
         
@@ -35,7 +35,6 @@ const AboutFilm = () => {
         const {year, filmLength, serial, endYear, startYear, description, countries, genres} = data
         setStringCountries(countries.map(item => item.country).join(', '))
         setStringGenres(genres.map(item => item.genre).join(', '))
-        
 
     }
 

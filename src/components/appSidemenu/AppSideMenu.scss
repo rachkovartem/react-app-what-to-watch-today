@@ -2,114 +2,123 @@
 
 
 
-body{
-
-    .css-1pngnu3-MuiFormControl-root {
-        border-radius: 12px;
-        .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
+body {
+    .MuiModal-root.MuiDrawer-root {
+        .MuiPaper-root {
+            background-color: var(--grey-800);
             color: var(--grey-100);
-            border: 2px solid var(--grey-400);
-            border-radius: 12px;
-
-            .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
-                color: var(--grey-100);
-                        
-                .css-bpeome-MuiSvgIcon-root-MuiSelect-icon {
-                    color: var(--grey-100);
-                    border: 2px solid var(--grey-400);
-                }
-                     
-            }
-
-        }
-        .Mui-focused {
-            border: 2px solid var(--primary-700);
-      
-            .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
-                border: 1px solid var(--grey-500);
-                
-            } 
-        }
-    }
-    .MuiOutlinedInput-root {
-        .MuiInputBase-root {
-            .MuiInputBase-colorPrimary{
-                .Mui-focused {
-                    .MuiInputBase-formControl  {
-                        .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
-                            border: 1px solid var(--primary-700);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    
-    .css-1160xiw-MuiPaper-root-MuiDrawer-paper {
-        
-        background-color: var(--grey-800);
-        color: var(--grey-100);
-        font-weight: 700;
-        font-style: normal;
-        line-height: 1.5rem;
-        letter-spacing: .02em;
-        .css-bshv44-MuiButtonBase-root-MuiListItem-root.Mui-selected {
-            background-color: var(--primary-700);
-        }          
-            
-        .css-h4y409-MuiList-root {
-            
             font-weight: 700;
             font-style: normal;
             line-height: 1.5rem;
             letter-spacing: .02em;
+            .MuiList-root { //их 2 разных
+                font-weight: 700;
+                font-style: normal;
+                line-height: 1.5rem;
+                letter-spacing: .02em;
 
-            .css-10hburv-MuiTypography-root {
-                font-family: 'Montserrat', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif!important;
-                color: var(--grey-100);
-                font-size: 15px;
-
-            }
-        }
-        .css-nen11g-MuiStack-root {
-            .css-1qxj3vh-MuiButtonBase-root-MuiButton-root {
-                border-color: var(--grey-100);
-                -webkit-text-fill-color: var(--grey-100);
-                font-family: 'Montserrat', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif!important;
-                color: var(--grey-100)!important;
+                .MuiButtonBase-root {
+                    .MuiListItemText-root {
+                        .MuiTypography-root {
+                            font-family: var(--fonts);
+                            color: var(--grey-100);
+                            font-size: 15px;
             
-  
+                        }
+                    }
+                }
+
+                .MuiButtonBase-root.Mui-selected {
+                    background-color: var(--primary-700);
+                }  
+
+                .MuiFormControl-root { //фильтр жанров
+                    border-radius: 12px;
+                    
+                    .MuiOutlinedInput-root {
+                        color: var(--grey-100);
+                        border: 2px solid var(--grey-400);
+                        border-radius: 12px;
+            
+                        .MuiSelect-select {
+                            font-family: var(--fonts);
+                            color: var(--grey-100);
+                            
+                        }
+                        .MuiSvgIcon-root {
+                            color: var(--grey-100);
+      
+                        }
+
+                        .MuiSelect-iconOpen {
+                            color: var(--grey-100);
+                        }
+                        .MuiOutlinedInput-notchedOutline { //fieldset
+                            color: var(--grey-100);
+                        }
+            
+                    }
+
+                    .MuiOutlinedInput-root.Mui-focused {
+                        border: 2px solid var(--primary-700);
+                        .MuiOutlinedInput-notchedOutline {
+                            border: none;
+                            
+                        } 
+                    }
+
+                 
+                }
             }
- 
+
+            
+            div { //кнопка сбросить фильтры
+                .MuiButton-root.MuiButton-outlined.MuiButton-outlinedPrimary {
+                    border-color: var(--grey-100);
+                    -webkit-text-fill-color: var(--grey-100);
+                    font-family: 'Montserrat', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif!important;
+                    color: var(--grey-100)!important;
+                }
+            }
         }
-        
     }
 
-    .css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper {
-        background-color: var(--grey-500);
-        color: var(--grey-100);
-        border-top-left-radius: 12px;
-        border-bottom-left-radius: 12px;
+    .MuiModal-root.MuiPopover-root.MuiMenu-root { //выпадающее окно выбора фильтра жанров
+        .MuiPaper-root  {
+            background-color: var(--grey-500);
+            color: var(--grey-100);
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+            .MuiList-root {
+                .MuiMenuItem-root .Mui-disabled {
+                    font-family: var(--fonts);
+                }
+                .MuiMenuItem-root {
+                    font-family: var(--fonts);
+                    .MuiTouchRipple-root {
+                        color: var(--grey-100);
+                    }
+                }
+                .MuiMenuItem-root.Mui-selected {
+                    background-color: var(--primary-700-40);
+                }
+            }
+        }
+        .MuiPaper-root::-webkit-scrollbar {
+            width: 3px; /* ширина для вертикального скролла */
+            height: 2px; /* высота для горизонтального скролла */
+            background-color: var(--grey-900);
+        }
+        .MuiPaper-root::-webkit-scrollbar-thumb {
+            background-color: var(--grey-600);
+            border-radius: 9em;
+            box-shadow: inset 1px 1px 10px --grey-600;
+        }
+        .MuiPaper-root::-webkit-scrollbar {
+            width: 3px; /* ширина для вертикального скролла */
+            height: 2px; /* высота для горизонтального скролла */
+            background-color: var(--grey-900)!important;
+        }
     }
-
-    .css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper::-webkit-scrollbar {
-        width: 3px; /* ширина для вертикального скролла */
-        height: 2px; /* высота для горизонтального скролла */
-        background-color: var(--grey-900);
-    }
-
-    .css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper::-webkit-scrollbar-thumb {
-        background-color: var(--grey-600);
-        border-radius: 9em;
-        box-shadow: inset 1px 1px 10px --grey-600;
-    }
-    .css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper::-webkit-scrollbar {
-        width: 3px; /* ширина для вертикального скролла */
-        height: 2px; /* высота для горизонтального скролла */
-        background-color: var(--grey-900)!important;
-    }
-
-
-    
+   
 }

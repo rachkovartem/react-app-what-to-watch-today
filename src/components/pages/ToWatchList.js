@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react';
-import { Grid } from '@mui/material';
-
+import { useState, useEffect, useMemo } from 'react';
 import FilmList from '../filmList/FilmList';
 import AppSidemenu from '../appSidemenu/AppSideMenu';
 import KinopoiskServices from '../../services/KinopoiskServices';
@@ -13,14 +11,13 @@ import Footer from '../footer/Footer'
 
 
 const ToWatchList = (props) => {
-  const { drawerOpen, setDrawerOpen, setFilmsToWatch, setFilterSearch, filterSearch, appInfoHeight} = props;
+  const { drawerOpen, setDrawerOpen, setFilmsToWatch, setFilterSearch, filterSearch, setCurrentLocation} = props;
   const [data, setData] = useState([]);
   const [filterDate, setFilterDate] = useState('Всё время');
   const [filterGenre, setFilterGenre] = useState([]);
-  const [sideMenuWidth, setSideMenuWidth] = useState(236);
-  const [sideMenuHeight, setSideMenuHeight] = useState()
 
   const {getFilmById} = KinopoiskServices();
+
 
   const returnNewStockData = () => {
     return [
@@ -226,30 +223,18 @@ const ToWatchList = (props) => {
     })
   }
 
+  const memoizedAllIds = useMemo(() => {
+    return data.map((film) => {
+      return film.id
+    })
+  }, [data])
+
+  const isIdAlreadyExists = (id) => {
+ 
+    return memoizedAllIds.indexOf(id) > 0 ? true : false;    
+  }
+
   const filtredData = onFilterGenre(onFilterDate(onFilterSearch(data, filterSearch), filterDate), filterGenre)
-
-  useEffect(() => {
-    const gridSideMenu = document.querySelector('.getGridSideMenuWidth');
-    // const gridSideMenuWidth = window.getComputedStyle(gridSideMenu).width;
-    // setSideMenuWidth(gridSideMenuWidth.slice(0, -2));
-  }, [])
-
-  useEffect(() => {
-    const sideMenu = document.querySelector('.sideMenuHeight');
-    // const sideMenuHeight = window.getComputedStyle(sideMenu).height;
-    // setSideMenuHeight(+sideMenuHeight.slice(0, -2));
-  }, [])
-  
-  const gridSxOverflowSideMenu = sideMenuHeight > window.innerHeight ? 'scroll' : 'initial'
-
-
-    
-
-  
-
-
-
-
 
 
   return (
@@ -273,7 +258,7 @@ const ToWatchList = (props) => {
           data={filtredData} 
           onAdd={addItem} 
           onDelete={deleteItem}/>
-          <NewFilmDialog onAdd={addItem}/>
+          <NewFilmDialog onAdd={addItem} isIdAlreadyExists={isIdAlreadyExists}/>
         </ErrorBoundary>
         <Footer/>
    
