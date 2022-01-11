@@ -6,16 +6,12 @@ import Skeleton from '@mui/material/Skeleton';
 import LinesEllipsis from 'react-lines-ellipsis';
 import { Link } from 'react-router-dom';
 
-import { useDomLoading } from '../../hooks/domLoading';
 import kinopoiskImg from '../../resources/img/kinopoisk.svg';
 import imdbImg from '../../resources/img/IMDB.svg';
 
 
 export default function FilmItem(props) {
-  const {title, subtitle, timestamp, genre, onDelete, posterUrlPreview, ratingImdb, ratingKinopoisk, id, style} = props;
-  const date = new Date(timestamp*1000);
-  const dateToItem = `${date.getDate()}/${(date.getMonth()+1)}/${date.getFullYear()}`
-  const  domLoaded = useDomLoading()
+  const {title, subtitle, onDelete, posterUrlPreview, ratingImdb, ratingKinopoisk, id, style, loading} = props;
 
   const onDescrAction = (e) => {
     if (e._reactName === 'onMouseLeave') {
@@ -40,7 +36,7 @@ export default function FilmItem(props) {
     basedOn='letters'
   />)
   
-  const posterView = !posterUrlPreview || domLoaded? 
+  const posterView = loading || !posterUrlPreview ? 
   <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)'}} variant='rectangular'>
     <img className="film__poster" src={posterUrlPreview} alt="Обложка"/>
   </Skeleton> :
@@ -67,28 +63,5 @@ export default function FilmItem(props) {
             <div onClick={() => onDelete(id)} className="film__delete-icon"><svg  aria-hidden="true" focusable="false" data-prefix="far" data-icon="trash-alt" className="svg-inline--fa fa-trash-alt fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41 0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z"></path></svg>
             </div>
           </li>
-          
-  
-   
-        
-
-  )
-
-
-
-}
-
-const ratings = (kinopoisk = "---", imdb = "---") => {
-  return (
-    <div className='Film-item__ratings-wrapper'>
-      <div className='Film-item__rating-wrapper'>
-        <img className='Film-item__logo' src={kinopoiskImg} alt="Лого кинопоиска"/>
-        <p className='Film-item__rating'>{kinopoisk ? kinopoisk : '---'}</p>
-      </div>
-      <div className='Film-item__rating-wrapper'>
-        <img className='Film-item__logo Film-item__logo_imdb' src={imdbImg} alt="Лого IMDB"/>
-        <p className='Film-item__rating'>{imdb ? imdb : '---'}</p>
-      </div>
-    </div>
   )
 }

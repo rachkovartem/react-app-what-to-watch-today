@@ -7,12 +7,17 @@ import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
+
     <div id="default-view">
-    <BrowserRouter>
-      <App/>
-    </BrowserRouter>
+
+      <BrowserRouter>
+
+        <App/>
+
+      </BrowserRouter>
       
     </div>
+    
   </React.StrictMode>,
   document.getElementById('root')
 );

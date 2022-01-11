@@ -37,9 +37,10 @@ const FilmList = (props) => {
             <Transition 
               component='li' 
               nodeRef={nodeRef} 
-              appear={false} 
+              appear={true} 
               in={true} 
               timeout={duration}  
+              key={id}
               >
               {state => (
                 <FilmItem

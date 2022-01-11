@@ -52,10 +52,45 @@ img {
     margin: 0 120px;
 }
 
-.container_search {
-    margin-right: 0;
+.transition-appear {
+    opacity: 0;
 }
 
+.transition-appear-active {
+    opacity: 1;
+    transition: opacity 1000ms;
+}
+
+
+// появления всех элементов
+
+.transition-appear-done {
+    opacity: 1;
+    transition: opacity 1000ms;
+}
+
+.transition-enter {
+    opacity: 0;
+}
+
+.transition-enter-active {
+    opacity: 1;
+    transition: opacity 200ms;
+}
+
+.transition-appear-done {
+    opacity: 1;
+    transition: opacity 1000ms;
+}
+
+.transition-exit {
+    opacity: 1;
+}
+
+.transition-exit-active {
+    opacity: 0;
+    transition: opacity 200ms;
+}
 
 
 @media screen and (max-width: 1023px) {

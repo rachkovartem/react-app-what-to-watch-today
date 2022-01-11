@@ -9,15 +9,14 @@ const App = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [filmsToWatch, setFilmsToWatch] = useState(0)
   const [domContentLoaded, setDomContentLoaded] = useState(false);
-  let scrollbarWidth;
+  
 
   const onDomLoaded = () => {
     setDomContentLoaded(true);  
      
   }
 
-
-  window.addEventListener('load', onDomLoaded)
+  window.addEventListener('DOMContentLoaded', onDomLoaded)
 
   useEffect(() => {
     if (!domContentLoaded) {return}
@@ -61,7 +60,7 @@ const App = () => {
                 setDrawerOpen={setDrawerOpen}
                 setFilmsToWatch={setFilmsToWatch}
                 />}/>
-              <Route path="/film/:id" element={<AboutFilm />}/>
+              <Route path="/film/:id" element={<AboutFilm/>}/>
               <Route path="*" element={<Page404 />}/>
             </Routes>
             </>

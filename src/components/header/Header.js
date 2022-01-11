@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
-
+import { CSSTransition } from 'react-transition-group'
 import './Header.scss'
 
 
-import { Fragment, useState, useEffect } from 'react';
+import { Fragment, useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router';
 
 export default function Header({filmsToWatch, onClickDrawerToggle, drawerOpen}) {
-
+  const nodeRef = useRef(null);
   const [displyedHamburger, setDisplayedHamburger] = useState(false);
 
   const displayHamburger = () => {
@@ -51,14 +51,15 @@ const location = useLocation()
   }
   return (
       <Fragment>
-        {header({onClickDrawerToggle, filmsSwitcher, filmsToWatch, onClickHamburger, displyedHamburger, drawerOpen})}
+        {header({onClickDrawerToggle, filmsSwitcher, filmsToWatch, onClickHamburger, displyedHamburger, drawerOpen, nodeRef})}
       </Fragment>
   );
 }
 
 
-const header = ({onClickDrawerToggle, filmsSwitcher, filmsToWatch, displyedHamburger, drawerOpen}) => {
+const header = ({onClickDrawerToggle, filmsSwitcher, filmsToWatch, displyedHamburger, drawerOpen, nodeRef}) => {
   return (
+    <CSSTransition in={true} appear={true} timeout={200} classNames="transition">
   <section className="header">
           <div className="container">
             <div className="header__wrapper">
@@ -124,5 +125,6 @@ const header = ({onClickDrawerToggle, filmsSwitcher, filmsToWatch, displyedHambu
             </div>
           </div>
         </section>
+        </CSSTransition>
       )
 }

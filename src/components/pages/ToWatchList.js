@@ -17,7 +17,7 @@ const ToWatchList = (props) => {
   const [filterGenre, setFilterGenre] = useState([]);
   const [filterSearch, setFilterSearch] = useState('');
 
-  const {getFilmById} = KinopoiskServices();
+  const {loading, error, getFilmById} = KinopoiskServices();
 
   //список фильмов для примера новому юзеру
   const returnNewStockData = () => {
@@ -258,6 +258,7 @@ const ToWatchList = (props) => {
       
         <ErrorBoundary>
           <FilmList 
+          loading={loading}
           data={memoizedFiltredData} 
           onAdd={addItem} 
           onDelete={deleteItem}/>
