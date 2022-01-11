@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { useState, useEffect, useRef } from 'react';
+
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -10,11 +10,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import NewFilmDatePicker from '../newFilmDatePicker/NewFilmDatePicker';
 import KinopoiskServices from '../../services/KinopoiskServices';
 import Autocomplete from '@mui/material/Autocomplete';
-import nextId from "react-id-generator";
 import { ThemeProvider, createTheme } from '@mui/material';
-
 import Popover from '@mui/material/Popover'
 import Typography from '@mui/material/Typography';
+
+import nextId from "react-id-generator";
 
 import './NewFilmDialog.scss';
 
@@ -47,14 +47,14 @@ const NewFilmDialog = (props) => {
     }
   });
   const {onAdd, isIdAlreadyExists} = props;
-  const {loading, error, getFilmByKeyWord} = KinopoiskServices();
+  const {loading, error, clearError, getFilmByKeyWord} = KinopoiskServices();
   const [title, setTitle] = useState('');
   const [timestamp, setTimeStamp] = useState(() => Math.round(Date.now()/1000));
   const [open, setOpen] = useState(false);
   const [filmOptions, setFilmOptions] = useState([]);
   const [userChoise, setUserChoise] = useState(null);
   const [searchInProgress, setSearchInProgress] = useState(false)
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const titleInput = useRef(null);
   const delay = 500;
@@ -69,7 +69,6 @@ const NewFilmDialog = (props) => {
     setTimeStamp(Math.round(Date.parse(value)/1000))
   }
   
-
   //всплывающее окно о уже сущестующем фильме, триггер по нажантию добавить
   const handleClosePopover = () => {
     setAnchorEl(null);
@@ -103,7 +102,6 @@ const NewFilmDialog = (props) => {
     
   }, [title])
 
-
   //а нужно было просто взять другой инпут из MUI, спать надо ложиться раньше
   const onFocusInputTitle = (e) => {
     e.target.parentNode.parentNode.classList.add('MuiFormControl-root-primary-border')
@@ -119,7 +117,6 @@ const NewFilmDialog = (props) => {
   const outFocusInputSubtitle = (e) => {
     e.target.parentNode.parentNode.classList.remove('MuiFormControl-root-primary-border-subtitle')
   }
-  
 
   const onValueSubtitleChange = (e) => {
     setUserChoise((prevChoise => {
@@ -151,9 +148,6 @@ const NewFilmDialog = (props) => {
       })
       .catch(setFilmOptions([])) 
   }
-
-  
-
 
   const validationTextForm = () => {
     if (!userChoise) {
@@ -209,7 +203,6 @@ const NewFilmDialog = (props) => {
       return 'Не нашли такой фильм :('
     } 
  }
- 
 
   return (
     <div>

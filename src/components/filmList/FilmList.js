@@ -39,15 +39,7 @@ const FilmList = (props) => {
   const {onAdd, data} = props;
   const elements = (data) => {
     return (
-      <TransitionGroup 
-      className="film-list__grid"
-      childFactory={child => cloneElement(
-        child,
-        {
-          style: {removeStyle}
-        }
-      )}>
-        {data.map(item => {
+        data.map(item => {
           const {id, ...itemProps} = item;
           return (
             <Transition 
@@ -72,8 +64,7 @@ const FilmList = (props) => {
               )}
             </Transition>
           )
-        })}
-      </TransitionGroup>
+        })
     )
     
   }
@@ -86,10 +77,17 @@ const FilmList = (props) => {
         <div className="container">
           <div className="film-list__wrapper">
             
-           
+          <TransitionGroup 
+            className="film-list__grid"
+            childFactory={child => cloneElement(
+            child,
+            {
+              style: {removeStyle}
+            }
+            )}>
               {elements(data)}
           
-           
+          </TransitionGroup>
           </div>
 
         </div>

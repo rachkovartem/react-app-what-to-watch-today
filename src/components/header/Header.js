@@ -18,18 +18,14 @@ export default function Header({filmsToWatch, currentLocation, onClickDrawerTogg
 
 const location = useLocation()
 
-
-
-
   useEffect(() => {
-    if (location === undefined) {
+    if (location.pathname === undefined) {
       return
-    } else if (location === '/') {
-      console.log(1)
+    } else if (location.pathname === '/') {
+      
       displayHamburger()
     } else hiddenHamburger()
   }, [location])
-
 
   const filmsSwitcher = (num) => {
     const lastNum = num.toString().slice(-1);
@@ -56,15 +52,11 @@ const location = useLocation()
       <Fragment>
         {header({onClickDrawerToggle, filmsSwitcher, filmsToWatch, onClickHamburger, displyedHamburger})}
       </Fragment>
-      
-
-
   );
 }
 
 
 const header = ({onClickDrawerToggle, filmsSwitcher, filmsToWatch, displyedHamburger}) => {
-  console.log(displyedHamburger)
   return (
   <section className="header">
           <div className="container">
