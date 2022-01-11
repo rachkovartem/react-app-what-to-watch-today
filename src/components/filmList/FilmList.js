@@ -2,7 +2,7 @@ import './FilmList.scss'
 import './Ratings.scss'
 
 import { Transition, TransitionGroup } from 'react-transition-group';
-import { useRef, cloneElement } from 'react';
+import { useRef, cloneElement, useMemo } from 'react';
 
 import FilmItem from '../filmItem/FilmItem';
 
@@ -60,6 +60,7 @@ const FilmList = (props) => {
     )
   }
 
+  const memoizedElements = useMemo(() => elements(data), [data])
 
   const list = (
     <TransitionGroup 
@@ -70,8 +71,7 @@ const FilmList = (props) => {
         style: {removeStyle}
       }
       )}>
-        {elements(data)}
-    
+        {memoizedElements}
     </TransitionGroup> 
   );
 

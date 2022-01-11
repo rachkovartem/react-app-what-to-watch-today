@@ -99,6 +99,18 @@ const AboutFilm = () => {
         
     }
 
+    const ratingStyle = (rating) => {
+        if (rating >= 7) {
+            return {color: '#3bb33b'}
+        }
+        if (rating >= 5 && rating < 7) {
+            return {color: '#777'}
+        }
+        if (rating < 5) {
+            return {color: '#ff1717'}
+        } else {return {color: '#000'}}
+    }
+
     return (
        <>
        <Cover title={nameRu} image={imagesUpdated && images.items[0] ? images.items[0].imageUrl : null}/>
@@ -116,36 +128,6 @@ const AboutFilm = () => {
        </>
         
     )
-}
-
-
-const rightBlock = (film) => {
-
-    const ratingStyle = (rating) => {
-        if (rating >= 7) {
-            return {color: '#3bb33b'}
-        }
-        if (rating >= 5 && rating < 7) {
-            return {color: '#777'}
-        }
-        if (rating < 5) {
-            return {color: '#ff1717'}
-        } else {return {color: '#000'}}
-    }
-
-    return (
-        <div className='about-film__ratings-wrapper'>
-            <div className='about-film__rating-wrapper'>
-                <img className='about-film__logo about-film__logo_kinopoisk' src={kinopoisk} alt="Кинопоиск" />
-                <p className='about-film__rating' style={ratingStyle(film.ratingKinopoisk)}>{film.ratingKinopoisk}</p>
-            </div>
-            <div className='about-film__rating-wrapper'>
-                <img className='about-film__logo about-film__logo_IMDB' src={imdb} alt="IMDB" />
-                <p className='about-film__rating' style={ratingStyle(film.ratingImdb)}>{film.ratingImdb}</p>
-            </div>
-        </div>
-    )
-    
 }
 
 

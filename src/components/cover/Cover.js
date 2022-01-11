@@ -18,7 +18,7 @@ const Cover = (props) => {
               <div className="cover__breadcrumbs">
                 <Link to='/'  className="cover__breadcrumb">Movie List</Link>
                 <span> / </span>
-                <a disabled className="cover__breadcrumb" href="#">Movies</a>
+                <Link to='/' className="cover__breadcrumb">Movies</Link>
               </div>
               <h1 className="cover__title">{title}</h1>
             </div>

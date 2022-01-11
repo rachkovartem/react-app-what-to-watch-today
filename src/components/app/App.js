@@ -12,15 +12,12 @@ const App = () => {
   const [filterSearch, setFilterSearch] = useState('');
   const [domContentLoaded, setDomContentLoaded] = useState(false);
 
-
   const onDomLoaded = () => {
     setDomContentLoaded(true);    
   }
 
   window.addEventListener('load', onDomLoaded)
   
-
-
   useEffect(() => {
     if (!drawerOpen) {return}
     if (drawerOpen) {
@@ -62,7 +59,8 @@ const App = () => {
        
             <>
               <Header
-              onClickDrawerToggle={onClickDrawerToggle} 
+              onClickDrawerToggle={onClickDrawerToggle}
+              drawerOpen={drawerOpen} 
               filmsToWatch={filmsToWatch} 
               setFilterSearch={setFilterSearch} 
               filterSearch={filterSearch}
@@ -87,7 +85,6 @@ const App = () => {
         
      
       )}
-    
   }
 
   return (

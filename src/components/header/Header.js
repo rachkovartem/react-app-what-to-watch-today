@@ -1,10 +1,12 @@
+import { Link } from 'react-router-dom';
+
 import './Header.scss'
 
 
 import { Fragment, useState, useEffect } from 'react';
 import { useLocation } from 'react-router';
 
-export default function Header({filmsToWatch, currentLocation, onClickDrawerToggle}) {
+export default function Header({filmsToWatch, onClickDrawerToggle, drawerOpen}) {
 
   const [displyedHamburger, setDisplayedHamburger] = useState(false);
 
@@ -50,13 +52,13 @@ const location = useLocation()
   }
   return (
       <Fragment>
-        {header({onClickDrawerToggle, filmsSwitcher, filmsToWatch, onClickHamburger, displyedHamburger})}
+        {header({onClickDrawerToggle, filmsSwitcher, filmsToWatch, onClickHamburger, displyedHamburger, drawerOpen})}
       </Fragment>
   );
 }
 
 
-const header = ({onClickDrawerToggle, filmsSwitcher, filmsToWatch, displyedHamburger}) => {
+const header = ({onClickDrawerToggle, filmsSwitcher, filmsToWatch, displyedHamburger, drawerOpen}) => {
   return (
   <section className="header">
           <div className="container">
@@ -66,16 +68,18 @@ const header = ({onClickDrawerToggle, filmsSwitcher, filmsToWatch, displyedHambu
                 <nav className="header__nav-menu">
                   <ul className="header__nav-menu-list">
                     <li className="header__nav-menu-list-item">
-                      <a href="#" className="header__nav-el">Главная</a>
+                      <Link to='/' className="header__nav-el">Главная</Link>
                     </li>
-                    <li className="header__nav-menu-list-item">
+                    {/* <li className="header__nav-menu-list-item">
                       <a href="#" className="header__nav-el">Профиль</a>
-                    </li>
+                    </li> */}
                   </ul>
                 </nav>
   
               
-                <div style={{display: !displyedHamburger ? "none" : ""}} onClick={onClickDrawerToggle} className="header__hamburger">
+                <div style={{display: !displyedHamburger ? "none" : ""}} 
+                onClick={onClickDrawerToggle} 
+                className={`header__hamburger ${drawerOpen ? 'header__hamburger_active' : ''}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
                     <g strokeWidth="6.5" strokeLinecap="round">
                       <path

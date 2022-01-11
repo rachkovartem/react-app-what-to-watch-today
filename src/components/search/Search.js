@@ -1,17 +1,20 @@
 import './Search.scss'
 import './InputForm.scss'
 
+import { useState, useMemo } from 'react'
+
 import search from '../../resources/icons/search.svg'
 
 
 const Search = (props) => {
-
-   const {setFilterSearch, filterSearch} = props;
+  const [filter, setFilter] = useState();
+  const [filtredData, setFiltredData] = useState();
+  const constMemoizedFiltredData = useMemo(() => {
+    /////////
+  }, filtredData)
+  
+  const {setFilterSearch, filterSearch} = props;
     
-
-
-
-
     return (
         <section className="search container_search">
           <div className="container">
@@ -20,7 +23,13 @@ const Search = (props) => {
             <div className="input-form">
               <img className="input-form__icon" src={search} alt="Поиск"/>
               
-              <input value={filterSearch ? filterSearch : ''} onChange={(e) => setFilterSearch(e.target.value)} autoComplete="off" placeholder="название фильма или описание" id="search" type="text" className="input-form__input"/>
+              <input 
+              value={filter ? filter : ''} 
+              onChange={(e) => setFilter(e.target.value)} 
+              autoComplete="off" 
+              placeholder="название фильма или описание" 
+              id="search" type="text" 
+              className="input-form__input"/>
               <label className="input-form__label" htmlFor="search">Поиск по записанным фильмам</label>
             </div>
             

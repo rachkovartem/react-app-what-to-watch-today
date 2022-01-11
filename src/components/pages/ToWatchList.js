@@ -18,7 +18,7 @@ const ToWatchList = (props) => {
 
   const {getFilmById} = KinopoiskServices();
 
-
+  //список фильмов для примера новому юзеру
   const returnNewStockData = () => {
     return [
       {
@@ -96,6 +96,7 @@ const ToWatchList = (props) => {
     ]
   }
 
+  //загрузка списка из ls
   useEffect(() => {
     let newData
     if (localStorage.getItem('movies')) {
@@ -116,7 +117,7 @@ const ToWatchList = (props) => {
     localStorage.setItem('movies', JSON.stringify(state))
   }
 
-//функция возвращает массив неповторяющихся жанров вместо массива с массивами жанров каждого фильма
+  //функция возвращает массив неповторяющихся жанров вместо массива с массивами жанров каждого фильма
   const genres = () => {
     let arr = []
     data.forEach(item => {
@@ -235,7 +236,6 @@ const ToWatchList = (props) => {
   }
 
   const filtredData = onFilterGenre(onFilterDate(onFilterSearch(data, filterSearch), filterDate), filterGenre)
-
 
   return (
     <>
