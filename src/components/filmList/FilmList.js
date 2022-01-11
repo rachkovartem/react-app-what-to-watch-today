@@ -1,16 +1,10 @@
 import './FilmList.scss'
 import './Ratings.scss'
-import nextId from 'react-id-generator';
 
-import {
-  Transition,
-  TransitionGroup,
-} from 'react-transition-group';
-
+import { Transition, TransitionGroup } from 'react-transition-group';
 import { useRef, cloneElement } from 'react';
+
 import FilmItem from '../filmItem/FilmItem';
-
-
 
 
 const FilmList = (props) => {
@@ -33,8 +27,6 @@ const FilmList = (props) => {
     exiting:  { opacity: 0 },
     exited:  { opacity: 0 },
   };
-
-
 
   const {onAdd, data} = props;
   const elements = (data) => {
@@ -66,38 +58,34 @@ const FilmList = (props) => {
           )
         })
     )
-    
   }
-  
+
+
+  const list = (
+    <TransitionGroup 
+      className="film-list__grid"
+      childFactory={child => cloneElement(
+      child,
+      {
+        style: {removeStyle}
+      }
+      )}>
+        {elements(data)}
     
+    </TransitionGroup> 
+  );
+
+  const notFound = <span className='film-list__notfound'>Ничего не найдено</span>;
+  
+  const View = data.length > 0 ? list : notFound;
 
   return (
-
-      <section className="film-list">
-        <div className="container">
-          <div className="film-list__wrapper">
-            
-          <TransitionGroup 
-            className="film-list__grid"
-            childFactory={child => cloneElement(
-            child,
-            {
-              style: {removeStyle}
-            }
-            )}>
-              {elements(data)}
-          
-          </TransitionGroup>
-          </div>
-
-        </div>
-
-      </section>
-
-
-
-
-    );
+    <section className="film-list">
+      <div className="container"> 
+        {View}
+      </div>
+    </section>
+  );
   
 }
 

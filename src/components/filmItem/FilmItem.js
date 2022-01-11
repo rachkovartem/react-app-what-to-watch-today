@@ -2,17 +2,13 @@ import './Ratings.scss'
 import './FilmItem.scss'
 
 import Skeleton from '@mui/material/Skeleton';
+
 import LinesEllipsis from 'react-lines-ellipsis';
 import { Link } from 'react-router-dom';
-import { Transition } from 'react-transition-group';
-import { useRef } from 'react';
+
 import { useDomLoading } from '../../hooks/domLoading';
 import kinopoiskImg from '../../resources/img/kinopoisk.svg';
 import imdbImg from '../../resources/img/IMDB.svg';
-
-
-
-
 
 
 export default function FilmItem(props) {
@@ -25,16 +21,15 @@ export default function FilmItem(props) {
     if (e._reactName === 'onMouseLeave') {
  
       e.target.parentNode.children[4].style.zIndex = -1
-    
 
     } else if (e._reactName === 'onMouseEnter') {
+
       e.target.parentNode.children[4].style.height = window.getComputedStyle(e.target.parentNode.children[1]).height;
       e.target.parentNode.children[4].style.width = window.getComputedStyle(e.target.parentNode.children[1]).width;
       e.target.parentNode.children[4].style.zIndex = 500;
 
     }
   }
-
 
   const eplipsedDescr = (text) => (<LinesEllipsis
     text={text}
@@ -44,9 +39,6 @@ export default function FilmItem(props) {
     trimRight
     basedOn='letters'
   />)
-
-
-  
   
   const posterView = !posterUrlPreview || domLoaded? 
   <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)'}} variant='rectangular'>
@@ -67,7 +59,7 @@ export default function FilmItem(props) {
                 {posterView}
               </div>
             </Link>
-            <a className="film__title-link" href="#"><h2 className="film__title">{title}</h2></a>
+            <Link className="film__title-link" to={`/film/${id}`}><h2 className="film__title">{title}</h2></Link>
             <div onClick={onDescrAction} 
             onMouseLeave={onDescrAction} 
             onMouseEnter={onDescrAction} className="film__descr">Описание</div>
