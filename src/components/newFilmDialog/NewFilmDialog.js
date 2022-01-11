@@ -194,7 +194,7 @@ const NewFilmDialog = (props) => {
     return res
   }
 
- const noOptionText = () => {
+  const noOptionText = () => {
     if (searchInProgress) {
       return '' 
     } else if (!searchInProgress && title === '') {
@@ -202,7 +202,12 @@ const NewFilmDialog = (props) => {
     } else if (!loading && !searchInProgress) {
       return 'Не нашли такой фильм :('
     } 
- }
+  }
+
+  const onInputChange = (newValue) => {
+    setTitle(newValue);
+    clearError()
+  }
 
   return (
     <div>
@@ -229,7 +234,7 @@ const NewFilmDialog = (props) => {
                   
                   onChange={(e, newValue) => setUserChoise(newValue)}
                   inputValue={title}
-                  onInputChange={(e, newValue) => setTitle(newValue)}
+                  onInputChange={(e, newValue) => onInputChange(newValue)}
                   options={filmOptions}
                   renderInput={(params) => TextFieldTitle(params)}
                   noOptionsText={noOptionText()}
