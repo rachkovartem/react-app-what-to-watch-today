@@ -1,5 +1,7 @@
 import './Cover.scss';
 
+import imageNotFound from '../../resources/img/image-not-found.png'
+
 import { Link } from "react-router-dom";
 
 
@@ -10,7 +12,7 @@ const Cover = (props) => {
         <section className="cover">
           <div className="container">
             <div className="container__poster-wrapper">
-              <img className="container__poster" src={image} alt="Постер"/>
+              <img className="container__poster" src={image ? image : imageNotFound} alt="Постер"/>
             </div>
             <div className="cover__title-wrapper">
               <div className="cover__breadcrumbs">

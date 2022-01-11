@@ -1,32 +1,34 @@
 import { useState, useEffect } from 'react';
 import { useParams, } from 'react-router-dom';
-import KinopoiskServices from '../../services/KinopoiskServices';
+
 import kinopoisk from '../../resources/img/kinopoisk.svg'
 import imdb from '../../resources/img/IMDB.svg';
-
+import KinopoiskServices from '../../services/KinopoiskServices';
 import Cover from '../cover/Cover';
 import Description from '../description/Description'
 import Footer from '../footer/Footer';
 
-const AboutFilm = ({}) => {
+
+const AboutFilm = () => {
 
     const {loading, error, clearError, getFilmById, getImagesById} = KinopoiskServices();
     const {id} = useParams();
-    const [film, setFilm] = useState({});
-    const [filmLoaded, setFilmLoaded] = useState(false)
+    const [filmLoaded, setFilmLoaded] = useState(false);
     const [ images, setImages ] = useState({});
-    const [imagesUpdated, setImagesUpdated] = useState(false)
-    const [countsOfImagesUpdated, setCountsOfImagesUpdated] = useState(false)
+    const [imagesUpdated, setImagesUpdated] = useState(false);
+    const [countsOfImagesUpdated, setCountsOfImagesUpdated] = useState(false);
     const [stringCountries, setStringCountries] = useState('');
     const [stringGenres, setStringGenres] = useState('');
+    const [film, setFilm] = useState({});
+    const {nameRu, nameEn, nameOriginal, type} = film;
 
-  
+    useEffect(() => {
+        updateFilm(id)
+    }, [])
 
     const updateFilm = (id) => {
-        
         getFilmById(id)
-        .then(filmUpdated)
-       
+        .then(filmUpdated) 
     }
 
     const filmUpdated = (data) => {
@@ -35,14 +37,7 @@ const AboutFilm = ({}) => {
         const {year, filmLength, serial, endYear, startYear, description, countries, genres} = data
         setStringCountries(countries.map(item => item.country).join(', '))
         setStringGenres(genres.map(item => item.genre).join(', '))
-
     }
-
-    useEffect(() => {
-        updateFilm(id)
-    }, []) 
-
-    const {nameRu, nameEn, nameOriginal, type} = film;
 
     const isType = (type) => {
         switch (type) {
@@ -66,40 +61,47 @@ const AboutFilm = ({}) => {
         }
     } 
 
-
+    const typeValues = ['STILL', 'SHOOTING', 'POSTER', 'FAN_ART', 'PROMO', 'CONCEPT', 'WALLPAPER', 'COVER', 'SCREENSHOT'];
     
-
-
-   const typeValues = ['STILL', 'SHOOTING', 'POSTER', 'FAN_ART', 'PROMO', 'CONCEPT', 'WALLPAPER', 'COVER', 'SCREENSHOT'];
     useEffect(() => {
-        updateImages('WALLPAPER')
-        
-
+        getImageForBigPoster()       
     }, [])
 
+    const getImageForBigPoster = async () => {
+        const values = ['WALLPAPER', 'SCREENSHOT', 'COVER', 'SHOOTING', 'STILL']
+        let value = 0;
+        let res = await getImagesByType(values[value]);
+        console.log(res)
+        while (res.items.length === 0 && values[value]) {
+            console.log(values[value])
+            res = await getImagesByType(values[value])
+            console.log(res)
+            value++
+        }
+        onImagesLoaded(res)
+    }
 
-    const updateImages = async (type = 'STILL') => {
+    const onImagesLoaded = (images) => {
+        setImages(images)
+        setImagesUpdated(true);
+    }
+
+    const getImagesByType = async (type = 'STILL') => {
         setImagesUpdated(false);
         const initRes = await getImagesById(id, type);
         let images = initRes.items
-    
         for (let i = 2; i < initRes.totalPages; i++) {
             const res = await getImagesById(id, type, i);
             images.concat(res.items);
         }
 
-        setImages({total: initRes.total, items: images})
-        setImagesUpdated(true);
+        return ({total: initRes.total, items: images})
         
     }
 
-    
-
-
     return (
        <>
-       <Cover title={nameRu} image={images.items ? images.items[0].imageUrl : null}/>
-
+       <Cover title={nameRu} image={imagesUpdated && images.items[0] ? images.items[0].imageUrl : null}/>
        <Description poster={film.posterUrl} 
        shortDescription={film.shortDescription} 
        description={film.description}
