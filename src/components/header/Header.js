@@ -24,7 +24,6 @@ const location = useLocation()
     if (location.pathname === undefined) {
       return
     } else if (location.pathname === '/') {
-      
       displayHamburger()
     } else hiddenHamburger()
   }, [location])
@@ -63,7 +62,7 @@ const header = ({onClickDrawerToggle, filmsSwitcher, filmsToWatch, displyedHambu
   <section className="header">
           <div className="container">
             <div className="header__wrapper">
-              <div className="header__films-counter">Нужно посмотреть {filmsToWatch} {filmsSwitcher(filmsToWatch)}</div>
+              <div style={{display: !displyedHamburger ? "none" : ""}} className="header__films-counter">Нужно посмотреть {filmsToWatch} {filmsSwitcher(filmsToWatch)}</div>
               <div className="header__nav-ham-wrapper">
                 <nav className="header__nav-menu">
                   <ul className="header__nav-menu-list">
@@ -77,7 +76,8 @@ const header = ({onClickDrawerToggle, filmsSwitcher, filmsToWatch, displyedHambu
                 </nav>
   
               
-                <div style={{display: !displyedHamburger ? "none" : ""}} 
+                <div 
+                style={{display: !displyedHamburger ? "none" : ""}} 
                 onClick={onClickDrawerToggle} 
                 className={`header__hamburger ${drawerOpen ? 'header__hamburger_active' : ''}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">

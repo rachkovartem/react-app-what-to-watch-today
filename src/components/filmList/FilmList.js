@@ -60,7 +60,7 @@ const FilmList = (props) => {
     )
   }
 
-  const memoizedElements = useMemo(() => elements(data), [data])
+  const memoizedElements = useMemo(() => elements(data), [data]);
 
   const list = (
     <TransitionGroup 

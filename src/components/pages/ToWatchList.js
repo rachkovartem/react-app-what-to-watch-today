@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import FilmList from '../filmList/FilmList';
 import AppSidemenu from '../appSidemenu/AppSideMenu';
 import KinopoiskServices from '../../services/KinopoiskServices';
@@ -11,10 +11,11 @@ import Footer from '../footer/Footer'
 
 
 const ToWatchList = (props) => {
-  const { drawerOpen, setDrawerOpen, setFilmsToWatch, setFilterSearch, filterSearch, setCurrentLocation} = props;
+  const { drawerOpen, setDrawerOpen, setFilmsToWatch} = props;
   const [data, setData] = useState([]);
   const [filterDate, setFilterDate] = useState('Всё время');
   const [filterGenre, setFilterGenre] = useState([]);
+  const [filterSearch, setFilterSearch] = useState('');
 
   const {getFilmById} = KinopoiskServices();
 
@@ -235,11 +236,13 @@ const ToWatchList = (props) => {
     return memoizedAllIds.indexOf(id) > 0 ? true : false;    
   }
 
-  const filtredData = onFilterGenre(onFilterDate(onFilterSearch(data, filterSearch), filterDate), filterGenre)
+  const filtredData = useCallback((data, filterSearch) => onFilterGenre(onFilterDate(onFilterSearch(data, filterSearch), filterDate), filterGenre), [data, filterSearch, filterDate, filterGenre]);
+  
+  const memoizedFiltredData = useMemo(() => filtredData(data, filterSearch), [filtredData])
 
   return (
     <>
-      <Search setFilterSearch={setFilterSearch} filterSearch={filterSearch}/>
+      <Search setFilterSearch={setFilterSearch} filterSearch={filterSearch} filtredData={filtredData} data={data}/>
    
         <ErrorBoundary>
           <AppSidemenu 
@@ -255,7 +258,7 @@ const ToWatchList = (props) => {
       
         <ErrorBoundary>
           <FilmList 
-          data={filtredData} 
+          data={memoizedFiltredData} 
           onAdd={addItem} 
           onDelete={deleteItem}/>
           <NewFilmDialog onAdd={addItem} isIdAlreadyExists={isIdAlreadyExists}/>
