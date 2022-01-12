@@ -59,7 +59,7 @@ html, body {
 .default-view {
 
   margin: 0 auto;
-
+  min-width: 100%;
   padding-bottom: 208px;
 }
 
@@ -73,6 +73,9 @@ body {
     margin: 0 120px;
 }
 
+.container__search {
+  
+}
 
 
 

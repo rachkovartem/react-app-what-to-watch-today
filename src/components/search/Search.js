@@ -25,7 +25,7 @@ const Search = (props) => {
   return (
     <section className="search">
       <CSSTransition in={true} appear={true} timeout={200} classNames="transition">
-          <div className="container">
+          <div className="container container__search">
             <h1 className="search__title">Запиши, что хотел посмотреть</h1>
             <p className="search__subtitle">И потом не нужно будет искать в безликих заметках, какие фильмы ты видел в Тик&#8209;токе, пока бездельничал на работе.</p>
             <div className="input-form">

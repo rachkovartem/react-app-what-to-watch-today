@@ -132,21 +132,24 @@
 
 @media screen and (max-width: 767px) {
 
-    .header__nav-menu {
-        display: none;
-    }    
-
     .header__nav-ham-wrapper {
         width: fit-content;
     }
 }
 
-@media screen and (max-width: 479px) {
+@media screen and (max-width: 500px) {
+    
     .header__films-counter {
         display: none;
-    }    
+    }  
+
+    .header__nav-ham-wrapper {
+        width: 100%;
+        justify-content: space-between;
+    }
 
     .header__wrapper {
         justify-content: flex-end;
     }
-}
+}  
+
