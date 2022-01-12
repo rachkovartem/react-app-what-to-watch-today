@@ -75,7 +75,6 @@ const AboutFilm = () => {
         while (res.items.length === 0 && values[value]) {
             console.log(values[value])
             res = await getImagesByType(values[value])
-            console.log(res)
             value++
         }
         onImagesLoaded(res)
@@ -113,18 +112,18 @@ const AboutFilm = () => {
 
     return (
        <>
-       <Cover title={nameRu} image={imagesUpdated && images.items[0] ? images.items[0].imageUrl : null}/>
-       <Description poster={film.posterUrl} 
-       shortDescription={film.shortDescription} 
-       description={film.description}
-       ratingKinopoisk={film.ratingKinopoisk}
-       ratingImdb={film.ratingImdb}
-       type={isType(film.type)}
-       year={film.year}
-       genres={stringGenres}
-       filmLength={film.filmLength}
-       />
-       <Footer/>
+            <Cover title={nameRu} image={imagesUpdated && images.items[0] ? images.items[0].imageUrl : null}/>
+            <Description poster={film.posterUrl} 
+            shortDescription={film.shortDescription} 
+            description={film.description}
+            ratingKinopoisk={film.ratingKinopoisk}
+            ratingImdb={film.ratingImdb}
+            type={isType(film.type)}
+            year={film.year}
+            genres={stringGenres}
+            filmLength={film.filmLength}
+            />
+           
        </>
         
     )

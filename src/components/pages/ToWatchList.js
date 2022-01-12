@@ -241,7 +241,7 @@ const ToWatchList = (props) => {
   const memoizedFiltredData = useMemo(() => filtredData(data, filterSearch), [filtredData])
 
   return (
-    <>
+  <>
       <Search setFilterSearch={setFilterSearch} filterSearch={filterSearch} filtredData={filtredData} data={data}/>
    
         <ErrorBoundary>
@@ -262,11 +262,17 @@ const ToWatchList = (props) => {
           data={memoizedFiltredData} 
           onAdd={addItem} 
           onDelete={deleteItem}/>
-          <NewFilmDialog onAdd={addItem} isIdAlreadyExists={isIdAlreadyExists}/>
+          
         </ErrorBoundary>
-        <Footer/>
-   
-    </>
+
+        <ErrorBoundary>
+
+          <NewFilmDialog onAdd={addItem} isIdAlreadyExists={isIdAlreadyExists}/>
+
+        </ErrorBoundary>
+          
+      </>
+    
   )
 }
 

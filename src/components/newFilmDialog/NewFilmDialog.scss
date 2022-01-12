@@ -6,7 +6,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    position: fixed;
+    position: sticky;
+    margin-left: auto;
     z-index: 5;
     right: 130px;
     bottom: 60px;

@@ -59,8 +59,8 @@ const location = useLocation()
 
 const header = ({onClickDrawerToggle, filmsSwitcher, filmsToWatch, displyedHamburger, drawerOpen, nodeRef}) => {
   return (
-    <CSSTransition in={true} appear={true} timeout={200} classNames="transition">
-  <section className="header">
+    <CSSTransition in={true} appear={true} timeout={300} classNames="transition">
+        <section className="header">
           <div className="container">
             <div className="header__wrapper">
               <div style={{display: !displyedHamburger ? "none" : ""}} className="header__films-counter">Нужно посмотреть {filmsToWatch} {filmsSwitcher(filmsToWatch)}</div>

@@ -4,7 +4,7 @@ import './FilmItem.scss'
 import Skeleton from '@mui/material/Skeleton';
 
 import LinesEllipsis from 'react-lines-ellipsis';
-import { Link } from 'react-router-dom';
+import { Link, Router } from 'react-router-dom';
 
 import kinopoiskImg from '../../resources/img/kinopoisk.svg';
 import imdbImg from '../../resources/img/IMDB.svg';
@@ -50,7 +50,7 @@ export default function FilmItem(props) {
               <img className="rating-icon" src={imdbImg} alt="IMDB"/>
               <span className="rating">{ratingImdb}</span>
             </div>
-            <Link to={`/film/${id}`}>
+            <Link key={`/film/${id}`} to={`/film/${id}`}>
               <div className="film__poster-link">
                 {posterView}
               </div>

@@ -1,22 +1,31 @@
-import { Routes,  Route } from "react-router-dom";
-import { useState, useEffect } from "react";
-
+import { Routes,  Route, useLocation } from "react-router-dom";
+import { useState, useEffect, createRef } from "react";
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { ToWatchList, Page404, AboutFilm } from "../pages"
+
 import Header from '../header/Header';
+import Footer from '../footer/Footer'
+
+
 
 
 const App = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [filmsToWatch, setFilmsToWatch] = useState(0)
   const [domContentLoaded, setDomContentLoaded] = useState(false);
-  
-
+  const [rendered, setRendered] = useState(false)
+  const nodeRef = createRef(null)
+  const location = useLocation()
   const onDomLoaded = () => {
     setDomContentLoaded(true);  
      
   }
-
-  window.addEventListener('DOMContentLoaded', onDomLoaded)
+  useEffect(() => {
+    window.addEventListener('DOMContentLoaded', onDomLoaded)  
+    setRendered(true)
+  }, [])
+  
+  
 
   useEffect(() => {
     if (!domContentLoaded) {return}
@@ -40,32 +49,53 @@ const App = () => {
     setDrawerOpen(drawerOpen => !drawerOpen)
 
   }
-  
-  const View = () => {
-    if (domContentLoaded) {
-      return (
 
-            <>
-              <Header
+
+  const View = () => {
+      return (
+        <>
+            <Header
               onClickDrawerToggle={onClickDrawerToggle}
               drawerOpen={drawerOpen} 
               filmsToWatch={filmsToWatch} 
               />
-          
-            <Routes>
-              <Route 
-                path="/" 
-                element={<ToWatchList 
-                drawerOpen={drawerOpen} 
-                setDrawerOpen={setDrawerOpen}
-                setFilmsToWatch={setFilmsToWatch}
-                />}/>
-              <Route path="/film/:id" element={<AboutFilm/>}/>
-              <Route path="*" element={<Page404 />}/>
-            </Routes>
-            </>
 
-      )}
+              <TransitionGroup component={null}>
+              <CSSTransition appear={true} key={location.key} classNames="scale" timeout={300}>
+                
+                <Routes>
+            
+                  <Route 
+                  path="/" 
+                  element={
+                    <div className="default-view scale">
+                        <ToWatchList 
+                        drawerOpen={drawerOpen} 
+                        setDrawerOpen={setDrawerOpen}
+                        setFilmsToWatch={setFilmsToWatch}
+                        />
+                    </div>}
+                  /> 
+
+                  <Route path="/film/:id" element={
+                    <div className="default-view scale">
+                     <AboutFilm/>
+                    </div>}
+                  />
+                
+                  <Route path="*" element={
+                    <div className="default-view scale">
+                      <Page404 />
+                    </div>}
+                  />  
+
+                </Routes>
+              </CSSTransition>
+            </TransitionGroup>
+            <Footer/>
+                 </>
+
+      )
   }
 
   return (
