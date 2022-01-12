@@ -99,6 +99,11 @@
 }
 
 @media screen and (max-width: 399px) {
+
+    .film-list {
+        margin-bottom: 100px;
+    }
+
     .film-list__grid {
         grid-template-columns: 1fr;
     }

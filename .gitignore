@@ -4,6 +4,9 @@
 /node_modules
 /.pnp
 .pnp.js
+/pantryID.txt
+/web3storageToken.txt
+/web3-storage-quickstart
 
 # testing
 /coverage

@@ -8,6 +8,24 @@
     z-index: 1000;
 }
 
+.header__button-avatar {
+    background: none;
+    border-radius: 100%;
+    border: 0;
+    width: 50px;
+    height: 50px;
+    margin: auto 0;
+    cursor: pointer;
+}
+
+.header__avatar {
+    width: 50px;
+    height: 50px;
+    margin: auto 0;
+    object-position: center;
+    object-fit: cover;
+    border-radius: 100%;
+}
 
 .header__wrapper {
     width: 100%;
@@ -15,7 +33,12 @@
     justify-content: space-between;
     min-height: 80px;
 }
-
+.header__button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 20px;
+}
 .header__films-counter {
     color: var(--grey-200);
     letter-spacing: 0.02em;
