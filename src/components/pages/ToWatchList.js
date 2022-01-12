@@ -17,6 +17,7 @@ const ToWatchList = (props) => {
   const [filterGenre, setFilterGenre] = useState([]);
   const [filterSearch, setFilterSearch] = useState('');
   const [open, setOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const {loading, error, getFilmById} = KinopoiskServices();
 
@@ -97,7 +98,10 @@ const ToWatchList = (props) => {
       }
     ]
   }
-
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, [])
   //загрузка списка из ls
   useEffect(() => {
     let newData
@@ -114,10 +118,40 @@ const ToWatchList = (props) => {
     setData(newData)
   }, [])
 
-  
+  useEffect(() => {
+    localStorageSetter(data)
+    setFilmsToWatch(data.length)
+  }, [data])
+
   const localStorageSetter = (state) => {
+    if (!isMounted) return
     localStorage.setItem('movies', JSON.stringify(state))
   }
+
+  useEffect(() => {
+    updateRatingsFromServer(data)
+  }, [])
+
+  const updateRatingsFromServer = (data) => {
+    if (!isMounted) return
+    if (data.length === 0 || typeof data.length !== 'object') return
+
+    const newData = data.map((film) => {
+      let newFilm = film
+      getFilmById(newFilm.id)
+      .then((response) => {
+        newFilm.ratingImdb = response.ratingImdb
+        newFilm.ratingKinopoisk = response.ratingKinopoisk
+      }, reasone => {
+        throw new Error ('Часть рейтингов фильмов не была обновлена из-за ограничесний сервера. Ошибка: ', reasone)
+      })
+      return newFilm
+    })
+
+    setData(newData)
+    
+  }
+  
 
   //функция возвращает массив неповторяющихся жанров вместо массива с массивами жанров каждого фильма
   const genres = () => {
@@ -138,10 +172,7 @@ const ToWatchList = (props) => {
     })
   }
 
-  useEffect(() => {
-    localStorageSetter(data)
-    setFilmsToWatch(data.length)
-  }, [data])
+ 
 
   const addItem = async ({title, subtitle, genre, timestamp, posterUrlPreview, id}) => {
     const response = await getFilmById(id)
@@ -162,27 +193,7 @@ const ToWatchList = (props) => {
   //функция обновляет данные с сервера
   //перебирает весь data и обновляет рейтинги
   //в идеале нужно это делать на сервере
-  useEffect(() => {
-    updateRatingsFromServer()
-  }, [])
-
-  const updateRatingsFromServer = () => {
-    if (data.length === 0) return
-    const newData = data.map((film) => {
-      let newFilm = film
-      getFilmById(newFilm.id)
-      .then((response) => {
-        newFilm.ratingImdb = response.ratingImdb
-        newFilm.ratingKinopoisk = response.ratingKinopoisk
-      }, reasone => {
-        throw new Error ('Часть рейтингов фильмов не была обновлена из-за ограничесний сервера. Ошибка: ', reasone)
-      })
-      return newFilm
-    })
-
-    setData(newData)
-    
-  }
+  
 
   const filterGenreSetter = (key) => {
     setFilterGenre(key);

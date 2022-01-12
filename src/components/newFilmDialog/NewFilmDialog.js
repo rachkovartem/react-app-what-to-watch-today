@@ -55,6 +55,7 @@ const NewFilmDialog = (props) => {
   const [userChoise, setUserChoise] = useState(null);
   const [searchInProgress, setSearchInProgress] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isMounted, setIsMounted] = useState(false)
 
   const titleInput = useRef(null);
   const delay = 500;
@@ -96,10 +97,15 @@ const NewFilmDialog = (props) => {
   const debouncedGetFilmsAndSetState = debounce((title) => getFilmsAndSetState(title), delay);
   
   useEffect(() => {
-    
+    setIsMounted(true)
+    return () => setIsMounted(false)
+  }, [])
+
+  useEffect(() => {
+
     debouncedGetFilmsAndSetState(title)
     setSearchInProgress(true)
-    
+  
   }, [title])
 
   //а нужно было просто взять другой инпут из MUI, спать надо ложиться раньше
@@ -133,6 +139,7 @@ const NewFilmDialog = (props) => {
 
 
   const getFilmsAndSetState = (input) => {
+    
     getFilmByKeyWord(input)
       .then(response => {
         const newFilmOptions = response.films.map((item) => {
@@ -143,10 +150,14 @@ const NewFilmDialog = (props) => {
                   description: item.description,
                   key: nextId()}
         })
+        if (!isMounted) return
         setFilmOptions(newFilmOptions);
 
       })
-      .catch(setFilmOptions([])) 
+      .catch(() => {
+        if (!isMounted) return
+        setFilmOptions([])
+      }) 
   }
 
   const validationTextForm = () => {

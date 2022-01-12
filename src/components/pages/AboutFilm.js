@@ -1,26 +1,27 @@
 import { useState, useEffect } from 'react';
 import { useParams, } from 'react-router-dom';
 
-import kinopoisk from '../../resources/img/kinopoisk.svg'
-import imdb from '../../resources/img/IMDB.svg';
 import KinopoiskServices from '../../services/KinopoiskServices';
 import Cover from '../cover/Cover';
 import Description from '../description/Description'
-import Footer from '../footer/Footer';
 
 
 const AboutFilm = () => {
 
     const {loading, error, clearError, getFilmById, getImagesById} = KinopoiskServices();
-    const {id} = useParams();
-    const [filmLoaded, setFilmLoaded] = useState(false);
+    const { id } = useParams();
     const [ images, setImages ] = useState({});
     const [imagesUpdated, setImagesUpdated] = useState(false);
-    const [countsOfImagesUpdated, setCountsOfImagesUpdated] = useState(false);
     const [stringCountries, setStringCountries] = useState('');
     const [stringGenres, setStringGenres] = useState('');
     const [film, setFilm] = useState({});
     const {nameRu, nameEn, nameOriginal, type} = film;
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+        return () => setIsMounted(false)
+    }, [])
 
     useEffect(() => {
         updateFilm(id)
@@ -32,8 +33,8 @@ const AboutFilm = () => {
     }
 
     const filmUpdated = (data) => {
+
         setFilm(data);
-        setFilmLoaded(true);
         const {year, filmLength, serial, endYear, startYear, description, countries, genres} = data
         setStringCountries(countries.map(item => item.country).join(', '))
         setStringGenres(genres.map(item => item.genre).join(', '))
@@ -68,6 +69,7 @@ const AboutFilm = () => {
     }, [])
 
     const getImageForBigPoster = async () => {
+        
         const values = ['WALLPAPER', 'SCREENSHOT', 'COVER', 'SHOOTING', 'STILL']
         let value = 0;
         let res = await getImagesByType(values[value]);
@@ -76,6 +78,7 @@ const AboutFilm = () => {
             res = await getImagesByType(values[value])
             value++
         }
+
         onImagesLoaded(res)
     }
 
@@ -109,9 +112,11 @@ const AboutFilm = () => {
         } else {return {color: '#000'}}
     }
 
+    
+
     return (
        <>
-            <Cover title={nameRu} image={imagesUpdated && images.items[0] ? images.items[0].imageUrl : null}/>
+            <Cover imagesUpdated={imagesUpdated} loading={loading} title={nameRu} image={imagesUpdated && images.items[0] ? images.items[0].imageUrl : null}/>
             <Description poster={film.posterUrl} 
             shortDescription={film.shortDescription} 
             description={film.description}

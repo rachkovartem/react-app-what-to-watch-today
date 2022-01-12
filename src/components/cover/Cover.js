@@ -1,4 +1,5 @@
 import './Cover.scss';
+import Skeleton from '@mui/material/Skeleton';
 
 import imageNotFound from '../../resources/img/image-not-found.png'
 
@@ -7,12 +8,22 @@ import { Link } from "react-router-dom";
 
 
 const Cover = (props) => {
-  const {title, image} = props;
+  const {title, image, loading, imagesUpdated} = props;
+
+    const skeleton = loading || !imagesUpdated ? <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)'}} variant='rectangular'>
+      <img className="container__poster" src={image ? image : imageNotFound} alt="Постер"/>
+      </Skeleton> : null;
+    const poster = image && !loading && imagesUpdated ? <img className="container__poster" src={image} alt="Постер"/> : null
+    const notFound = !image && !loading && imagesUpdated ? <img className="container__poster" src={imageNotFound} alt="Постер"/> : null
+
     return (
         <section className="cover">
           <div className="container">
             <div className="container__poster-wrapper">
-              <img className="container__poster" src={image ? image : imageNotFound} alt="Постер"/>
+              {skeleton}
+              {poster}
+              {notFound}
+
             </div>
             <div className="cover__title-wrapper">
               <div className="cover__breadcrumbs">

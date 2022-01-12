@@ -4,7 +4,7 @@ import './FilmItem.scss'
 import Skeleton from '@mui/material/Skeleton';
 
 import LinesEllipsis from 'react-lines-ellipsis';
-import { Link, Router } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import kinopoiskImg from '../../resources/img/kinopoisk.svg';
 import imdbImg from '../../resources/img/IMDB.svg';
