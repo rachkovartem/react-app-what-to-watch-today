@@ -46,11 +46,11 @@ const NewFilmDialog = (props) => {
       ].join(','),
     }
   });
-  const {onAdd, isIdAlreadyExists} = props;
+  const {onAdd, isIdAlreadyExists, open, setOpen} = props;
   const {loading, error, clearError, getFilmByKeyWord} = KinopoiskServices();
   const [title, setTitle] = useState('');
   const [timestamp, setTimeStamp] = useState(() => Math.round(Date.now()/1000));
-  const [open, setOpen] = useState(false);
+  
   const [filmOptions, setFilmOptions] = useState([]);
   const [userChoise, setUserChoise] = useState(null);
   const [searchInProgress, setSearchInProgress] = useState(false)
@@ -211,12 +211,7 @@ const NewFilmDialog = (props) => {
 
   return (
     <>
-        <button className="film-list__add-button" onClick={() => setOpen(true)}>
-          <svg rotate="45" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M7.75781 7.75732L16.2431 16.2426" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M7.75781 16.2426L16.2431 7.75732" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
+        
         <ThemeProvider theme={theme}>
           <Dialog open={open} onClose={() => setOpen(false)}>
               <DialogTitle>Запланировать фильм</DialogTitle>

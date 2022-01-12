@@ -71,7 +71,6 @@ const AboutFilm = () => {
         const values = ['WALLPAPER', 'SCREENSHOT', 'COVER', 'SHOOTING', 'STILL']
         let value = 0;
         let res = await getImagesByType(values[value]);
-        console.log(res)
         while (res.items.length === 0 && values[value]) {
             console.log(values[value])
             res = await getImagesByType(values[value])

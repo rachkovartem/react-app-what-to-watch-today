@@ -14,7 +14,6 @@ const App = () => {
   const [filmsToWatch, setFilmsToWatch] = useState(0)
   const [domContentLoaded, setDomContentLoaded] = useState(false);
   const [rendered, setRendered] = useState(false)
-  const nodeRef = createRef(null)
   const location = useLocation()
   const onDomLoaded = () => {
     setDomContentLoaded(true);  
@@ -54,11 +53,13 @@ const App = () => {
   const View = () => {
       return (
         <>
+        <CSSTransition appear={true} key={location.key} classNames="scale" timeout={300}>
             <Header
               onClickDrawerToggle={onClickDrawerToggle}
               drawerOpen={drawerOpen} 
               filmsToWatch={filmsToWatch} 
               />
+              </CSSTransition>
 
               <TransitionGroup component={null}>
               <CSSTransition appear={true} key={location.key} classNames="scale" timeout={300}>

@@ -16,6 +16,7 @@ const ToWatchList = (props) => {
   const [filterDate, setFilterDate] = useState('Всё время');
   const [filterGenre, setFilterGenre] = useState([]);
   const [filterSearch, setFilterSearch] = useState('');
+  const [open, setOpen] = useState(false);
 
   const {loading, error, getFilmById} = KinopoiskServices();
 
@@ -261,13 +262,17 @@ const ToWatchList = (props) => {
           loading={loading}
           data={memoizedFiltredData} 
           onAdd={addItem} 
-          onDelete={deleteItem}/>
+          onDelete={deleteItem}
+          setOpen={setOpen}
+          
+          />
+          
           
         </ErrorBoundary>
 
         <ErrorBoundary>
 
-          <NewFilmDialog onAdd={addItem} isIdAlreadyExists={isIdAlreadyExists}/>
+          <NewFilmDialog setOpen={setOpen} open={open} onAdd={addItem} isIdAlreadyExists={isIdAlreadyExists}/>
 
         </ErrorBoundary>
           

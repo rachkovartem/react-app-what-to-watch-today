@@ -17,6 +17,75 @@
     padding: 0;
 }
 
+.film-list__add-button {
+    --delay: 0.3s;
+    --transition: opacity var(--delay), background-color var(--delay), border-color var(--delay);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: sticky;
+    margin-left: auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    z-index: 5;
+    right: 130px;
+    bottom: 60px;
+    width: 56px;
+    height: 56px;
+    background-color: var(--primary-400);
+    background-size: cover;
+    border: 2px solid var(--primary-400);
+    border-radius: 100%;
+    transition: var(--transition);
+    opacity: 0.8;
+    cursor: pointer;
+    &:hover {
+        background-color: var(--primary-400);
+        border-color: var(--primary-500);
+        transition: var(--transition);
+        opacity: 1;
+    }
+    &:active {
+        background-color: var(--primary-500);
+        border-color: var(--primary-500);
+        transition:  var(--transition);
+        opacity: 1;
+        
+    }
+    svg {
+        width: 100%;
+        height: 100%;
+        transform-origin: center;
+        transform: rotate(45deg) scale(1.2);
+    }
+}
+
+@media screen and (max-width: 1199px) {
+    .film-list__add-button {
+        right: 70px;
+        bottom: 70px;
+    }
+    
+} 
+
+@media screen and (max-width: 768px) {
+    .film-list__add-button {
+        right: 50px;
+        bottom: 50px;
+    }
+    
+} 
+    
+@media screen and (max-width: 425px) {
+    .film-list__add-button {
+        right: 30px;
+        bottom: 30px;
+        width: 50px;
+        height: 50px;
+    }
+    
+} 
+
 @media screen and (max-width: 1023px) {
     .film-list__grid {
         grid-template-columns: repeat(3, 1fr);
