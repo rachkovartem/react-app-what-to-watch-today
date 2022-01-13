@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useAuth0 } from "@auth0/auth0-react";
+
 import FilmList from '../filmList/FilmList';
 import AppSidemenu from '../appSidemenu/AppSideMenu';
 import KinopoiskServices from '../../services/KinopoiskServices';
@@ -9,6 +11,12 @@ import Search from '../search/Search';
 import NewFilmDialog from '../newFilmDialog/NewFilmDialog';
 
 
+function typeCheck(value) {
+  var regex = /^\[object (\S+?)\]$/;
+  var matches = Object.prototype.toString.call(value).match(regex) || [];
+
+  return (matches[1] || 'undefined').toLowerCase();
+}
 
 const ToWatchList = (props) => {
   const { drawerOpen, setDrawerOpen, setFilmsToWatch} = props;
@@ -18,8 +26,11 @@ const ToWatchList = (props) => {
   const [filterSearch, setFilterSearch] = useState('');
   const [open, setOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isServerDataLoaded, setIsServerDataLoaded] = useState(false);
+  const { loginWithRedirect, user, isAuthenticated, isLoading, logout } = useAuth0();
 
-  const {loadingPantry, errorPantry, clearErrorPantry, getData, postData} = PantryServices();
+
+  const {loadingPantry, errorPantry, clearErrorPantry, getData, putData, postData} = PantryServices();
   const {loading, error, getFilmById} = KinopoiskServices();
 
   //список фильмов для примера новому юзеру
@@ -99,12 +110,65 @@ const ToWatchList = (props) => {
       }
     ]
   }
+
   useEffect(() => {
     setIsMounted(true);
     return () => setIsMounted(false);
   }, [])
+
   //загрузка списка из ls
   useEffect(() => {
+    if (!isAuthenticated) {
+      const newData = getDataFromLS()
+      if (data === undefined) return
+      setData(newData)
+      } else if (isAuthenticated) {
+        console.log('Аутентифицировано, получение данных с сервера')
+        const response = getUserDataFromServer(user.email) 
+        response.then(res => {
+          if (res === null || res === undefined) {
+            setData([]);
+            setIsServerDataLoaded(true)
+            console.log(`С сервера получен ${res}, установлен [] в data`)
+            return
+          }
+          setData(res)
+          console.log(res)
+          console.log('Эти данные получены с сервера при инициализации (129)')
+          setIsServerDataLoaded(true)
+        })  
+      }
+  }, [user])
+
+  const getFullDataFromServer = async () => {
+    const response = await getData()
+    return response
+  }
+
+  const getUserDataFromServer = async(email) => {
+    const response = await getData()
+    return response[email]
+  }
+
+  const putUserDataToServer = async (user, data) => {
+    console.log(data)
+    const resetOldArray = await putData({[user.email]: null})
+
+      if (resetOldArray) {
+        console.log('успешно сброшены данные на сервере пере отправкой данных выше (146)')
+        const response = putData({[user.email]: data})
+        response.then(res => {
+          console.log(res ? 'успешно отправлено на сервер' : 'ошибка отправки на сервер')
+        })
+      } else {
+        console.log('ошибка отправки на сервер')
+      }
+    
+    
+    
+  }
+
+  const getDataFromLS = () => {
     let newData
     if (localStorage.getItem('movies')) {
       newData = JSON.parse(localStorage.getItem('movies'))
@@ -116,14 +180,17 @@ const ToWatchList = (props) => {
     } else {
       newData = returnNewStockData()
     }
-    setData(newData)
-    console.log(newData)
-    postData(newData)
-  }, [])
+    return(newData)
+  }
 
   useEffect(() => {
-    localStorageSetter(data)
-    setFilmsToWatch(data.length)
+    if (!isAuthenticated && isMounted && data) {
+      localStorageSetter(data)
+    } else if (isAuthenticated && isServerDataLoaded) {
+      console.log(1)
+      putUserDataToServer(user, data)
+    }
+    if (isMounted && data) setFilmsToWatch(data.length)
   }, [data])
 
   const localStorageSetter = (state) => {
@@ -150,14 +217,12 @@ const ToWatchList = (props) => {
       })
       return newFilm
     })
-
     setData(newData)
-    
   }
-  
 
   //функция возвращает массив неповторяющихся жанров вместо массива с массивами жанров каждого фильма
   const genres = () => {
+    if (!data) return
     let arr = []
     data.forEach(item => {
       item.genre.forEach((e) => {
@@ -174,8 +239,6 @@ const ToWatchList = (props) => {
       return prevData.filter(item => item.id !== id)
     })
   }
-
- 
 
   const addItem = async ({title, subtitle, genre, timestamp, posterUrlPreview, id}) => {
     const response = await getFilmById(id)
@@ -207,8 +270,10 @@ const ToWatchList = (props) => {
   }
 
   const onFilterGenre = (data, filter) => {
+    if (!data) return
     return data.filter(film => {
       return filter.every(filterGenre => {
+        
         return film.genre.includes(filterGenre)
       })
     })
@@ -234,6 +299,7 @@ const ToWatchList = (props) => {
   }
 
   const onFilterSearch = (data, filter) => {
+    if (!data || filter === undefined) return
     return data.filter((item) => {
       return (item.title.toLowerCase().includes(filter.toLowerCase()) 
       || item.subtitle.toLowerCase().includes(filter.toLowerCase()))
@@ -241,23 +307,25 @@ const ToWatchList = (props) => {
   }
 
   const memoizedAllIds = useMemo(() => {
+    if (!data || data.length) return
     return data.map((film) => {
       return film.id
     })
   }, [data])
 
   const isIdAlreadyExists = (id) => {
- 
+    if (!memoizedAllIds) return
     return memoizedAllIds.indexOf(id) > 0 ? true : false;    
   }
 
-  const filtredData = useCallback((data, filterSearch) => onFilterGenre(onFilterDate(onFilterSearch(data, filterSearch), filterDate), filterGenre), [data, filterSearch, filterDate, filterGenre]);
+  const filtredData = onFilterGenre(onFilterDate(onFilterSearch(data, filterSearch), filterDate), filterGenre)
+  const memoizedFiltredData = useMemo(() => onFilterGenre(onFilterDate(onFilterSearch(data, filterSearch), filterDate), filterGenre), [data, filterSearch, filterDate, filterGenre]);
   
-  const memoizedFiltredData = useMemo(() => filtredData(data, filterSearch), [filtredData])
+
 
   return (
   <>
-      <Search setFilterSearch={setFilterSearch} filterSearch={filterSearch} filtredData={filtredData} data={data}/>
+      <Search setFilterSearch={setFilterSearch} filterSearch={filterSearch}/>
    
         <ErrorBoundary>
           <AppSidemenu 

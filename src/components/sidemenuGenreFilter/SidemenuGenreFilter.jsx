@@ -67,7 +67,7 @@ export default function SideMenuGenreFilter(props) {
           <MenuItem disabled value="">
             <span>Фильтр по жанру</span>
           </MenuItem>
-          {names.map((name) => (
+          {names ? names.map((name) => (
             <MenuItem
               key={name}
               value={name}
@@ -75,7 +75,7 @@ export default function SideMenuGenreFilter(props) {
             >
               {name}
             </MenuItem>
-          ))}
+          )) : null}
         </Select>
       </FormControl>
     </div>

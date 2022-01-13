@@ -1,14 +1,13 @@
 import './Search.scss'
 import './InputForm.scss'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import search from '../../resources/icons/search.svg'
 
 let timer;
 function debounce(func, timeout = 500){
-  
   return (...args) => {
     clearTimeout(timer);
     timer = setTimeout(() => { func.apply(this, args); }, timeout);
@@ -20,6 +19,19 @@ const Search = (props) => {
   const { setFilterSearch } = props;
   const [filter, setFilter] = useState(''); 
   const debouncedSetFilterSearch = debounce((e) => setFilterSearch(e), 500);
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+    return setIsMounted(false)
+  }, [])
+  
+  const onClickSearch = (e) => {
+    if (e.target.value !== undefined) {
+      debouncedSetFilterSearch(e.target.value);
+      setFilter(e.target.value)
+    }
+  }
 
   
   return (
@@ -32,7 +44,7 @@ const Search = (props) => {
               <img className="input-form__icon" src={search} alt="Поиск"/>
               <input 
               value={filter ? filter : ''} 
-              onChange={(e) => {debouncedSetFilterSearch(e.target.value); setFilter(e.target.value)}} 
+              onChange={onClickSearch} 
               autoComplete="off" 
               placeholder="название фильма или описание" 
               id="search" type="text" 

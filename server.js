@@ -2,8 +2,8 @@ const express = require('express');
 const favicon = require('express-favicon');
 const path = require('path');
 const fetch = require ('node-fetch');
-var https = require('follow-redirects').https;
-var fs = require('fs');
+const https = require('follow-redirects').https;
+const dotenv = require('dotenv');
 
 const cors=require("cors");
 const corsOptions ={
@@ -12,6 +12,14 @@ const corsOptions ={
    optionSuccessStatus:200,
 }
 
+if (process.env.NODE_ENV === 'development')
+  dotenv.config(
+    {
+      path: path.resolve(__dirname, '.env.' + process.env.NODE_ENV + '.local')
+    }
+);
+
+const ID = process.env.PANTRY_ID
 
 const port = process.env.PORT || 8080;
 
@@ -28,62 +36,20 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 //простой тест сервера
 app.get('/ping', function (req, res) {
- return res.send('isDev');
+ return res.send('pong');
 });
-
 
 app.get('/api/getData', function (req, mainRes) {
     var options = {
         'method': 'GET',
         'hostname': 'getpantry.cloud',
-        'path': '/apiv1/pantry/2b1cdc78-73a2-4a92-a1d4-8c61e000900f/basket/towatchapp',
+        'path': `/apiv1/pantry/${ID}/basket/towatchapp`,
         'headers': {
           'Content-Type': 'application/json'
         },
         'maxRedirects': 20
     };
-    let data = {
-        "squadName": "Super hero squad",
-        "homeTown": "Metro City",
-        "formed": 2016,
-        "secretBase": "Super tower",
-        "active": true,
-        "members": [
-          {
-            "name": "Molecule Man",
-            "age": 29,
-            "secretIdentity": "Dan Jukes",
-            "powers": [
-              "Radiation resistance",
-              "Turning tiny",
-              "Radiation blast"
-            ]
-          },
-          {
-            "name": "Madame Uppercut",
-            "age": 39,
-            "secretIdentity": "Jane Wilson",
-            "powers": [
-              "Million tonne punch",
-              "Damage resistance",
-              "Superhuman reflexes"
-            ]
-          },
-          {
-            "name": "Eternal Flame",
-            "age": 1000000,
-            "secretIdentity": "Unknown",
-            "powers": [
-              "Immortality",
-              "Heat Immunity",
-              "Inferno",
-              "Teleportation",
-              "Interdimensional travel"
-            ]
-          }
-        ]
-      };
-
+    let data = {};
      
     const getReq = https.request(options, function (res) {
         var chunks = [];
@@ -97,6 +63,8 @@ app.get('/api/getData', function (req, mainRes) {
           var body = Buffer.concat(chunks);
           data = body.toString()
           mainRes.send(data)
+          console.log(data)
+          console.log('получены данные с сервера')
         });
       
         res.on("error", function (error) {
@@ -106,22 +74,40 @@ app.get('/api/getData', function (req, mainRes) {
     });
 
     getReq.end();
-
 })
-
 
 
 app.post('/api/postData', async function (mainReq, mainRes) {
   console.log(mainReq.body)
-  const response = await fetch('https://getpantry.cloud/apiv1/pantry/2b1cdc78-73a2-4a92-a1d4-8c61e000900f/basket/towatchapp', {
-    method: 'post',
-    body: JSON.stringify(mainReq.body),
-    headers: {'Content-Type': 'application/json'},
-    'maxRedirects': 20
-  });
-
+  try {
+    const response = await fetch(`https://getpantry.cloud/apiv1/pantry/${ID}/basket/towatchapp`, {
+      method: 'POST',
+      body: JSON.stringify(mainReq.body),
+      headers: {'Content-Type': 'application/json'},
+      'maxRedirects': 20
+    });
+    mainRes.send(response)
+  } catch (error) {
+    console.log(error)
+  }
   
-  mainRes.end('200 OK')
+})
+
+app.put('/api/putData', async function (mainReq, mainRes) {
+  console.log(mainReq.body)
+  try {
+    const response = await fetch(`https://getpantry.cloud/apiv1/pantry/${ID}/basket/towatchapp`, {
+      method: 'PUT',
+      body: JSON.stringify(mainReq.body),
+      headers: {'Content-Type': 'application/json'},
+      'maxRedirects': 20
+    });
+    console.log(response.ok ? 'успешно отправлено' : 'ошибка отправки')
+    mainRes.send(response.ok)
+  } catch (error) {
+    console.log(error)
+  }
+  
 })
 
 //обслуживание html

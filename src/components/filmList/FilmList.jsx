@@ -32,7 +32,7 @@ const FilmList = (props) => {
   const {onAdd, data} = props;
   const elements = (data) => {
     return (
-        data.map(item => {
+        data ? data.map(item => {
           const {id, ...itemProps} = item;
           return (
             <Transition 
@@ -58,7 +58,7 @@ const FilmList = (props) => {
               )}
             </Transition>
           )
-        })
+        }) : null
     )
   }
 
@@ -79,7 +79,7 @@ const FilmList = (props) => {
 
   const notFound = <span className='film-list__notfound'>Ничего не найдено</span>;
   
-  const View = data.length > 0 ? list : notFound;
+  const View = data && data.length > 0 ? list : notFound;
 
   return (
     <section className="film-list">
