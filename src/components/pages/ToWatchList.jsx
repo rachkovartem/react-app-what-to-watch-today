@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 
 import FilmList from '../filmList/FilmList';
@@ -10,14 +10,6 @@ import PantryServices from '../../services/PantryServices';
 import Search from '../search/Search';
 import NewFilmDialog from '../newFilmDialog/NewFilmDialog';
 
-
-function typeCheck(value) {
-  var regex = /^\[object (\S+?)\]$/;
-  var matches = Object.prototype.toString.call(value).match(regex) || [];
-
-  return (matches[1] || 'undefined').toLowerCase();
-}
-
 const ToWatchList = (props) => {
   const { drawerOpen, setDrawerOpen, setFilmsToWatch} = props;
   const [data, setData] = useState([]);
@@ -27,13 +19,12 @@ const ToWatchList = (props) => {
   const [open, setOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [isServerDataLoaded, setIsServerDataLoaded] = useState(false);
-  const { loginWithRedirect, user, isAuthenticated, isLoading, logout } = useAuth0();
+  const { user, isAuthenticated, isLoading } = useAuth0();
 
 
   const {loadingPantry, errorPantry, clearErrorPantry, getData, putData, postData} = PantryServices();
   const {loading, error, getFilmById} = KinopoiskServices();
 
-  //список фильмов для примера новому юзеру
   const returnNewStockData = () => {
     return [
       {
@@ -116,7 +107,6 @@ const ToWatchList = (props) => {
     return () => setIsMounted(false);
   }, [])
 
-  //загрузка списка из ls
   useEffect(() => {
     if (!isAuthenticated) {
       const newData = getDataFromLS()
@@ -163,9 +153,6 @@ const ToWatchList = (props) => {
       } else {
         console.log('ошибка отправки на сервер')
       }
-    
-    
-    
   }
 
   const getDataFromLS = () => {
@@ -220,7 +207,6 @@ const ToWatchList = (props) => {
     setData(newData)
   }
 
-  //функция возвращает массив неповторяющихся жанров вместо массива с массивами жанров каждого фильма
   const genres = () => {
     if (!data) return
     let arr = []
@@ -255,12 +241,7 @@ const ToWatchList = (props) => {
       })
     })
   }
-
-  //функция обновляет данные с сервера
-  //перебирает весь data и обновляет рейтинги
-  //в идеале нужно это делать на сервере
   
-
   const filterGenreSetter = (key) => {
     setFilterGenre(key);
   }
@@ -318,15 +299,11 @@ const ToWatchList = (props) => {
     return memoizedAllIds.indexOf(id) > 0 ? true : false;    
   }
 
-  const filtredData = onFilterGenre(onFilterDate(onFilterSearch(data, filterSearch), filterDate), filterGenre)
   const memoizedFiltredData = useMemo(() => onFilterGenre(onFilterDate(onFilterSearch(data, filterSearch), filterDate), filterGenre), [data, filterSearch, filterDate, filterGenre]);
   
-
-
   return (
     <>
       <Search setFilterSearch={setFilterSearch} filterSearch={filterSearch}/>
-   
         <ErrorBoundary>
           <AppSidemenu 
           onClickDrawerToggle={() => setDrawerOpen(drawerOpen => !drawerOpen)} 

@@ -137,7 +137,6 @@ const NewFilmDialog = (props) => {
     setSearchInProgress(false)
   }, [filmOptions])
 
-
   const getFilmsAndSetState = (input) => {
     
     getFilmByKeyWord(input)

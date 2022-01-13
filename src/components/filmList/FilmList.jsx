@@ -7,7 +7,6 @@ import { useRef, cloneElement, useMemo } from 'react';
 import Spinner from '../spinner/Spinner'
 import FilmItem from '../filmItem/FilmItem';
 
-
 const FilmList = (props) => {
   const { setOpen, loadingPantry, isLoading } = props;
   const nodeRef = useRef(null)
@@ -63,7 +62,7 @@ const FilmList = (props) => {
     )
   }
 
-  const memoizedElements = useMemo(() => elements(data), [data]);
+  const memoizedElements = useMemo(() => elements(data), [elements]);
 
   const list = (
     <TransitionGroup 
@@ -78,8 +77,6 @@ const FilmList = (props) => {
     </TransitionGroup> 
   );
 
-  
-  
   const View = data && data.length > 0 && !loadingPantry && !isLoading ? list : null;
   const spinner = loadingPantry || isLoading ? <Spinner/> : null;
   const notFound = (data.length === 0 || !data) && !loadingPantry && !isLoading ? <span className='film-list__notfound'>Ничего не найдено</span> : null;

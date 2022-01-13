@@ -46,7 +46,6 @@ const App = () => {
 
   const onClickDrawerToggle = () => {
     setDrawerOpen(drawerOpen => !drawerOpen)
-
   }
 
   const View = () => {
@@ -57,6 +56,7 @@ const App = () => {
                 onClickDrawerToggle={onClickDrawerToggle}
                 drawerOpen={drawerOpen} 
                 filmsToWatch={filmsToWatch} 
+                domContentLoaded={domContentLoaded}
                 />
                 </CSSTransition>
                 <TransitionGroup component={null}>

@@ -15,32 +15,37 @@ import Logout from '@mui/icons-material/Logout';
 
 
 
-export default function Header({filmsToWatch, onClickDrawerToggle, drawerOpen}) {
+export default function Header({domContentLoaded, onClickDrawerToggle, drawerOpen}) {
 
   const [displyedHamburger, setDisplayedHamburger] = useState(false);
   const { loginWithRedirect, user, isAuthenticated, isLoading, logout } = useAuth0();
-  const [ loggedUser, setloggedUser ] = useState();
-  const [ isRendered, setRendered ] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
 
   useEffect(() => {
-    setRendered(true);
-    return setRendered(false)
-  }, [])
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      setloggedUser(user)
+    if (!domContentLoaded) {return}
+    if (anchorEl) {
+      if (window.innerWidth > 900) {
+        document.querySelector('.header__hamburger').style.marginRight = '3px';
+        document.querySelector('.film-list__add-button').style.marginRight = '3px';
+      } 
+    } 
+    if (!anchorEl) {
+      if (window.innerWidth > 900) {
+        document.querySelector('.header__hamburger').style.marginRight = '';
+        document.querySelector('.film-list__add-button').style.marginRight = '';
+      }
     }
-  }, [])
+  },[anchorEl])
 
   const displayHamburger = () => {
     setDisplayedHamburger(true)
@@ -50,7 +55,7 @@ export default function Header({filmsToWatch, onClickDrawerToggle, drawerOpen}) 
     setDisplayedHamburger(false)
   }
 
-const location = useLocation()
+  const location = useLocation()
 
   useEffect(() => {
     if (location.pathname === undefined) {
@@ -130,14 +135,14 @@ const location = useLocation()
       <ListItemIcon>
         <AccountBoxIcon fontSize="small"/>
       </ListItemIcon>
-       Профиль
+      Профиль
     </MenuItem>
     <Divider />
     <MenuItem onClick={() => logout({ returnTo: window.location.origin })}>
       <ListItemIcon>
         <Logout fontSize="small" />
       </ListItemIcon>
-      Выйти
+        Выйти
     </MenuItem>
   </Menu>
   )
@@ -159,7 +164,6 @@ const location = useLocation()
                 </ul>
               </nav>
 
-            
               <div 
               style={{display: !displyedHamburger ? "none" : ""}} 
               onClick={onClickDrawerToggle} 
@@ -203,7 +207,6 @@ const location = useLocation()
                   </g>
                 </svg>
               </div>
-            
             </div>
           </div>
         </div>
