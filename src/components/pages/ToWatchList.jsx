@@ -113,18 +113,14 @@ const ToWatchList = (props) => {
       if (data === undefined) return
       setData(newData)
       } else if (isAuthenticated) {
-        console.log('Аутентифицировано, получение данных с сервера')
         const response = getUserDataFromServer(user.email) 
         response.then(res => {
           if (res === null || res === undefined) {
             setData([]);
             setIsServerDataLoaded(true)
-            console.log(`С сервера получен ${res}, установлен [] в data`)
             return
           }
           setData(res)
-          console.log(res)
-          console.log('Эти данные получены с сервера при инициализации (129)')
           setIsServerDataLoaded(true)
         })  
       }
@@ -141,17 +137,13 @@ const ToWatchList = (props) => {
   }
 
   const putUserDataToServer = async (user, data) => {
-    console.log(data)
     const resetOldArray = await putData({[user.email]: null})
 
       if (resetOldArray) {
-        console.log('успешно сброшены данные на сервере пере отправкой данных выше (146)')
         const response = putData({[user.email]: data})
         response.then(res => {
-          console.log(res ? 'успешно отправлено на сервер' : 'ошибка отправки на сервер')
         })
       } else {
-        console.log('ошибка отправки на сервер')
       }
   }
 
@@ -174,7 +166,6 @@ const ToWatchList = (props) => {
     if (!isAuthenticated && isMounted && data) {
       localStorageSetter(data)
     } else if (isAuthenticated && isServerDataLoaded) {
-      console.log(1)
       putUserDataToServer(user, data)
     }
     if (isMounted && data) setFilmsToWatch(data.length)

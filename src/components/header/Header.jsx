@@ -13,13 +13,14 @@ import Divider from '@mui/material/Divider';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import Logout from '@mui/icons-material/Logout';
 
-
+import UserProfile from '../userProfile/UserProfile';
 
 export default function Header({domContentLoaded, onClickDrawerToggle, drawerOpen}) {
 
   const [displyedHamburger, setDisplayedHamburger] = useState(false);
   const { loginWithRedirect, user, isAuthenticated, isLoading, logout } = useAuth0();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [openModalProfile, setOpenModalProfile] = useState(false);
 
   const open = Boolean(anchorEl);
 
@@ -39,7 +40,7 @@ export default function Header({domContentLoaded, onClickDrawerToggle, drawerOpe
         document.querySelector('.film-list__add-button').style.marginRight = '3px';
       } 
     } 
-    if (!anchorEl) {
+    if (!anchorEl && document.querySelector('.film-list__add-button')) {
       if (window.innerWidth > 900) {
         document.querySelector('.header__hamburger').style.marginRight = '';
         document.querySelector('.film-list__add-button').style.marginRight = '';
@@ -131,7 +132,7 @@ export default function Header({domContentLoaded, onClickDrawerToggle, drawerOpe
     transformOrigin={{ horizontal: 'left', vertical: 'top' }}
     anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
   >
-    <MenuItem>
+    <MenuItem onClick={() => setOpenModalProfile(true)}>
       <ListItemIcon>
         <AccountBoxIcon fontSize="small"/>
       </ListItemIcon>
@@ -148,69 +149,72 @@ export default function Header({domContentLoaded, onClickDrawerToggle, drawerOpe
   )
 
   return (
-  <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-          {avatar}
-          {avatarMenu}
-          {logProfileButton}
-            {/* <div style={{display: !displyedHamburger ? "none" : ""}} className="header__films-counter">Нужно посмотреть {filmsToWatch} {filmsSwitcher(filmsToWatch)}</div> */}
-            <div className="header__nav-ham-wrapper">
-              <nav className="header__nav-menu">
-                <ul className="header__nav-menu-list">
-                  <li className="header__nav-menu-list-item">
-                    <Link to='/' className="header__nav-el">Главная</Link>
-                  </li>
-                </ul>
-              </nav>
+  <>
+    <header className="header">
+          <div className="container">
+            <div className="header__wrapper">
+            {avatar}
+            {avatarMenu}
+            {logProfileButton}
+              {/* <div style={{display: !displyedHamburger ? "none" : ""}} className="header__films-counter">Нужно посмотреть {filmsToWatch} {filmsSwitcher(filmsToWatch)}</div> */}
+              <div className="header__nav-ham-wrapper">
+                <nav className="header__nav-menu">
+                  <ul className="header__nav-menu-list">
+                    <li className="header__nav-menu-list-item">
+                      <Link to='/' className="header__nav-el">Главная</Link>
+                    </li>
+                  </ul>
+                </nav>
 
-              <div 
-              style={{display: !displyedHamburger ? "none" : ""}} 
-              onClick={onClickDrawerToggle} 
-              className={`header__hamburger ${drawerOpen ? 'header__hamburger_active' : ''}`}>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-                  <g strokeWidth="6.5" strokeLinecap="round">
-                    <path
-                      d="M72 82.286h28.75"
-                      fill="#009100"
-                      fillRule="evenodd"
-                      stroke="#fff"
-                    />
-                    <path
-                      d="M100.75 103.714l72.482-.143c.043 39.398-32.284 71.434-72.16 71.434-39.878 0-72.204-32.036-72.204-71.554"
-                      fill="none"
-                      stroke="#fff"
-                    />
-                    <path
-                      d="M72 125.143h28.75"
-                      fill="#009100"
-                      fillRule="evenodd"
-                      stroke="#fff"
-                    />
-                    <path
-                      d="M100.75 103.714l-71.908-.143c.026-39.638 32.352-71.674 72.23-71.674 39.876 0 72.203 32.036 72.203 71.554"
-                      fill="none"
-                      stroke="#fff"
-                    />
-                    <path
-                      d="M100.75 82.286h28.75"
-                      fill="#009100"
-                      fillRule="evenodd"
-                      stroke="#fff"
-                    />
-                    <path
-                      d="M100.75 125.143h28.75"
-                      fill="#009100"
-                      fillRule="evenodd"
-                      stroke="#fff"
-                    />
-                  </g>
-                </svg>
+                <div 
+                style={{display: !displyedHamburger ? "none" : ""}} 
+                onClick={onClickDrawerToggle} 
+                className={`header__hamburger ${drawerOpen ? 'header__hamburger_active' : ''}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+                    <g strokeWidth="6.5" strokeLinecap="round">
+                      <path
+                        d="M72 82.286h28.75"
+                        fill="#009100"
+                        fillRule="evenodd"
+                        stroke="#fff"
+                      />
+                      <path
+                        d="M100.75 103.714l72.482-.143c.043 39.398-32.284 71.434-72.16 71.434-39.878 0-72.204-32.036-72.204-71.554"
+                        fill="none"
+                        stroke="#fff"
+                      />
+                      <path
+                        d="M72 125.143h28.75"
+                        fill="#009100"
+                        fillRule="evenodd"
+                        stroke="#fff"
+                      />
+                      <path
+                        d="M100.75 103.714l-71.908-.143c.026-39.638 32.352-71.674 72.23-71.674 39.876 0 72.203 32.036 72.203 71.554"
+                        fill="none"
+                        stroke="#fff"
+                      />
+                      <path
+                        d="M100.75 82.286h28.75"
+                        fill="#009100"
+                        fillRule="evenodd"
+                        stroke="#fff"
+                      />
+                      <path
+                        d="M100.75 125.143h28.75"
+                        fill="#009100"
+                        fillRule="evenodd"
+                        stroke="#fff"
+                      />
+                    </g>
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
+      <UserProfile openModalProfile={openModalProfile} setOpenModalProfile={setOpenModalProfile}/>
+    </>
   )
 };
 
