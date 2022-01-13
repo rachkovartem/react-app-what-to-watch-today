@@ -324,7 +324,7 @@ const ToWatchList = (props) => {
 
 
   return (
-  <>
+    <>
       <Search setFilterSearch={setFilterSearch} filterSearch={filterSearch}/>
    
         <ErrorBoundary>
@@ -338,7 +338,6 @@ const ToWatchList = (props) => {
           filterDate={filterDate}/>
         </ErrorBoundary>
         
-      
         <ErrorBoundary>
           <FilmList 
           loading={loading}
@@ -346,18 +345,14 @@ const ToWatchList = (props) => {
           onAdd={addItem} 
           onDelete={deleteItem}
           setOpen={setOpen}
-          
+          loadingPantry={loadingPantry}
+          isLoading={isLoading}
           />
-          
-          
         </ErrorBoundary>
 
         <ErrorBoundary>
-
           <NewFilmDialog setOpen={setOpen} open={open} onAdd={addItem} isIdAlreadyExists={isIdAlreadyExists}/>
-
         </ErrorBoundary>
-          
       </>
     
   )

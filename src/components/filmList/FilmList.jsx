@@ -4,11 +4,12 @@ import './Ratings.scss'
 import { Transition, TransitionGroup } from 'react-transition-group';
 import { useRef, cloneElement, useMemo } from 'react';
 
+import Spinner from '../spinner/Spinner'
 import FilmItem from '../filmItem/FilmItem';
 
 
 const FilmList = (props) => {
-  const { setOpen } = props;
+  const { setOpen, loadingPantry, isLoading } = props;
   const nodeRef = useRef(null)
   const duration = 300;
 
@@ -77,14 +78,18 @@ const FilmList = (props) => {
     </TransitionGroup> 
   );
 
-  const notFound = <span className='film-list__notfound'>Ничего не найдено</span>;
   
-  const View = data && data.length > 0 ? list : notFound;
+  
+  const View = data && data.length > 0 && !loadingPantry && !isLoading ? list : null;
+  const spinner = loadingPantry || isLoading ? <Spinner/> : null;
+  const notFound = (data.length === 0 || !data) && !loadingPantry && !isLoading ? <span className='film-list__notfound'>Ничего не найдено</span> : null;
 
   return (
     <section className="film-list">
       <div className="container"> 
+        {spinner}
         {View}
+        {notFound}
         <button className="film-list__add-button" onClick={() => setOpen(true)}>
           <svg rotate="45" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M7.75781 7.75732L16.2431 16.2426" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

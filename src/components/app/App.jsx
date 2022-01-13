@@ -1,10 +1,13 @@
 import { Routes,  Route, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense, lazy } from "react";
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
-import { ToWatchList, Page404, AboutFilm } from "../pages"
+import { ToWatchList, Page404 } from "../pages";
+import Spinner from "../spinner/Spinner";
 
 import Header from '../header/Header';
-import Footer from '../footer/Footer'
+import Footer from '../footer/Footer';
+
+const AboutFilm = lazy(() => import('../pages/AboutFilm'));
 
 const App = () => {
 
@@ -71,9 +74,11 @@ const App = () => {
                       </div>}
                     /> 
                     <Route path="/film/:id" element={
-                      <div className="default-view scale">
-                      <AboutFilm/>
-                      </div>}
+                       <Suspense fallback={<Spinner/>}>
+                        <div className="default-view scale">
+                        <AboutFilm/>
+                        </div>
+                      </Suspense>}
                     />
                     <Route path="*" element={
                       <div className="default-view scale">
