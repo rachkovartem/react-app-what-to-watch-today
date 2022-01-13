@@ -34,13 +34,13 @@ export default function Header({domContentLoaded, onClickDrawerToggle, drawerOpe
 
   useEffect(() => {
     if (!domContentLoaded) {return}
-    if (anchorEl) {
+    if (anchorEl && document.querySelector('.header__hamburger') && document.querySelector('.film-list__add-button')) {
       if (window.innerWidth > 900) {
         document.querySelector('.header__hamburger').style.marginRight = '3px';
         document.querySelector('.film-list__add-button').style.marginRight = '3px';
       } 
     } 
-    if (!anchorEl && document.querySelector('.film-list__add-button')) {
+    if (!anchorEl && document.querySelector('.film-list__add-button') && document.querySelector('.film-list__add-button')) {
       if (window.innerWidth > 900) {
         document.querySelector('.header__hamburger').style.marginRight = '';
         document.querySelector('.film-list__add-button').style.marginRight = '';
