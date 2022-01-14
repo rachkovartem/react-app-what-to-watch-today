@@ -77,9 +77,9 @@ const FilmList = (props) => {
     </TransitionGroup> 
   );
 
-  const View = data && data.length > 0 && !loadingPantry && !isLoading ? list : null;
-  const spinner = loadingPantry || isLoading ? <Spinner/> : null;
-  const notFound = (data.length === 0 || !data) && !loadingPantry && !isLoading ? <span className='film-list__notfound'>Ничего не найдено</span> : null;
+  const View = data && data.length > 0 && !loadingPantry ? list : null;
+  const spinner = loadingPantry ? <Spinner/> : null;
+  const notFound = (data.length === 0 || !data) && !loadingPantry ? <span className='film-list__notfound'>Ничего не найдено</span> : null;
 
   return (
     <section className="film-list">

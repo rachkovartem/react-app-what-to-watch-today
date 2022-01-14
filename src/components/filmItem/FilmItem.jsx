@@ -5,13 +5,23 @@ import Skeleton from '@mui/material/Skeleton';
 
 import LinesEllipsis from 'react-lines-ellipsis';
 import { Link } from 'react-router-dom';
+import { memo } from 'react';
 
 import kinopoiskImg from '../../resources/img/kinopoisk.svg';
 import imdbImg from '../../resources/img/IMDB.svg';
 
+function propsChecker(prevProps, nexProps) {
+  return prevProps.title === nexProps.title &&
+  prevProps.subtitle === nexProps.subtitle &&
+  prevProps.posterUrlPreview === nexProps.posterUrlPreview &&
+  prevProps.ratingImdb === nexProps.ratingImdb &&
+  prevProps.ratingKinopoisk === nexProps.ratingKinopoisk &&
+  prevProps.id === nexProps.id &&
+  prevProps.style.opacity === nexProps.style.opacity
+}
 
-export default function FilmItem(props) {
-  const {title, subtitle, onDelete, posterUrlPreview, ratingImdb, ratingKinopoisk, id, style, loading} = props;
+export const FilmItem = memo((props) => {
+  const {title, subtitle, onDelete, posterUrlPreview , ratingImdb, ratingKinopoisk, id, style, loading} = props;
 
   const onDescrAction = (e) => {
     if (e._reactName === 'onMouseLeave') {
@@ -64,4 +74,6 @@ export default function FilmItem(props) {
             </div>
           </li>
   )
-}
+}, propsChecker)
+
+export default FilmItem;
