@@ -73,6 +73,12 @@ body {
     margin: 0 120px;
 }
 
+@media screen and (min-width: 1440px) {
+  .container_header {
+    margin: 0 auto;
+  }
+}
+
 .transition-appear {
     opacity: 0;
 }
