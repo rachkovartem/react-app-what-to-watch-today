@@ -10,6 +10,7 @@ import { memo } from 'react';
 import kinopoiskImg from '../../resources/img/kinopoisk.svg';
 import imdbImg from '../../resources/img/IMDB.svg';
 
+
 function propsChecker(prevProps, nexProps) {
   return prevProps.title === nexProps.title &&
   prevProps.subtitle === nexProps.subtitle &&
@@ -21,7 +22,7 @@ function propsChecker(prevProps, nexProps) {
 }
 
 export const FilmItem = memo((props) => {
-  const {title, subtitle, onDelete, posterUrlPreview , ratingImdb, ratingKinopoisk, id, style, loading} = props;
+  const {title, subtitle, onDelete, posterUrlPreview , ratingImdb, ratingKinopoisk, id, style, loading, isLoading, loadingPantry} = props;
 
   const onDescrAction = (e) => {
     if (e._reactName === 'onMouseLeave') {
@@ -46,7 +47,7 @@ export const FilmItem = memo((props) => {
     basedOn='letters'
   />)
   
-  const posterView = loading || !posterUrlPreview ? 
+  const posterView = loadingPantry || isLoading || loading || !posterUrlPreview ? 
   <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)'}} variant='rectangular'>
     <img className="film__poster" src={posterUrlPreview} alt="Обложка"/>
   </Skeleton> :

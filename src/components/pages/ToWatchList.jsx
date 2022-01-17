@@ -108,7 +108,7 @@ const ToWatchList = (props) => {
   }, [])
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated && !isLoading) {
       const newData = getDataFromLS()
       if (data === undefined) return
       setData(newData)
