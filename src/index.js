@@ -6,6 +6,7 @@ import ScrollToTop from './components/scrollToTop/ScrollToTop';
 import { BrowserRouter } from "react-router-dom";
 import { Auth0Provider } from "@auth0/auth0-react";
 
+
 ReactDOM.render(
   <React.StrictMode>
       <BrowserRouter>
