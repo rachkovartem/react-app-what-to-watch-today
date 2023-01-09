@@ -26,6 +26,6 @@ jobs:
           port: 22
           script: |
             cd /home/rycha/react-app-what-to-watch-today
-            git pull origin main
+            git pull origin master
             git status
             docker compose up -d --build front
