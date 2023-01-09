@@ -1,176 +1,164 @@
-import './Header.scss'
+import "./Header.scss";
+import { useMutation } from "@apollo/client";
+import { useStore } from "effector-react";
 
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router";
+import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
-import * as React from 'react';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Divider from '@mui/material/Divider';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import Logout from '@mui/icons-material/Logout';
+import * as React from "react";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Divider from "@mui/material/Divider";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import Logout from "@mui/icons-material/Logout";
+import { $isAuthenticated } from "../../models/auth";
+import { AuthService } from "../../services/AuthService";
 
-import UserProfile from '../userProfile/UserProfile';
+import UserProfile from "../userProfile/UserProfile";
 
-export default function Header({domContentLoaded, onClickDrawerToggle, drawerOpen}) {
-
-  const [displyedHamburger, setDisplayedHamburger] = useState(false);
-  const { loginWithRedirect, user, isAuthenticated, isLoading, logout } = useAuth0();
+export default function Header({
+  domContentLoaded,
+  onClickDrawerToggle,
+  drawerOpen,
+}) {
+  const isAuthenticated = useStore($isAuthenticated);
+  const [SignUp, { error, loading }] = useMutation(AuthService.SIGNUP);
   const [anchorEl, setAnchorEl] = useState(null);
+  const location = useLocation();
   const [openModalProfile, setOpenModalProfile] = useState(false);
 
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
 
   useEffect(() => {
-    if (!domContentLoaded) {return}
-    if (anchorEl && document.querySelector('.header__hamburger') && document.querySelector('.film-list__add-button')) {
+    if (!domContentLoaded) {
+      return;
+    }
+    if (
+      anchorEl &&
+      document.querySelector(".header__hamburger") &&
+      document.querySelector(".film-list__add-button")
+    ) {
       if (window.innerWidth > 900) {
-        document.querySelector('.header__hamburger').style.marginRight = '3px';
-        document.querySelector('.film-list__add-button').style.marginRight = '3px';
-      } 
-    } 
-    if (!anchorEl && document.querySelector('.film-list__add-button') && document.querySelector('.film-list__add-button')) {
-      if (window.innerWidth > 900) {
-        document.querySelector('.header__hamburger').style.marginRight = '';
-        document.querySelector('.film-list__add-button').style.marginRight = '';
+        document.querySelector(".header__hamburger").style.marginRight = "3px";
+        document.querySelector(".film-list__add-button").style.marginRight =
+          "3px";
       }
     }
-  },[anchorEl])
-
-  const displayHamburger = () => {
-    setDisplayedHamburger(true)
-  }
-
-  const hiddenHamburger = () => {
-    setDisplayedHamburger(false)
-  }
-
-  const location = useLocation()
-
-  useEffect(() => {
-    if (location.pathname === undefined) {
-      return
-    } else if (location.pathname === '/') {
-      displayHamburger()
-    } else hiddenHamburger()
-  }, [location])
-
-  const filmsSwitcher = (num) => {
-    const lastNum = num.toString().slice(-1);
-    if ((num > 100 && lastNum === '1') ||
-        num === 1) {
-      return 'фильм'
-    } else if ((num > 100 && 
-              (lastNum === '2' ||
-              lastNum === '3' || 
-              lastNum === '4')) ||
-              num === 2 ||
-              num === 3 ||
-              num === 4) {
-      return 'фильма'
-    } else {
-      return 'фильмов'
+    if (
+      !anchorEl &&
+      document.querySelector(".film-list__add-button") &&
+      document.querySelector(".film-list__add-button")
+    ) {
+      if (window.innerWidth > 900) {
+        document.querySelector(".header__hamburger").style.marginRight = "";
+        document.querySelector(".film-list__add-button").style.marginRight = "";
+      }
     }
-  }
-
-  const avatar = !isLoading && isAuthenticated ? <button type="button" className="header__button-avatar">
-    <img onClick={handleClick} className="header__avatar" src={user.picture} alt="avatar"/>
-    </button> : null;
-     
-  const logProfileButton = !isAuthenticated ? <button 
-    type="button" 
-    onClick={() => loginWithRedirect({
-      screen_hint: 'signup',
-    })} 
-    className="header__nav-el header__button">Войти</button> : null;
-
-  const avatarMenu = (
-  <Menu
-    anchorEl={anchorEl}
-    id="account-menu"
-    open={open}
-    onClose={handleClose}
-    onClick={handleClose}
-    PaperProps={{
-      elevation: 0,
-      sx: {
-        borderRadius: '12px',
-        overflow: 'visible',
-        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-        mt: 1.5,
-        '& .MuiAvatar-root': {
-          width: 32,
-          height: 32,
-          ml: -0.5,
-          mr: 1,
-        },
-        '&:before': {
-          content: '""',
-          display: 'block',
-          position: 'absolute',
-          top: 0,
-          left: 20,
-          width: 10,
-          height: 10,
-          bgcolor: 'var(--grey-500)',
-          transform: 'translateY(-50%) rotate(45deg)',
-          zIndex: 0,
-        },
-      },
-    }}
-    transformOrigin={{ horizontal: 'left', vertical: 'top' }}
-    anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-  >
-    <MenuItem onClick={() => setOpenModalProfile(true)}>
-      <ListItemIcon>
-        <AccountBoxIcon fontSize="small"/>
-      </ListItemIcon>
-      Профиль
-    </MenuItem>
-    <Divider />
-    <MenuItem onClick={() => logout({ returnTo: window.location.origin })}>
-      <ListItemIcon>
-        <Logout fontSize="small" />
-      </ListItemIcon>
-        Выйти
-    </MenuItem>
-  </Menu>
-  )
+  }, [anchorEl]);
 
   return (
-  <>
-    <header className="header">
-          <div className="container container_header">
-            <div className="header__wrapper">
-            {avatar}
-            {avatarMenu}
-            {logProfileButton}
-              {/* <div style={{display: !displyedHamburger ? "none" : ""}} className="header__films-counter">Нужно посмотреть {filmsToWatch} {filmsSwitcher(filmsToWatch)}</div> */}
-              <div className="header__nav-ham-wrapper">
-                <nav className="header__nav-menu">
-                  <ul className="header__nav-menu-list">
-                    <li className="header__nav-menu-list-item">
-                      <Link to='/' className="header__nav-el">Главная</Link>
-                    </li>
-                  </ul>
-                </nav>
-
-                <div 
-                style={{display: !displyedHamburger ? "none" : ""}} 
-                onClick={onClickDrawerToggle} 
-                className={`header__hamburger ${drawerOpen ? 'header__hamburger_active' : ''}`}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+    <>
+      <header className="header">
+        <div className="container container_header">
+          <div className="header__wrapper">
+            {!loading && isAuthenticated && (
+              <button type="button" className="header__button-avatar">
+                <img
+                  onClick={handleClick}
+                  className="header__avatar"
+                  src=""
+                  alt="avatar"
+                />
+              </button>
+            )}
+            <Menu
+              anchorEl={anchorEl}
+              id="account-menu"
+              open={open}
+              onClose={handleClose}
+              onClick={handleClose}
+              PaperProps={{
+                elevation: 0,
+                sx: {
+                  borderRadius: "12px",
+                  overflow: "visible",
+                  filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                  mt: 1.5,
+                  "& .MuiAvatar-root": {
+                    width: 32,
+                    height: 32,
+                    ml: -0.5,
+                    mr: 1,
+                  },
+                  "&:before": {
+                    content: '""',
+                    display: "block",
+                    position: "absolute",
+                    top: 0,
+                    left: 20,
+                    width: 10,
+                    height: 10,
+                    bgcolor: "var(--grey-500)",
+                    transform: "translateY(-50%) rotate(45deg)",
+                    zIndex: 0,
+                  },
+                },
+              }}
+              transformOrigin={{ horizontal: "left", vertical: "top" }}
+              anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
+            >
+              <MenuItem onClick={() => setOpenModalProfile(true)}>
+                <ListItemIcon>
+                  <AccountBoxIcon fontSize="small" />
+                </ListItemIcon>
+                Профиль
+              </MenuItem>
+              <Divider />
+              <MenuItem onClick={() => {}}>
+                <ListItemIcon>
+                  <Logout fontSize="small" />
+                </ListItemIcon>
+                Выйти
+              </MenuItem>
+            </Menu>
+            {!isAuthenticated && (
+              <div>
+                <button type="button" className="header__nav-el header__button">
+                  Войти
+                </button>
+                <button type="button" className="header__nav-el header__button">
+                  Регистрация
+                </button>
+              </div>
+            )}
+            <div className="header__nav-ham-wrapper">
+              <nav className="header__nav-menu">
+                <ul className="header__nav-menu-list">
+                  <li className="header__nav-menu-list-item">
+                    <Link to="/" className="header__nav-el">
+                      Главная
+                    </Link>
+                  </li>
+                </ul>
+              </nav>
+              {location.pathname === "/" && (
+                <div
+                  onClick={onClickDrawerToggle}
+                  className={`header__hamburger ${
+                    drawerOpen ? "header__hamburger_active" : ""
+                  }`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
                     <g strokeWidth="6.5" strokeLinecap="round">
                       <path
                         d="M72 82.286h28.75"
@@ -209,14 +197,15 @@ export default function Header({domContentLoaded, onClickDrawerToggle, drawerOpe
                     </g>
                   </svg>
                 </div>
-              </div>
+              )}
             </div>
           </div>
-        </header>
-      <UserProfile openModalProfile={openModalProfile} setOpenModalProfile={setOpenModalProfile}/>
+        </div>
+      </header>
+      <UserProfile
+        openModalProfile={openModalProfile}
+        setOpenModalProfile={setOpenModalProfile}
+      />
     </>
-  )
-};
-
-
- 
+  );
+}
