@@ -3,8 +3,9 @@ import './Ratings.scss'
 
 import { Transition, TransitionGroup } from 'react-transition-group';
 import { useRef, cloneElement, useMemo } from 'react';
+import { Skeleton } from '@mui/material';
 
-import Spinner from '../spinner/Spinner'
+import poster from '../../resources/img/poster.jpg'
 import FilmItem from '../filmItem/FilmItem';
 
 const FilmList = (props) => {
@@ -63,8 +64,68 @@ const FilmList = (props) => {
   }
 
   const memoizedElements = useMemo(() => elements(data), [elements]);
+  const notFound = memoizedElements.length === 0 && !loadingPantry && !isLoading ? <div className="film-list__grid">
+    <span className='film-list__notfound'>Ничего не найдено</span>
+    </div> : null;
+  const skeleton = isLoading || loadingPantry ? (
+    <div className="film-list__grid">
+      <li className="film" style={{minWidth: '100%'}}>
+        <div className="film__poster-link">
+          <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)', borderRadius: '12px', minWidth:'400px'}} variant='rectangular'>
+            <img className="film__poster" src={poster} alt="Обложка"/>
+          </Skeleton>
+        </div>
+        <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)', borderRadius: '12px', minWidth:'40%', mt: '10px'}} variant='h2'>
+          <div className="film__title-link"><h2 className="film__title">title</h2></div>
+        </Skeleton>
+        <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)', borderRadius: '12px', minWidth:'80%', mt: '10px'}} variant='h3'>
+          <div className="film__descr">Desription</div>
+        </Skeleton>
+      </li>
+      <li className="film" style={{minWidth: '100%'}}>
+        <div className="film__poster-link">
+          <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)', borderRadius: '12px', minWidth:'400px'}} variant='rectangular'>
+            <img className="film__poster" src={poster} alt="Обложка"/>
+          </Skeleton>
+        </div>
+        <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)', borderRadius: '12px', minWidth:'40%', mt: '10px'}} variant='h2'>
+          <div className="film__title-link"><h2 className="film__title">title</h2></div>
+        </Skeleton>
+        <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)', borderRadius: '12px', minWidth:'80%', mt: '10px'}} variant='h3'>
+          <div className="film__descr">Desription</div>
+        </Skeleton>
+      </li>
+      <li className="film" style={{minWidth: '100%'}}>
+        <div className="film__poster-link">
+          <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)', borderRadius: '12px', minWidth:'400px'}} variant='rectangular'>
+            <img className="film__poster" src={poster} alt="Обложка"/>
+          </Skeleton>
+        </div>
+        <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)', borderRadius: '12px', minWidth:'40%', mt: '10px'}} variant='h2'>
+          <div className="film__title-link"><h2 className="film__title">title</h2></div>
+        </Skeleton>
+        <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)', borderRadius: '12px', minWidth:'80%', mt: '10px'}} variant='h3'>
+          <div className="film__descr">Desription</div>
+        </Skeleton>
+      </li>
+      <li className="film" style={{minWidth: '100%'}}>
+        <div className="film__poster-link">
+          <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)', borderRadius: '12px', minWidth:'400px'}} variant='rectangular'>
+            <img className="film__poster" src={poster} alt="Обложка"/>
+          </Skeleton>
+        </div>
+        <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)', borderRadius: '12px', minWidth:'40%', mt: '10px'}} variant='h2'>
+          <div className="film__title-link"><h2 className="film__title">title</h2></div>
+        </Skeleton>
+        <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)', borderRadius: '12px', minWidth:'80%', mt: '10px'}} variant='h3'>
+          <div className="film__descr">Desription</div>
+        </Skeleton>
+      </li>
+    </div>) : null;
 
-  const list = (
+
+
+  const list = memoizedElements.length > 0 && !loadingPantry && !isLoading ? (
     <TransitionGroup 
       className="film-list__grid"
       childFactory={child => cloneElement(
@@ -75,18 +136,14 @@ const FilmList = (props) => {
       )}>
         {memoizedElements}
     </TransitionGroup> 
-  );
-
-  const View = data && data.length > 0 && !loadingPantry && !isLoading ? list : null;
-  const spinner = loadingPantry || isLoading ? <Spinner/> : null;
-  const notFound = (data.length === 0 || !data) && !loadingPantry && !isLoading ? <span className='film-list__notfound'>Ничего не найдено</span> : null;
+  ) : null;
 
   return (
     <section className="film-list">
       <div className="container"> 
-        {spinner}
-        {View}
+        {list}
         {notFound}
+        {skeleton}
         <button className="film-list__add-button" onClick={() => setOpen(true)}>
           <svg rotate="45" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M7.75781 7.75732L16.2431 16.2426" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

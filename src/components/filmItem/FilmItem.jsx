@@ -5,13 +5,24 @@ import Skeleton from '@mui/material/Skeleton';
 
 import LinesEllipsis from 'react-lines-ellipsis';
 import { Link } from 'react-router-dom';
+import { memo } from 'react';
 
 import kinopoiskImg from '../../resources/img/kinopoisk.svg';
 import imdbImg from '../../resources/img/IMDB.svg';
 
 
-export default function FilmItem(props) {
-  const {title, subtitle, onDelete, posterUrlPreview, ratingImdb, ratingKinopoisk, id, style, loading} = props;
+function propsChecker(prevProps, nexProps) {
+  return prevProps.title === nexProps.title &&
+  prevProps.subtitle === nexProps.subtitle &&
+  prevProps.posterUrlPreview === nexProps.posterUrlPreview &&
+  prevProps.ratingImdb === nexProps.ratingImdb &&
+  prevProps.ratingKinopoisk === nexProps.ratingKinopoisk &&
+  prevProps.id === nexProps.id &&
+  prevProps.style.opacity === nexProps.style.opacity
+}
+
+export const FilmItem = memo((props) => {
+  const {title, subtitle, onDelete, posterUrlPreview , ratingImdb, ratingKinopoisk, id, style, loading, isLoading, loadingPantry} = props;
 
   const onDescrAction = (e) => {
     if (e._reactName === 'onMouseLeave') {
@@ -36,7 +47,7 @@ export default function FilmItem(props) {
     basedOn='letters'
   />)
   
-  const posterView = loading || !posterUrlPreview ? 
+  const posterView = loadingPantry || isLoading || loading || !posterUrlPreview ? 
   <Skeleton sx={{backgroundColor: 'rgb(255 255 255 / 20%)'}} variant='rectangular'>
     <img className="film__poster" src={posterUrlPreview} alt="Обложка"/>
   </Skeleton> :
@@ -64,4 +75,6 @@ export default function FilmItem(props) {
             </div>
           </li>
   )
-}
+}, propsChecker)
+
+export default FilmItem;

@@ -151,7 +151,7 @@ export default function Header({domContentLoaded, onClickDrawerToggle, drawerOpe
   return (
   <>
     <header className="header">
-          <div className="container">
+          <div className="container container_header">
             <div className="header__wrapper">
             {avatar}
             {avatarMenu}

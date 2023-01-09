@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 
 import FilmList from '../filmList/FilmList';
@@ -108,7 +108,7 @@ const ToWatchList = (props) => {
   }, [])
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated && !isLoading) {
       const newData = getDataFromLS()
       if (data === undefined) return
       setData(newData)

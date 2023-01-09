@@ -50,7 +50,7 @@ app.get('/api/getData', function (req, mainRes) {
         'maxRedirects': 20
     };
     let data = {};
-     
+     console.log('отправлен get запрос')
     const getReq = https.request(options, function (res) {
         var chunks = [];
       
@@ -111,7 +111,7 @@ app.put('/api/putData', async function (mainReq, mainRes) {
 })
 
 //обслуживание html
-app.get('/', function (req, res) {
+app.get('/*', function (req, res) {
 res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 app.listen(port);

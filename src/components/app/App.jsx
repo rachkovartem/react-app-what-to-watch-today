@@ -14,7 +14,6 @@ const App = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [filmsToWatch, setFilmsToWatch] = useState(0)
   const [domContentLoaded, setDomContentLoaded] = useState(false);
-  const [rendered, setRendered] = useState(false)
   const location = useLocation()
   
   const onDomLoaded = () => {
@@ -23,7 +22,6 @@ const App = () => {
   }
   useEffect(() => {
     window.addEventListener('DOMContentLoaded', onDomLoaded)  
-    setRendered(true)
   }, [])
     
   useEffect(() => {
