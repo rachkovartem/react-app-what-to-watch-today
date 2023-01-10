@@ -14,7 +14,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import Logout from "@mui/icons-material/Logout";
-import { $isAuthenticated } from "../../models/auth";
+import { $isAuthenticated, toggleSignupModal } from "../../models/auth";
 import { AuthService } from "../../services/AuthService";
 
 import UserProfile from "../userProfile/UserProfile";
@@ -29,6 +29,7 @@ export default function Header({
   const [anchorEl, setAnchorEl] = useState(null);
   const location = useLocation();
   const [openModalProfile, setOpenModalProfile] = useState(false);
+  const onClickSignUp = () => toggleSignupModal(true);
 
   const open = Boolean(anchorEl);
 
@@ -136,7 +137,11 @@ export default function Header({
                 <button type="button" className="header__nav-el header__button">
                   Войти
                 </button>
-                <button type="button" className="header__nav-el header__button">
+                <button
+                  type="button"
+                  className="header__nav-el header__button"
+                  onClick={onClickSignUp}
+                >
                   Регистрация
                 </button>
               </div>
