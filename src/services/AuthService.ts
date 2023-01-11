@@ -13,6 +13,17 @@ export const AuthService = {
     query Login($email: String!, $password: String!) {
       login(email: $email, password: $password) {
         _id
+        email
+      }
+    }
+  `,
+
+  AUTH_CHECK: gql`
+    {
+      profile {
+        name
+        email
+        _id
       }
     }
   `,

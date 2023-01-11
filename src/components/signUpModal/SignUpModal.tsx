@@ -1,16 +1,22 @@
 import { TextField } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import { useStore } from "effector-react";
-import { $isSignupModalOpened, toggleSignupModal } from "../../models/auth";
+import {
+  $isSignupModalOpened,
+  toggleSignupModal,
+  updateUserData,
+} from "../../models/auth";
 
 import "./SignUpModal.scss";
 import Button from "@mui/material/Button";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { AuthService } from "../../services/AuthService";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 export const SignUpModal = () => {
-  const [SignUp, { error, loading }] = useMutation(AuthService.SIGNUP);
+  const [SignUp] = useMutation(AuthService.SIGNUP);
+  const [Login] = useLazyQuery(AuthService.LOGIN);
   const open = useStore($isSignupModalOpened);
   const onClose = () => toggleSignupModal(false);
 
@@ -22,15 +28,26 @@ export const SignUpModal = () => {
     },
   });
 
-  const onSubmit = async (data: { email: string; password: string }) => {
-    const result = await SignUp({ variables: data });
-    console.log(result);
+  const onSubmit = async (data: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
+    const signupResult = await SignUp({ variables: data });
+    const createdUser = signupResult.data.createUser;
+    if (createdUser) {
+      const loginResult = await Login({
+        variables: { email: data.email, password: data.password },
+      });
+      updateUserData(loginResult.data.login);
+    }
   };
-  console.log(error, loading);
+
   return (
     <Modal open={open} onClose={onClose}>
       <div className="signup-modal">
         <form className="signup-modal__form" onSubmit={handleSubmit(onSubmit)}>
+          <HighlightOffIcon onClick={onClose} />
           <p>Имя</p>
           <TextField
             {...register("name")}
@@ -50,7 +67,7 @@ export const SignUpModal = () => {
             name="password"
           />
           <Button className="signup-modal__button" type="submit">
-            Войти
+            Зарегистрироваться
           </Button>
         </form>
       </div>

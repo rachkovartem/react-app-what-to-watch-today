@@ -1,5 +1,6 @@
 import "./Header.scss";
 import { useMutation } from "@apollo/client";
+import Typography from "@mui/material/Typography";
 import { useStore } from "effector-react";
 
 import { useState, useEffect } from "react";
@@ -14,7 +15,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import Logout from "@mui/icons-material/Logout";
-import { $isAuthenticated, toggleSignupModal } from "../../models/auth";
+import {
+  $isAuthenticated,
+  $userData,
+  toggleSignupModal,
+} from "../../models/auth";
 import { AuthService } from "../../services/AuthService";
 
 import UserProfile from "../userProfile/UserProfile";
@@ -25,6 +30,7 @@ export default function Header({
   drawerOpen,
 }) {
   const isAuthenticated = useStore($isAuthenticated);
+  const userData = useStore($userData);
   const [SignUp, { error, loading }] = useMutation(AuthService.SIGNUP);
   const [anchorEl, setAnchorEl] = useState(null);
   const location = useLocation();
@@ -73,13 +79,13 @@ export default function Header({
         <div className="container container_header">
           <div className="header__wrapper">
             {!loading && isAuthenticated && (
-              <button type="button" className="header__button-avatar">
-                <img
-                  onClick={handleClick}
-                  className="header__avatar"
-                  src=""
-                  alt="avatar"
-                />
+              <button
+                type="button"
+                className="header__button-avatar"
+                onClick={handleClick}
+              >
+                <img className="header__avatar" src="" alt="avatar" />
+                <Typography color="#fff">{userData.email}</Typography>
               </button>
             )}
             <Menu
@@ -133,7 +139,7 @@ export default function Header({
               </MenuItem>
             </Menu>
             {!isAuthenticated && (
-              <div>
+              <div className="header__buttons-wrapper">
                 <button type="button" className="header__nav-el header__button">
                   Войти
                 </button>
