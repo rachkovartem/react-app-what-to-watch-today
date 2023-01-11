@@ -27,4 +27,10 @@ export const AuthService = {
       }
     }
   `,
+
+  LOGOUT: gql`
+    {
+      logout
+    }
+  `,
 };

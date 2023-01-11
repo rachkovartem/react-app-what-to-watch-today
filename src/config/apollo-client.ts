@@ -47,6 +47,7 @@ const typeDefs = gql`
     getSubscribers: [User!]!
     login(email: String!, password: String!): UserOmitPassword!
     profile: User!
+    logout: Boolean!
     refresh: String!
     getMyPosts: [Post!]!
   }

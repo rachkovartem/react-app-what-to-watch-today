@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense, lazy } from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { updateUserData } from "../../models/auth";
 import { AuthService } from "../../services/AuthService";
+import { LoginModal } from "../loginModal/LoginModal";
 import { ToWatchList, Page404 } from "../pages";
 import { SignUpModal } from "../signUpModal/SignUpModal";
 import Spinner from "../spinner/Spinner";
@@ -117,6 +118,7 @@ const App = () => {
             </Routes>
           </CSSTransition>
         </TransitionGroup>
+        <LoginModal />
         <SignUpModal />
         <Footer />
       </>

@@ -1,5 +1,6 @@
 import "./Header.scss";
-import { useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import { Avatar } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useStore } from "effector-react";
 
@@ -18,6 +19,8 @@ import Logout from "@mui/icons-material/Logout";
 import {
   $isAuthenticated,
   $userData,
+  clearUserData,
+  toggleLoginModal,
   toggleSignupModal,
 } from "../../models/auth";
 import { AuthService } from "../../services/AuthService";
@@ -32,10 +35,12 @@ export default function Header({
   const isAuthenticated = useStore($isAuthenticated);
   const userData = useStore($userData);
   const [SignUp, { error, loading }] = useMutation(AuthService.SIGNUP);
+  const [LogoutFunction] = useLazyQuery(AuthService.LOGOUT);
   const [anchorEl, setAnchorEl] = useState(null);
   const location = useLocation();
   const [openModalProfile, setOpenModalProfile] = useState(false);
   const onClickSignUp = () => toggleSignupModal(true);
+  const onClickLogin = () => toggleLoginModal(true);
 
   const open = Boolean(anchorEl);
 
@@ -44,6 +49,12 @@ export default function Header({
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleClickLogout = async () => {
+    console.log(1);
+    await LogoutFunction();
+    clearUserData();
   };
 
   useEffect(() => {
@@ -79,14 +90,16 @@ export default function Header({
         <div className="container container_header">
           <div className="header__wrapper">
             {!loading && isAuthenticated && (
-              <button
-                type="button"
-                className="header__button-avatar"
-                onClick={handleClick}
-              >
-                <img className="header__avatar" src="" alt="avatar" />
-                <Typography color="#fff">{userData.email}</Typography>
-              </button>
+              <div className="header__button-avatar-wrapper">
+                <button
+                  type="button"
+                  className="header__button-avatar"
+                  onClick={handleClick}
+                >
+                  <Avatar alt={userData.email}>{userData?.email[0]}</Avatar>
+                </button>
+                <Typography color="#fff">{userData?.email}</Typography>
+              </div>
             )}
             <Menu
               anchorEl={anchorEl}
@@ -131,7 +144,7 @@ export default function Header({
                 Профиль
               </MenuItem>
               <Divider />
-              <MenuItem onClick={() => {}}>
+              <MenuItem onClick={handleClickLogout}>
                 <ListItemIcon>
                   <Logout fontSize="small" />
                 </ListItemIcon>
@@ -140,7 +153,11 @@ export default function Header({
             </Menu>
             {!isAuthenticated && (
               <div className="header__buttons-wrapper">
-                <button type="button" className="header__nav-el header__button">
+                <button
+                  type="button"
+                  className="header__nav-el header__button"
+                  onClick={onClickLogin}
+                >
                   Войти
                 </button>
                 <button

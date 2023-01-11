@@ -12,10 +12,9 @@
     background: none;
     border-radius: 100%;
     border: 0;
-    height: 50px;
-    margin: auto 0 auto 20px;
     cursor: pointer;
-    display: flex;
+    height: 50px;
+    width: 50px;
     transition: all 0.5s ease-out;
     &:hover {
         transform: scale(1.1);
@@ -25,13 +24,12 @@
     }
 }
 
-.header__avatar {
-    width: 50px;
+.header__button-avatar-wrapper {
     height: 50px;
-    margin: auto 0;
-    object-position: center;
-    object-fit: cover;
-    border-radius: 100%;
+    margin: auto 0 auto 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .header__buttons-wrapper {
