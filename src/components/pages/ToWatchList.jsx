@@ -1,5 +1,7 @@
+import { useStore } from "effector-react";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { $userFilmsList } from "../../models/films";
 
 import FilmList from "../filmList/FilmList";
 import AppSidemenu from "../appSidemenu/AppSideMenu";
@@ -12,7 +14,6 @@ import NewFilmDialog from "../newFilmDialog/NewFilmDialog";
 
 const ToWatchList = (props) => {
   const { drawerOpen, setDrawerOpen, setFilmsToWatch } = props;
-  const [data, setData] = useState([]);
   const [filterDate, setFilterDate] = useState("Всё время");
   const [filterGenre, setFilterGenre] = useState([]);
   const [filterSearch, setFilterSearch] = useState("");
@@ -20,6 +21,7 @@ const ToWatchList = (props) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isServerDataLoaded, setIsServerDataLoaded] = useState(false);
   const { user, isAuthenticated, isLoading } = useAuth0();
+  const userFilmsList = useStore($userFilmsList);
 
   const {
     loadingPantry,
@@ -102,81 +104,6 @@ const ToWatchList = (props) => {
     return () => setIsMounted(false);
   }, []);
 
-  useEffect(() => {
-    if (!isAuthenticated && !isLoading) {
-      const newData = getDataFromLS();
-      if (data === undefined) return;
-      setData(newData);
-    } else if (isAuthenticated) {
-      const response = getUserDataFromServer(user.email);
-      response.then((res) => {
-        if (res === null || res === undefined) {
-          setData([]);
-          setIsServerDataLoaded(true);
-          return;
-        }
-        setData(res);
-        setIsServerDataLoaded(true);
-      });
-    }
-  }, [user]);
-
-  const getFullDataFromServer = async () => {
-    const response = await getData();
-    return response;
-  };
-
-  const getUserDataFromServer = async (email) => {
-    const response = await getData();
-    return response[email];
-  };
-
-  const putUserDataToServer = async (user, data) => {
-    const resetOldArray = await putData({ [user.email]: null });
-
-    if (resetOldArray) {
-      const response = putData({ [user.email]: data });
-      response.then((res) => {});
-    } else {
-    }
-  };
-
-  const getDataFromLS = () => {
-    let newData;
-    if (localStorage.getItem("movies")) {
-      newData = JSON.parse(localStorage.getItem("movies"));
-      if (
-        !newData[0] ||
-        typeof newData[0].genre === "string" ||
-        typeof newData[0].id === "string"
-      ) {
-        localStorage.clear();
-        newData = returnNewStockData();
-      }
-    } else {
-      newData = returnNewStockData();
-    }
-    return newData;
-  };
-
-  useEffect(() => {
-    if (!isAuthenticated && isMounted && data) {
-      localStorageSetter(data);
-    } else if (isAuthenticated && isServerDataLoaded) {
-      putUserDataToServer(user, data);
-    }
-    if (isMounted && data) setFilmsToWatch(data.length);
-  }, [data]);
-
-  const localStorageSetter = (state) => {
-    if (!isMounted) return;
-    localStorage.setItem("movies", JSON.stringify(state));
-  };
-
-  useEffect(() => {
-    updateRatingsFromServer(data);
-  }, []);
-
   const updateRatingsFromServer = (data) => {
     if (!isMounted) return;
     if (data.length === 0 || typeof data.length !== "object") return;
@@ -197,49 +124,18 @@ const ToWatchList = (props) => {
       );
       return newFilm;
     });
-    setData(newData);
   };
 
   const genres = () => {
-    if (!data) return;
     let arr = [];
-    data.forEach((item) => {
-      item.genre.forEach((e) => {
+    userFilmsList.forEach((item) => {
+      item.genres.forEach((e) => {
         if (!arr.some((arrItem) => arrItem === e)) {
           arr.push(e);
         }
       });
     });
     return arr;
-  };
-
-  const deleteItem = (id) => {
-    setData((prevData) => {
-      return prevData.filter((item) => item.id !== id);
-    });
-  };
-
-  const addItem = async ({
-    title,
-    subtitle,
-    genre,
-    timestamp,
-    posterUrlPreview,
-    id,
-  }) => {
-    const response = await getFilmById(id);
-    setData((prevData) => {
-      return prevData.concat({
-        title: title,
-        subtitle: subtitle,
-        id: id,
-        genre: genre,
-        timestamp: timestamp,
-        posterUrlPreview: posterUrlPreview,
-        ratingImdb: response.ratingImdb,
-        ratingKinopoisk: response.ratingKinopoisk,
-      });
-    });
   };
 
   const filterGenreSetter = (key) => {
@@ -295,11 +191,10 @@ const ToWatchList = (props) => {
   };
 
   const memoizedAllIds = useMemo(() => {
-    if (!data || data.length) return;
-    return data.map((film) => {
+    return userFilmsList.map((film) => {
       return film.id;
     });
-  }, [data]);
+  }, [userFilmsList]);
 
   const isIdAlreadyExists = (id) => {
     if (!memoizedAllIds) return;
@@ -309,10 +204,10 @@ const ToWatchList = (props) => {
   const memoizedFiltredData = useMemo(
     () =>
       onFilterGenre(
-        onFilterDate(onFilterSearch(data, filterSearch), filterDate),
+        onFilterDate(onFilterSearch(userFilmsList, filterSearch), filterDate),
         filterGenre
       ),
-    [data, filterSearch, filterDate, filterGenre]
+    [userFilmsList, filterSearch, filterDate, filterGenre]
   );
 
   return (
@@ -334,8 +229,8 @@ const ToWatchList = (props) => {
         <FilmList
           loading={loading}
           data={memoizedFiltredData}
-          onAdd={addItem}
-          onDelete={deleteItem}
+          onAdd={() => {}}
+          onDelete={() => {}}
           setOpen={setOpen}
           loadingPantry={loadingPantry}
           isLoading={isLoading}
@@ -346,7 +241,6 @@ const ToWatchList = (props) => {
         <NewFilmDialog
           setOpen={setOpen}
           open={open}
-          onAdd={addItem}
           isIdAlreadyExists={isIdAlreadyExists}
         />
       </ErrorBoundary>
