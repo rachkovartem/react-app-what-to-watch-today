@@ -1,3 +1,4 @@
+import { useTheme } from "@mui/material/styles";
 import { useState, useEffect, useRef } from "react";
 
 import Button from "@mui/material/Button";
@@ -7,17 +8,16 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { addFilm } from "../../models/films";
+import { $userFilmsList, addFilm } from "../../models/films";
 import NewFilmDatePicker from "../newFilmDatePicker/NewFilmDatePicker";
 import KinopoiskServices from "../../services/KinopoiskServices";
 import Autocomplete from "@mui/material/Autocomplete";
-import { ThemeProvider, createTheme } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 
-import nextId from "react-id-generator";
-
 import "./NewFilmDialog.scss";
+import { useStoreMap } from "effector-react";
 
 let timer;
 function debounce(func, timeout = 500) {
@@ -29,26 +29,19 @@ function debounce(func, timeout = 500) {
   };
 }
 
-const NewFilmDialog = (props) => {
-  const theme = createTheme({
-    typography: {
-      fontFamily: [
-        "Montserrat",
-        "-apple-system",
-        "BlinkMacSystemFont",
-        "Segoe UI",
-        "Roboto",
-        "Oxygen",
-        "Ubuntu",
-        "Cantarell",
-        "Open Sans",
-        "Helvetica Neue",
-        "sans-serif",
-      ].join(","),
-    },
-  });
-  const { onAdd, isIdAlreadyExists, open, setOpen } = props;
-  const { loading, error, clearError, getFilmByKeyWord } = KinopoiskServices();
+const NewFilmDialog = ({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: (boolean) => void;
+}) => {
+  const theme = useTheme();
+  const userFilmsIds = useStoreMap($userFilmsList, (films) =>
+    films.map((film) => film.kinopoiskId)
+  );
+  const { loading, error, clearError, getFilmByKeyWord, getFilmById } =
+    KinopoiskServices();
   const [title, setTitle] = useState("");
   const [timestamp, setTimeStamp] = useState(() =>
     Math.round(Date.now() / 1000)
@@ -75,7 +68,6 @@ const NewFilmDialog = (props) => {
     setTimeStamp(Math.round(Date.parse(value) / 1000));
   };
 
-  //всплывающее окно о уже сущестующем фильме, триггер по нажатию добавить
   const handleClosePopover = () => {
     setAnchorEl(null);
   };
@@ -84,13 +76,14 @@ const NewFilmDialog = (props) => {
 
   const id = openPopover ? "simple-popover" : undefined;
 
-  const handleAdd = (e) => {
-    if (isIdAlreadyExists(userChoise.id)) {
+  const handleAdd = async (e) => {
+    if (userFilmsIds.includes(userChoise.filmId)) {
       setAnchorEl(e.currentTarget);
       return;
     }
 
-    addFilm(userChoise);
+    const fullFilmData = await getFilmById(userChoise.filmId);
+    addFilm(fullFilmData);
 
     setUserChoise(null);
     setOpen(false);
@@ -150,14 +143,7 @@ const NewFilmDialog = (props) => {
       .then((response) => {
         const newFilmOptions = response.films.map((item) => {
           return {
-            label: `${item.nameRu ? item.nameRu : ""}${
-              item.nameEn ? ` (${item.nameEn})` : ""
-            }, ${item.year}`,
-            id: item.filmId,
-            genres: item.genres.map((item) => item.genre),
-            posterUrlPreview: item.posterUrlPreview,
-            description: item.description,
-            key: nextId(),
+            ...item,
           };
         });
         if (!isMounted) return;
@@ -238,12 +224,16 @@ const NewFilmDialog = (props) => {
             <Autocomplete
               ref={titleInput}
               isOptionEqualToValue={(option, value) => {
-                return option.id === value.id;
+                return option.kinopoiskId === value.kinopoiskId;
               }}
-              input={userChoise}
-              onChange={(e, newValue) => setUserChoise(newValue)}
+              getOptionLabel={(item) =>
+                `${item.nameRu ? item.nameRu : ""}${
+                  item.nameEn ? ` (${item.nameEn})` : ""
+                }, ${item.year}`
+              }
+              onChange={(_, newValue) => setUserChoise(newValue)}
               inputValue={title}
-              onInputChange={(e, newValue) => onInputChange(newValue)}
+              onInputChange={(_, newValue) => onInputChange(newValue)}
               options={filmOptions}
               renderInput={(params) => TextFieldTitle(params)}
               noOptionsText={noOptionText()}
@@ -276,7 +266,11 @@ const NewFilmDialog = (props) => {
               type="text"
               fullWidth
               variant="standard"
-              value={userChoise ? userChoise.genres.join(", ") : ""}
+              value={
+                userChoise
+                  ? userChoise.genres.map((item) => item.genre).join(", ")
+                  : ""
+              }
             />
             <NewFilmDatePicker
               timestampToPicker={timestampToPicker}

@@ -1,6 +1,7 @@
 import "./Header.scss";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { Avatar } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useStore } from "effector-react";
 
@@ -32,9 +33,10 @@ export default function Header({
   onClickDrawerToggle,
   drawerOpen,
 }) {
+  const theme = useTheme();
   const isAuthenticated = useStore($isAuthenticated);
   const userData = useStore($userData);
-  const [SignUp, { error, loading }] = useMutation(AuthService.SIGNUP);
+  const [_, { loading }] = useMutation(AuthService.SIGNUP);
   const [LogoutFunction] = useLazyQuery(AuthService.LOGOUT);
   const [anchorEl, setAnchorEl] = useState(null);
   const location = useLocation();
@@ -98,7 +100,16 @@ export default function Header({
                 >
                   <Avatar alt={userData.email}>{userData?.email[0]}</Avatar>
                 </button>
-                <Typography color="#fff">{userData?.email}</Typography>
+                <Typography
+                  sx={{
+                    [theme.breakpoints.down(520)]: {
+                      display: "none",
+                    },
+                  }}
+                  color="#fff"
+                >
+                  {userData?.email}
+                </Typography>
               </div>
             )}
             <Menu

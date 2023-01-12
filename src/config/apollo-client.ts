@@ -2,49 +2,59 @@ import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
 import env from "./env";
 
 const typeDefs = gql`
+  type Country {
+    country: String
+  }
+
+  type Genre {
+    genre: String
+  }
+
   type Film {
-    kinopoiskId: Float!
-    imdbId: String!
-    nameRu: String!
-    nameEn: String!
-    nameOriginal: String!
-    posterUrl: String!
-    posterUrlPreview: String!
-    coverUrl: String!
-    logoUrl: String!
-    reviewsCount: Float!
-    ratingGoodReview: Float!
-    ratingGoodReviewVoteCount: Float!
-    ratingKinopoisk: Float!
-    ratingKinopoiskVoteCount: Float!
-    ratingImdb: Float!
-    ratingImdbVoteCount: Float!
-    ratingFilmCritics: Float!
-    ratingFilmCriticsVoteCount: Float!
-    ratingAwait: Float!
-    ratingAwaitCount: Float!
-    ratingRfCritics: Float!
-    ratingRfCriticsVoteCount: Float!
-    webUrl: String!
-    year: String!
-    filmLength: String!
-    slogan: String!
-    description: String!
-    shortDescription: String!
-    editorAnnotation: String!
-    isTicketsAvailable: Boolean!
-    productionStatus: String!
-    type: String!
-    ratingMpaa: String!
-    ratingAgeLimits: String!
-    hasImax: String!
-    has3D: Boolean!
-    lastSync: String!
-    startYear: String!
-    endYear: String!
-    serial: Boolean!
-    shortFilm: Boolean!
-    completed: Boolean!
+    kinopoiskId: Float
+    imdbId: String
+    nameRu: String
+    nameEn: String
+    nameOriginal: String
+    posterUrl: String
+    posterUrlPreview: String
+    coverUrl: String
+    logoUrl: String
+    reviewsCount: Float
+    ratingGoodReview: Float
+    ratingGoodReviewVoteCount: Float
+    ratingKinopoisk: Float
+    ratingKinopoiskVoteCount: Float
+    ratingImdb: Float
+    ratingImdbVoteCount: Float
+    ratingFilmCritics: Float
+    ratingFilmCriticsVoteCount: Float
+    ratingAwait: Float
+    ratingAwaitCount: Float
+    ratingRfCritics: Float
+    ratingRfCriticsVoteCount: Float
+    webUrl: String
+    year: String
+    filmLength: String
+    slogan: String
+    description: String
+    shortDescription: String
+    editorAnnotation: String
+    isTicketsAvailable: Boolean
+    productionStatus: String
+    type: String
+    ratingMpaa: String
+    ratingAgeLimits: String
+    hasImax: String
+    has3D: Boolean
+    lastSync: String
+    countries: [Country!]
+    genres: [Genre!]
+    startYear: String
+    endYear: String
+    serial: Boolean
+    shortFilm: Boolean
+    completed: Boolean
   }
 
   type User {
@@ -92,7 +102,8 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    addFilm(kinopoiskId: Float!): String!
+    addFilm(kinopoiskId: Float!): Boolean!
+    deleteFilm(kinopoiskId: Float!): Boolean!
     createSubscription(recipientId: String!): String!
     createUser(
       name: String!
@@ -110,6 +121,11 @@ const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   typeDefs,
   credentials: "include",
+  defaultOptions: {
+    query: {
+      fetchPolicy: "no-cache",
+    },
+  },
 });
 
 export default apolloClient;

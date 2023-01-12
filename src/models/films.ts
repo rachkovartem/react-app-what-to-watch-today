@@ -133,12 +133,12 @@ export const getFilmsFromLSFx = createEffect(() => {
   return films;
 });
 
-export const addFilmToServerFx = createEffect((kinopoiskId: number) => {
-  console.log(kinopoiskId);
-  apolloClient.query({
-    query: ApiService.ADD_FILM,
+export const addFilmToServerFx = createEffect(async (kinopoiskId: number) => {
+  const result = await apolloClient.mutate({
+    mutation: ApiService.ADD_FILM,
     variables: { kinopoiskId },
   });
+  return result.data;
 });
 
 export const addFilmToLSFx = createEffect((film: Film) => {
@@ -147,7 +147,17 @@ export const addFilmToLSFx = createEffect((film: Film) => {
   localStorage.setItem("movies", JSON.stringify(films));
 });
 
+export const deleteFilmFx = createEffect(async (kinopoiskId: number) => {
+  const result = await apolloClient.mutate({
+    mutation: ApiService.DELETE_FILM,
+    variables: { kinopoiskId },
+  });
+
+  return result.data;
+});
+
 export const addFilm = createEvent<Film>();
+export const deleteFilm = createEvent<string>();
 export const toggleAddModal = createEvent<boolean>();
 
 $userFilmsList
@@ -163,7 +173,7 @@ sample({
 });
 
 sample({
-  clock: addFilmToServerFx.doneData,
+  clock: [addFilmToServerFx.doneData, deleteFilmFx.doneData],
   target: getFilmsFromServerFx,
 });
 
