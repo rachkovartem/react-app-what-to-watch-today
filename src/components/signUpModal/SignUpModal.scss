@@ -1,0 +1,46 @@
+.signup-modal {
+  display: flex;
+  height: 100vh
+}
+
+.signup-modal__form {
+  & svg {
+    cursor: pointer;
+    position: absolute;
+    top: -20px;
+    right: -20px;
+
+  }
+  width: 400px;
+  background: var(--grey-900-40);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.signup-modal__input {
+  & input {
+    color: #fff;
+  }
+  position: relative;
+  background: rgba(0, 0, 0, 0.1);
+   .MuiOutlinedInput-root {
+     border: 2px solid var(--grey-800);
+     border-radius: 12px;
+     &.Mui-focused .MuiOutlinedInput-notchedOutline  {
+       border-color: var(--grey-600);
+     }
+   }
+}
+
+.signup-modal__button {
+  &.MuiButton-root {
+    color: var(--primary-400);
+    margin-top: 20px
+  }
+
+}

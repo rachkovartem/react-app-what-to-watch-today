@@ -12,26 +12,28 @@
     background: none;
     border-radius: 100%;
     border: 0;
-    width: 50px;
-    height: 50px;
-    margin: auto 0;
     cursor: pointer;
-}
-
-.header__avatar {
-    width: 50px;
     height: 50px;
-    margin: auto 0;
-    object-position: center;
-    object-fit: cover;
-    border-radius: 100%;
+    width: 50px;
     transition: all 0.5s ease-out;
     &:hover {
         transform: scale(1.1);
-        -webkit-box-shadow: 0px 0px 13px 0px rgba(190, 183, 251, 0.35);
-        -moz-box-shadow: 0px 0px 13px 0px rgba(190, 183, 251, 0.35);
-        box-shadow: 0px 0px 13px 0px rgba(190, 183, 251, 0.35);
+        -webkit-box-shadow: 0 0 13px 0 rgba(190, 183, 251, 0.35);
+        -moz-box-shadow: 0 0 13px 0 rgba(190, 183, 251, 0.35);
+        box-shadow: 0 0 13px 0 rgba(190, 183, 251, 0.35);
     }
+}
+
+.header__button-avatar-wrapper {
+    height: 50px;
+    margin: auto 0 auto 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header__buttons-wrapper {
+    margin-left: 20px;
 }
 
 .header__wrapper {
@@ -45,6 +47,7 @@
     border: none;
     cursor: pointer;
     margin-right: 20px;
+    height: 100%;
 }
 .header__films-counter {
     color: var(--grey-200);
