@@ -1,5 +1,5 @@
 import { useTheme } from "@mui/material/styles";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -9,15 +9,15 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { $userFilmsList, addFilm } from "../../models/films";
-import NewFilmDatePicker from "../newFilmDatePicker/NewFilmDatePicker";
-import KinopoiskServices from "../../services/KinopoiskServices";
+import KinopoiskService from "../../services/KinopoiskService";
 import Autocomplete from "@mui/material/Autocomplete";
 import { ThemeProvider } from "@mui/material";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 
 import "./NewFilmDialog.scss";
-import { useStoreMap } from "effector-react";
+import { useStore, useStoreMap } from "effector-react";
+import { $isAddModalOpened, toggleAddModal } from "../../models/app";
 
 let timer;
 function debounce(func, timeout = 500) {
@@ -29,64 +29,42 @@ function debounce(func, timeout = 500) {
   };
 }
 
-const NewFilmDialog = ({
-  open,
-  setOpen,
-}: {
-  open: boolean;
-  setOpen: (boolean) => void;
-}) => {
+const NewFilmDialog = () => {
   const theme = useTheme();
+  const open = useStore($isAddModalOpened);
+
   const userFilmsIds = useStoreMap($userFilmsList, (films) =>
-    films.map((film) => film.kinopoiskId)
+    Array.isArray(films) ? films.map((film) => film.kinopoiskId) : []
   );
-  const { loading, error, clearError, getFilmByKeyWord, getFilmById } =
-    KinopoiskServices();
+
   const [title, setTitle] = useState("");
-  const [timestamp, setTimeStamp] = useState(() =>
-    Math.round(Date.now() / 1000)
-  );
-
   const [filmOptions, setFilmOptions] = useState([]);
-  const [userChoise, setUserChoise] = useState(null);
+  const [userChoose, setUserChoose] = useState(null);
   const [searchInProgress, setSearchInProgress] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [isMounted, setIsMounted] = useState(false);
+  const [alreadyExistAnchorEl, setAlreadyExistAnchorEl] = useState(null);
 
-  const titleInput = useRef(null);
+  const { loading, error, clearError, getFilmByKeyWord, getFilmById } =
+    KinopoiskService();
+
   const delay = 500;
 
-  const timestampToPicker = () => {
-    const stamp = new Date(timestamp * 1000);
-    const newDate = `${
-      stamp.getMonth() + 1
-    }/${stamp.getDate()}/${stamp.getFullYear()}`;
-    return newDate;
-  };
-
-  const onDateChange = (value) => {
-    setTimeStamp(Math.round(Date.parse(value) / 1000));
-  };
-
   const handleClosePopover = () => {
-    setAnchorEl(null);
+    setAlreadyExistAnchorEl(null);
   };
 
-  const openPopover = Boolean(anchorEl);
-
-  const id = openPopover ? "simple-popover" : undefined;
+  const openPopover = Boolean(alreadyExistAnchorEl);
 
   const handleAdd = async (e) => {
-    if (userFilmsIds.includes(userChoise.filmId)) {
-      setAnchorEl(e.currentTarget);
+    if (userFilmsIds.includes(userChoose.filmId)) {
+      setAlreadyExistAnchorEl(e.currentTarget);
       return;
     }
 
-    const fullFilmData = await getFilmById(userChoise.filmId);
+    const fullFilmData = await getFilmById(userChoose.filmId);
     addFilm(fullFilmData);
 
-    setUserChoise(null);
-    setOpen(false);
+    setUserChoose(null);
+    toggleAddModal(false);
   };
 
   const debouncedGetFilmsAndSetState = debounce(
@@ -94,17 +72,6 @@ const NewFilmDialog = ({
     delay
   );
 
-  useEffect(() => {
-    setIsMounted(true);
-    return () => setIsMounted(false);
-  }, []);
-
-  useEffect(() => {
-    debouncedGetFilmsAndSetState(title);
-    setSearchInProgress(true);
-  }, [title]);
-
-  //а нужно было просто взять другой инпут из MUI, спать надо ложиться раньше
   const onFocusInputTitle = (e) => {
     e.target.parentNode.parentNode.classList.add(
       "MuiFormControl-root-primary-border"
@@ -126,56 +93,18 @@ const NewFilmDialog = ({
     );
   };
 
-  const onValueSubtitleChange = (e) => {
-    setUserChoise((prevChoise) => {
-      const newChoise = { ...prevChoise };
-      newChoise.description = e.target.value;
-      return newChoise;
-    });
-  };
-
-  useEffect(() => {
-    setSearchInProgress(false);
-  }, [filmOptions]);
-
   const getFilmsAndSetState = (input) => {
     getFilmByKeyWord(input)
       .then((response) => {
-        const newFilmOptions = response.films.map((item) => {
-          return {
-            ...item,
-          };
-        });
-        if (!isMounted) return;
-        setFilmOptions(newFilmOptions);
+        setSearchInProgress(true);
+        setFilmOptions(response.films);
       })
       .catch(() => {
-        if (!isMounted) return;
         setFilmOptions([]);
+      })
+      .finally(() => {
+        setSearchInProgress(false);
       });
-  };
-
-  const validationTextForm = () => {
-    return !userChoise;
-  };
-
-  const TextFieldTitle = (params) => {
-    return (
-      <TextField
-        {...params}
-        autoFocus
-        required
-        onFocus={onFocusInputTitle}
-        onBlur={outFocusInputTitle}
-        error={validationTextForm()}
-        margin="dense"
-        id="title"
-        label="Название"
-        type="text"
-        fullWidth
-        variant="standard"
-      />
-    );
   };
 
   const loadingCatcher = (loading) => {
@@ -206,23 +135,22 @@ const NewFilmDialog = ({
     }
   };
 
-  const onInputChange = (newValue) => {
+  const onInputChange = (newValue: string) => {
     setTitle(newValue);
+    debouncedGetFilmsAndSetState(newValue);
     clearError();
   };
 
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Dialog open={open} onClose={() => setOpen(false)}>
+        <Dialog open={open} onClose={() => toggleAddModal(false)}>
           <DialogTitle>Запланировать фильм</DialogTitle>
           <DialogContent>
             <DialogContentText sx={{ color: "var(--grey-100)" }}>
               Какой фильм нужно будет посмотреть?
             </DialogContentText>
-
             <Autocomplete
-              ref={titleInput}
               isOptionEqualToValue={(option, value) => {
                 return option.kinopoiskId === value.kinopoiskId;
               }}
@@ -231,59 +159,63 @@ const NewFilmDialog = ({
                   item.nameEn ? ` (${item.nameEn})` : ""
                 }, ${item.year}`
               }
-              onChange={(_, newValue) => setUserChoise(newValue)}
+              onChange={(_, newValue) => setUserChoose(newValue)}
               inputValue={title}
               onInputChange={(_, newValue) => onInputChange(newValue)}
               options={filmOptions}
-              renderInput={(params) => TextFieldTitle(params)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  autoFocus
+                  required
+                  onFocus={onFocusInputTitle}
+                  onBlur={outFocusInputTitle}
+                  error={!userChoose}
+                  margin="dense"
+                  id="title"
+                  label="Название"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                />
+              )}
               noOptionsText={noOptionText()}
               loading={loadingCatcher(loading) || searchInProgress}
               loadingText={
                 error ? "Ошибка на сервере, попробуйте позже" : "Уже ищем..."
               }
             />
-
             <TextField
               onFocus={onFocusInputSubtitle}
               onBlur={outFocusInputSubtitle}
-              multiline={true}
+              multiline
               margin="dense"
-              id="subtitle"
               label="Описание"
               type="text"
               fullWidth
+              InputProps={{ readOnly: true }}
               variant="standard"
-              value={userChoise ? userChoise.description : ""}
-              onChange={onValueSubtitleChange}
+              value={userChoose?.description || ""}
             />
             <TextField
               classes={{ root: "Mui_textfield_genres" }}
               inputProps={{ color: "white" }}
               disabled
               margin="dense"
-              id="genre"
               label="Жанр"
               type="text"
               fullWidth
               variant="standard"
               value={
-                userChoise
-                  ? userChoise.genres.map((item) => item.genre).join(", ")
+                userChoose
+                  ? userChoose.genres.map((item) => item.genre).join(", ")
                   : ""
               }
             />
-            <NewFilmDatePicker
-              timestampToPicker={timestampToPicker}
-              onDateChange={onDateChange}
-            />
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setOpen(false)}>Отменить</Button>
-            <Button
-              aria-describedby={id}
-              disabled={!userChoise}
-              onClick={handleAdd}
-            >
+            <Button onClick={() => toggleAddModal(false)}>Отменить</Button>
+            <Button disabled={!userChoose} onClick={handleAdd}>
               Добавить
             </Button>
             <Popover
@@ -293,9 +225,8 @@ const NewFilmDialog = ({
                   color: "var(--grey-100)",
                 },
               }}
-              id={id}
               open={openPopover}
-              anchorEl={anchorEl}
+              anchorEl={alreadyExistAnchorEl}
               onClose={handleClosePopover}
               anchorOrigin={{
                 vertical: "top",

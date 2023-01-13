@@ -3,6 +3,7 @@ import apolloClient from "../config/apollo-client";
 import { ApiService } from "../services/ApiService";
 import { $isAuthenticated } from "./auth";
 import { isArray } from "@apollo/client/cache/inmemory/helpers";
+import KinopoiskService from "../services/KinopoiskService";
 
 export type Film = {
   kinopoiskId: number;
@@ -51,86 +52,114 @@ export type Film = {
   completed: boolean;
 };
 
+export type FilmsTypes = "all" | "films" | "serials";
+
+type FilterParams = {
+  genres?: string[];
+  search?: string;
+  type?: FilmsTypes;
+};
+
 export const STOCK_FILMS = [
   {
-    title: "Зеленая миля (The Green Mile), 1999",
-    subtitle:
-      "Пол Эджкомб — начальник блока смертников в тюрьме «Холодная гора», каждый из узников которого однажды проходит «зеленую милю» по пути к месту казни. Пол повидал много заключённых и надзирателей за время работы. Однако гигант Джон Коффи, обвинённый в страшном преступлении, стал одним из самых необычных обитателей блока.",
     id: 435,
-    genre: ["детектив", "драма", "криминал", "фантастика", "фэнтези"],
-    timestamp: 1609362000,
-    posterUrlPreview:
-      "https://kinopoiskapiunofficial.tech/images/posters/kp_small/435.jpg",
-    ratingImdb: 8.6,
-    ratingKinopoisk: 9.1,
   },
   {
-    title: "Побег из Шоушенка (The Shawshank Redemption), 1994",
-    subtitle:
-      "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
     id: 326,
-    genre: ["драма"],
-    timestamp: 1611781200,
-    posterUrlPreview:
-      "https://kinopoiskapiunofficial.tech/images/posters/kp_small/326.jpg",
-    ratingImdb: 9.3,
-    ratingKinopoisk: 9.1,
   },
   {
-    title:
-      "Властелин колец: Возвращение короля (The Lord of the Rings: The Return of the King), 2003",
-    subtitle:
-      "Повелитель сил тьмы Саурон направляет свою бесчисленную армию под стены Минас-Тирита, крепости Последней Надежды. Он предвкушает близкую победу, но именно это мешает ему заметить две крохотные фигурки — хоббитов, приближающихся к Роковой Горе, где им предстоит уничтожить Кольцо Всевластья.",
     id: 3498,
-    genre: ["драма", "приключения", "фэнтези"],
-    timestamp: 1618347600,
-    posterUrlPreview:
-      "https://kinopoiskapiunofficial.tech/images/posters/kp_small/3498.jpg",
-    ratingImdb: 8.9,
-    ratingKinopoisk: 8.6,
   },
   {
-    title: "Форрест Гамп (Forrest Gump), 1994",
-    subtitle:
-      "Сидя на автобусной остановке, Форрест Гамп — не очень умный, но добрый и открытый парень — рассказывает случайным встречным историю своей необыкновенной жизни.\n\nС самого малолетства он страдал от заболевания ног, и соседские хулиганы дразнили мальчика, и в один прекрасный день Форрест открыл в себе невероятные способности к бегу. Подруга детства Дженни всегда его поддерживала и защищала, но вскоре дороги их разошлись",
     id: 448,
-    genre: ["военный", "драма", "история", "комедия", "мелодрама"],
-    timestamp: 1636405200,
-    posterUrlPreview:
-      "https://kinopoiskapiunofficial.tech/images/posters/kp_small/448.jpg",
-    ratingImdb: 8.8,
-    ratingKinopoisk: 8.9,
   },
   {
-    title: "Интерстеллар (Interstellar), 2014",
-    subtitle:
-      "Когда засуха, пыльные бури и вымирание растений приводят человечество к продовольственному кризису, коллектив исследователей и учёных отправляется сквозь червоточину (которая предположительно соединяет области пространства-времени через большое расстояние) в путешествие, чтобы превзойти прежние ограничения для космических путешествий человека и найти планету с подходящими для человечества условиями.",
     id: 258687,
-    genre: ["драма", "приключения", "фантастика"],
-    timestamp: 1640811600,
-    posterUrlPreview:
-      "https://kinopoiskapiunofficial.tech/images/posters/kp_small/258687.jpg",
-    ratingImdb: 8.6,
-    ratingKinopoisk: 8.6,
   },
 ];
 
+const filterFilms = (films: Film[]) => {
+  let filtered = [...films];
+
+  const api = {
+    filterByGenre(genres: string[]) {
+      if (!genres) return api;
+      filtered = filtered.filter((film) =>
+        genres.every((filterGenre) =>
+          film.genres.some((genre) => genre.genre === filterGenre)
+        )
+      );
+
+      return api;
+    },
+    filterBySearch(filter: string) {
+      if (!filter) return api;
+
+      filtered = filtered.filter((film) => {
+        const isInclude = (text: string) =>
+          !!text?.toLowerCase().includes(filter.toLowerCase());
+        return (
+          isInclude(film.nameRu) ||
+          isInclude(film.nameEn) ||
+          isInclude(film.nameOriginal)
+        );
+      });
+      return api;
+    },
+    filterByType(type?: FilmsTypes) {
+      if (!type || type === "all") return api;
+
+      filtered = filtered.filter((film) =>
+        type === "serials" ? film.serial : !film.serial
+      );
+      return api;
+    },
+    _getFiltered() {
+      return filtered;
+    },
+    get result() {
+      return this._getFiltered();
+    },
+  };
+
+  return api;
+};
+
 export const $userFilmsList = createStore<Film[]>([]);
-export const $isAddModalOpened = createStore(false);
+export const $userFilmsGenres = $userFilmsList.map((films) =>
+  films.reduce((acc, film) => {
+    const filmGenres = film.genres
+      .map((genre) => genre.genre)
+      .filter((genre) => !acc.includes(genre));
+
+    return [...acc, ...filmGenres];
+  }, [])
+);
+export const $filteredUserFilmList = createStore<Film[]>([]);
+export const $filmsFilter = createStore<FilterParams>({
+  search: "",
+  genres: [],
+  type: "all",
+});
 
 export const getFilmsFromServerFx = createEffect(async () => {
   const result = await apolloClient.query({ query: ApiService.GET_FILMS });
   return result.data.getFilms;
 });
 
-export const getFilmsFromLSFx = createEffect(() => {
+export const getFilmsFromLSFx = createEffect(async () => {
   const films = JSON.parse(localStorage.getItem("movies"));
+
   if (!isArray(films)) {
+    const result = Promise.all(
+      STOCK_FILMS.map((id) => KinopoiskService().getFilmById(id))
+    );
+    console.log(result);
     localStorage.setItem("movies", JSON.stringify(STOCK_FILMS));
     return STOCK_FILMS;
   }
 
-  return films;
+  return films || [];
 });
 
 export const addFilmToServerFx = createEffect(async (kinopoiskId: number) => {
@@ -158,13 +187,30 @@ export const deleteFilmFx = createEffect(async (kinopoiskId: number) => {
 
 export const addFilm = createEvent<Film>();
 export const deleteFilm = createEvent<string>();
-export const toggleAddModal = createEvent<boolean>();
+export const filterUserFilms = createEvent<FilterParams>();
+export const resetFilmsFilter = createEvent();
 
 $userFilmsList
   .on(getFilmsFromServerFx.doneData, (_, data) => data)
   .on(getFilmsFromLSFx, (_, data) => data);
+$filteredUserFilmList.on($userFilmsList, (_, data) => data);
 
-$isAddModalOpened.on(toggleAddModal, (_, data) => data);
+$filmsFilter
+  .on(filterUserFilms, (state, filter) => ({ ...state, ...filter }))
+  .reset(resetFilmsFilter);
+
+sample({
+  clock: $filmsFilter,
+  source: $userFilmsList,
+  fn: (films, filter) => {
+    console.log(filter);
+    return filterFilms(films)
+      .filterByGenre(filter.genres)
+      .filterBySearch(filter.search)
+      .filterByType(filter.type).result;
+  },
+  target: $filteredUserFilmList,
+});
 
 sample({
   clock: $isAuthenticated,
@@ -173,14 +219,15 @@ sample({
 });
 
 sample({
-  clock: [addFilmToServerFx.doneData, deleteFilmFx.doneData],
-  target: getFilmsFromServerFx,
+  clock: $isAuthenticated,
+  filter: (isAuthenticated) => !isAuthenticated,
+  fn: () => [],
+  target: $userFilmsList,
 });
 
 sample({
-  clock: $isAuthenticated,
-  filter: (isAuthenticated) => !isAuthenticated,
-  target: getFilmsFromLSFx,
+  clock: [addFilmToServerFx.doneData, deleteFilmFx.doneData],
+  target: getFilmsFromServerFx,
 });
 
 sample({

@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
-@import './styles/normalize.scss';
-@import './styles/variables.scss';
+@import 'normalize';
+@import 'variables';
 
 
 
@@ -16,7 +16,7 @@
 body {
     min-width: 320px;
     background: var(--grey-900);
-    background-image: url('./resources/img/bg.png');
+    background-image: url('../resources/img/bg.png');
     background-repeat: repeat-y;
     color: var(--grey-50);
     background-size: cover;
@@ -59,7 +59,6 @@ html, body {
   margin: 0 auto;
 }
 .default-view {
-  margin: 0 auto;
   padding-bottom: 208px;
 }
 

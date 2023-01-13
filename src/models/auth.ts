@@ -1,4 +1,6 @@
-import { createEvent, createStore, sample } from "effector";
+import { createEvent, createStore, createEffect, sample } from "effector";
+import apolloClient from "../config/apollo-client";
+import { AuthService } from "../services/AuthService";
 
 export type UserData = { _id: string; email: string };
 
@@ -12,11 +14,19 @@ export const toggleLoginModal = createEvent<boolean>();
 export const updateUserData = createEvent<Partial<UserData>>();
 export const clearUserData = createEvent();
 
+export const checkAuthFx = createEffect(async () => {
+  const result = await apolloClient.query({
+    query: AuthService.AUTH_CHECK,
+  });
+  return result?.data?.profile;
+});
+
 $userData
   .on(updateUserData, (prevState, updatedState) => ({
     ...prevState,
     ...updatedState,
   }))
+  .on(checkAuthFx.doneData, (_, data) => data)
   .reset(clearUserData);
 
 sample({

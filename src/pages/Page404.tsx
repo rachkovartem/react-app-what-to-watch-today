@@ -1,5 +1,3 @@
-import pageNotFound from "../resources/img/404.png";
-
 const Page404 = () => {
   return (
     <div

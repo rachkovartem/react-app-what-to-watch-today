@@ -1,37 +1,38 @@
 import "./AppSideMenu.scss";
 
 import * as React from "react";
-import PropTypes from "prop-types";
 
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import SideMenuGenreFilter from "../sidemenuGenreFilter/SidemenuGenreFilter";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { useStore } from "effector-react";
 import { $isDrawerOpened, toggleDrawer } from "../../models/app";
+import {
+  $filmsFilter,
+  FilmsTypes,
+  filterUserFilms,
+  resetFilmsFilter,
+} from "../../models/films";
+import { ListItemButton } from "@mui/material";
 
-const drawerWidth = 240;
+const filterValues: { title: string; value: FilmsTypes }[] = [
+  { title: "Всё", value: "all" },
+  { title: "Фильмы", value: "films" },
+  { title: "Сериалы", value: "serials" },
+];
 
-function AppSidemenu(props: {
-  genres: () => Array<string>;
-  filterSetter: { genre: unknown; date: (string) => void };
-  filtersReset: () => void;
-  filterGenre: unknown[];
-  filterDate: string;
-}) {
+function AppSidemenu() {
   const isDrawerOpened = useStore($isDrawerOpened);
+  const filmsFilter = useStore($filmsFilter);
+  const resetFilter = () => resetFilmsFilter();
 
   const handleCloseDrawer = () => {
     toggleDrawer(false);
-  };
-
-  const selectedButton = (text) => {
-    return props.filterDate === text;
   };
 
   return (
@@ -47,7 +48,7 @@ function AppSidemenu(props: {
         display: "block",
         left: "initial",
         right: "0",
-        "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
+        "& .MuiDrawer-paper": { boxSizing: "border-box", width: 320 },
       }}
     >
       <Typography
@@ -61,37 +62,28 @@ function AppSidemenu(props: {
           whiteSpace: "normal",
         }}
       >
-        Отобразить фильмы, добавленные за какой период?
+        Что показать?
       </Typography>
       <List>
-        {["Неделя", "Месяц", "Год", "Всё время"].map((text) => (
-          <ListItem
-            onClick={() => props.filterSetter.date(text)}
-            selected={selectedButton(text)}
-            button
-            key={text}
-            id={text}
+        {filterValues.map((value, index) => (
+          <ListItemButton
+            onClick={() => filterUserFilms({ type: value.value })}
+            selected={value.value === filmsFilter.type}
+            key={index}
           >
-            {/* <ListItemIcon>
-
-            </ListItemIcon> */}
-            <ListItemText primary={text} />
-          </ListItem>
+            <ListItemText primary={value.title} />
+          </ListItemButton>
         ))}
       </List>
       <Divider />
       <List>
-        <SideMenuGenreFilter
-          genres={props.genres}
-          filterSetter={props.filterSetter}
-          filterGenre={props.filterGenre}
-        />
+        <SideMenuGenreFilter />
       </List>
       <Divider />
       <Stack>
         <Button
-          onClick={() => props.filtersReset()}
-          sx={{ mt: "25px", ml: "auto", mr: "auto" }}
+          onClick={resetFilter}
+          sx={{ mt: "25px", ml: "auto", mr: "auto", width: "250px" }}
           variant="outlined"
         >
           Сбросить фильтры
@@ -100,13 +92,5 @@ function AppSidemenu(props: {
     </Drawer>
   );
 }
-
-AppSidemenu.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window: PropTypes.func,
-};
 
 export default AppSidemenu;

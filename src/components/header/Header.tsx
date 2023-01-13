@@ -5,10 +5,9 @@ import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useStore } from "effector-react";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
 
 import * as React from "react";
 import Menu from "@mui/material/Menu";
@@ -17,7 +16,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import Logout from "@mui/icons-material/Logout";
-import { $isDrawerOpened, toggleDrawer } from "../../models/app";
+import {
+  $isDrawerOpened,
+  toggleDrawer,
+  toggleUserProfile,
+} from "../../models/app";
 import {
   $isAuthenticated,
   $userData,
@@ -27,62 +30,33 @@ import {
 } from "../../models/auth";
 import { AuthService } from "../../services/AuthService";
 
-import UserProfile from "../userProfile/UserProfile";
-
-export default function Header({ domContentLoaded }) {
+export default function Header() {
   const theme = useTheme();
   const isDrawerOpened = useStore($isDrawerOpened);
   const isAuthenticated = useStore($isAuthenticated);
   const userData = useStore($userData);
   const [_, { loading }] = useMutation(AuthService.SIGNUP);
   const [LogoutFunction] = useLazyQuery(AuthService.LOGOUT);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLDivElement>(null);
   const location = useLocation();
-  const [openModalProfile, setOpenModalProfile] = useState(false);
   const onClickSignUp = () => toggleSignupModal(true);
   const onClickLogin = () => toggleLoginModal(true);
 
-  const open = Boolean(anchorEl);
+  const open = Boolean(menuAnchorEl);
 
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+    setMenuAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
-    setAnchorEl(null);
+    setMenuAnchorEl(null);
   };
 
   const handleClickLogout = async () => {
-    console.log(1);
     await LogoutFunction();
     clearUserData();
   };
 
-  useEffect(() => {
-    if (!domContentLoaded) {
-      return;
-    }
-    if (
-      anchorEl &&
-      document.querySelector(".header__hamburger") &&
-      document.querySelector(".film-list__add-button")
-    ) {
-      if (window.innerWidth > 900) {
-        document.querySelector(".header__hamburger").style.marginRight = "3px";
-        document.querySelector(".film-list__add-button").style.marginRight =
-          "3px";
-      }
-    }
-    if (
-      !anchorEl &&
-      document.querySelector(".film-list__add-button") &&
-      document.querySelector(".film-list__add-button")
-    ) {
-      if (window.innerWidth > 900) {
-        document.querySelector(".header__hamburger").style.marginRight = "";
-        document.querySelector(".film-list__add-button").style.marginRight = "";
-      }
-    }
-  }, [anchorEl]);
+  const openProfileModal = () => toggleUserProfile(true);
 
   return (
     <>
@@ -111,8 +85,7 @@ export default function Header({ domContentLoaded }) {
               </div>
             )}
             <Menu
-              anchorEl={anchorEl}
-              id="account-menu"
+              anchorEl={menuAnchorEl}
               open={open}
               onClose={handleClose}
               onClick={handleClose}
@@ -143,10 +116,8 @@ export default function Header({ domContentLoaded }) {
                   },
                 },
               }}
-              transformOrigin={{ horizontal: "left", vertical: "top" }}
-              anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
             >
-              <MenuItem onClick={() => setOpenModalProfile(true)}>
+              <MenuItem onClick={openProfileModal}>
                 <ListItemIcon>
                   <AccountBoxIcon fontSize="small" />
                 </ListItemIcon>
@@ -239,10 +210,6 @@ export default function Header({ domContentLoaded }) {
           </div>
         </div>
       </header>
-      <UserProfile
-        openModalProfile={openModalProfile}
-        setOpenModalProfile={setOpenModalProfile}
-      />
     </>
   );
 }

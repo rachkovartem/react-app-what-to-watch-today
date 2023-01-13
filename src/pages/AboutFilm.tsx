@@ -1,48 +1,30 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import KinopoiskServices from "../services/KinopoiskServices";
+import KinopoiskService from "../services/KinopoiskService";
 import Cover from "../components/cover/Cover";
 import Description from "../components/description/Description";
+import { Film } from "../models/films";
 
 const AboutFilm = () => {
-  const { loading, error, clearError, getFilmById, getImagesById } =
-    KinopoiskServices();
+  const { loading, getFilmById, getImagesById } = KinopoiskService();
   const { id } = useParams();
-  const [images, setImages] = useState({});
+  const [images, setImages] = useState<{ items: { imageUrl: string }[] }>();
   const [imagesUpdated, setImagesUpdated] = useState(false);
-  const [stringCountries, setStringCountries] = useState("");
   const [stringGenres, setStringGenres] = useState("");
-  const [film, setFilm] = useState({});
-  const { nameRu, nameEn, nameOriginal, type } = film;
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-    return () => setIsMounted(false);
-  }, []);
+  const [film, setFilm] = useState<Film>({} as Film);
 
   useEffect(() => {
     updateFilm(id);
   }, []);
 
   const updateFilm = (id) => {
-    getFilmById(id).then(filmUpdated);
+    getFilmById(id).then(filmUpdate);
   };
 
-  const filmUpdated = (data) => {
+  const filmUpdate = (data) => {
     setFilm(data);
-    const {
-      year,
-      filmLength,
-      serial,
-      endYear,
-      startYear,
-      description,
-      countries,
-      genres,
-    } = data;
-    setStringCountries(countries.map((item) => item.country).join(", "));
+    const { genres } = data;
     setStringGenres(genres.map((item) => item.genre).join(", "));
   };
 
@@ -68,28 +50,11 @@ const AboutFilm = () => {
     }
   };
 
-  const typeValues = [
-    "STILL",
-    "SHOOTING",
-    "POSTER",
-    "FAN_ART",
-    "PROMO",
-    "CONCEPT",
-    "WALLPAPER",
-    "COVER",
-    "SCREENSHOT",
-  ];
-
-  useEffect(() => {
-    getImageForBigPoster();
-  }, []);
-
   const getImageForBigPoster = async () => {
     const values = ["WALLPAPER", "SCREENSHOT", "COVER", "SHOOTING", "STILL"];
     let value = 0;
     let res = await getImagesByType(values[value]);
     while (res.items.length === 0 && values[value]) {
-      console.log(values[value]);
       res = await getImagesByType(values[value]);
       value++;
     }
@@ -114,26 +79,16 @@ const AboutFilm = () => {
     return { total: initRes.total, items: images };
   };
 
-  const ratingStyle = (rating) => {
-    if (rating >= 7) {
-      return { color: "#3bb33b" };
-    }
-    if (rating >= 5 && rating < 7) {
-      return { color: "#777" };
-    }
-    if (rating < 5) {
-      return { color: "#ff1717" };
-    } else {
-      return { color: "#000" };
-    }
-  };
+  useEffect(() => {
+    getImageForBigPoster();
+  }, []);
 
   return (
     <>
       <Cover
         imagesUpdated={imagesUpdated}
         loading={loading}
-        title={nameRu}
+        title={film.nameRu || film.nameEn || film.nameOriginal}
         image={
           imagesUpdated && images.items[0] ? images.items[0].imageUrl : null
         }

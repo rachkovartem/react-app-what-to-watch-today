@@ -3,7 +3,6 @@ import "./FilmItem.scss";
 
 import Skeleton from "@mui/material/Skeleton";
 
-import LinesEllipsis from "react-lines-ellipsis";
 import { Link } from "react-router-dom";
 import { memo } from "react";
 
@@ -12,6 +11,7 @@ import { useStore } from "effector-react";
 import { Properties } from "csstype";
 import kinopoiskImg from "../../resources/img/kinopoisk.svg";
 import imdbImg from "../../resources/img/IMDB.svg";
+import Typography from "@mui/material/Typography";
 
 function propsChecker(prevProps, nexProps) {
   return prevProps.film === nexProps.film && prevProps.style === nexProps.style;
@@ -26,6 +26,7 @@ export const FilmItem = memo(
     film: Film;
   }) => {
     const loading = useStore(getFilmsFromServerFx.pending);
+
     const onDescrAction = (e) => {
       if (e._reactName === "onMouseLeave") {
         e.target.parentNode.children[4].style.zIndex = -1;
@@ -95,7 +96,18 @@ export const FilmItem = memo(
           Описание
         </div>
         <div className="film__descr-text">
-          <EplipsedDescr text={film.description} />
+          <Typography
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: 10,
+              lineClamp: `${10}`,
+              WebkitBoxOrient: "vertical",
+            }}
+          >
+            {film.description}
+          </Typography>
         </div>
         <div
           onClick={() => deleteFilmFx(film.kinopoiskId)}
@@ -121,17 +133,6 @@ export const FilmItem = memo(
     );
   },
   propsChecker
-);
-
-const EplipsedDescr = ({ text }) => (
-  <LinesEllipsis
-    text={text}
-    maxLine="14"
-    ellipsis="..."
-    component="p"
-    trimRight
-    basedOn="letters"
-  />
 );
 
 export default FilmItem;

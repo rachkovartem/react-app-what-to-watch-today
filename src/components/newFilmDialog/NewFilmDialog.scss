@@ -178,12 +178,10 @@
                     background: rgba(0, 0, 0, 0.1);
                     border: none;
                     .MuiInputLabel-root {
-                        padding-left: 20px;
                         padding-top: 1px;
                         color: var(--grey-100);
                         transition: margin 100ms linear, color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
                         margin-top: 8px;
-                        top: -9px;
                         padding-left: 0;
                         top: -9px;
                         .Mui-focused {
@@ -234,7 +232,7 @@
             .MuiDialogContent-root::-webkit-scrollbar-thumb {
                 background-color: var(--grey-600);
                 border-radius: 9em;
-                box-shadow: inset 1px 1px 10px --grey-600;
+                box-shadow: inset 1px 1px 10px var(--grey-600);
             }
 
             .MuiDialogActions-root { //кнопки
@@ -296,7 +294,7 @@
         .MuiAutocomplete-listbox::-webkit-scrollbar-thumb {
             background-color: var(--grey-600);
             border-radius: 9em;
-            box-shadow: inset 1px 1px 10px --grey-600;
+            box-shadow: inset 1px 1px 10px var(--grey-600);
         }
 
         .MuiAutocomplete-listbox::-webkit-scrollbar {

@@ -1,19 +1,25 @@
 import "./FilmList.scss";
-import "./Ratings.scss";
 import nextId from "react-id-generator";
 
 import { Transition, TransitionGroup } from "react-transition-group";
-import { useRef, cloneElement } from "react";
+import { cloneElement, useEffect, useState } from "react";
 import { Skeleton } from "@mui/material";
 
 import poster from "../../resources/img/poster.jpg";
 import FilmItem from "../filmItem/FilmItem";
+import { useStore } from "effector-react";
+import {
+  $filteredUserFilmList,
+  getFilmsFromServerFx,
+} from "../../models/films";
+import { toggleAddModal } from "../../models/app";
 
-const FilmList = (props) => {
-  const { setOpen, loadingPantry, isLoading } = props;
-  const nodeRef = useRef(null);
+const FilmList = () => {
+  const filteredFilms = useStore($filteredUserFilmList);
+  const loading = useStore(getFilmsFromServerFx.pending);
+  const [initialLoading, setInitialLoading] = useState(true);
+
   const duration = 300;
-
   const removeStyle = {
     transition: `opacity ${duration}ms ease-in-out`,
     opacity: 1,
@@ -31,12 +37,14 @@ const FilmList = (props) => {
     exited: { opacity: 0 },
   };
 
-  const { films } = props;
+  useEffect(() => {
+    setInitialLoading(false);
+  }, []);
 
   return (
     <section className="film-list">
       <div className="container">
-        {films.length > 0 && !loadingPantry && !isLoading ? (
+        {filteredFilms.length > 0 && (!initialLoading || !loading) ? (
           <TransitionGroup
             className="film-list__grid"
             childFactory={(child) =>
@@ -45,13 +53,12 @@ const FilmList = (props) => {
               })
             }
           >
-            {films.map((film) => {
+            {filteredFilms.map((film) => {
               return (
                 <Transition
                   component="li"
-                  nodeRef={nodeRef}
                   appear={false}
-                  in={true}
+                  in
                   timeout={duration}
                   key={nextId()}
                 >
@@ -70,13 +77,16 @@ const FilmList = (props) => {
             })}
           </TransitionGroup>
         ) : null}
-        {films.length === 0 && !loadingPantry && !isLoading ? (
+        {filteredFilms.length === 0 && !loading && !initialLoading ? (
           <div className="film-list__grid">
             <span className="film-list__notfound">Ничего не найдено</span>
           </div>
         ) : null}
-        {(isLoading || loadingPantry) && <SkeletonFilm />}
-        <button className="film-list__add-button" onClick={() => setOpen(true)}>
+        {loading && initialLoading && <SkeletonFilms />}
+        <button
+          className="film-list__add-button"
+          onClick={() => toggleAddModal(true)}
+        >
           <svg
             rotate="45"
             width="24"
@@ -106,7 +116,7 @@ const FilmList = (props) => {
   );
 };
 
-const SkeletonFilm = () => (
+const SkeletonFilms = () => (
   <div className="film-list__grid">
     <li className="film" style={{ minWidth: "100%" }}>
       <div className="film__poster-link">

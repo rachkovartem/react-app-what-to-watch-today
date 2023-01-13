@@ -1,6 +1,7 @@
 import { useHttp } from "../hooks/hook.http";
+import env from "../config/env";
 
-const KinopoiskServices = () => {
+const KinopoiskService = () => {
   const { loading, error, request, clearError } = useHttp();
 
   const _apiURL = "https://kinopoiskapiunofficial.tech/api/";
@@ -8,7 +9,7 @@ const KinopoiskServices = () => {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "X-API-KEY": "9261fd63-b1c8-4121-bea1-7d81ae93b210",
+      "X-API-KEY": env.X_API_KEY,
     },
   };
 
@@ -36,7 +37,7 @@ const KinopoiskServices = () => {
     );
   };
 
-  const getImagesById = async (id, type, timeout, page = 1) => {
+  const getImagesById = async (id, type, timeout?, page = 1) => {
     return await request(
       `${_apiURL}v2.2/films/${id}/images?type=${type}&page=${page}`,
       _apiOptions.method,
@@ -57,4 +58,4 @@ const KinopoiskServices = () => {
   };
 };
 
-export default KinopoiskServices;
+export default KinopoiskService;

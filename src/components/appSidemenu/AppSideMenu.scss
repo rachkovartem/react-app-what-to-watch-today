@@ -112,7 +112,7 @@ body {
         .MuiPaper-root::-webkit-scrollbar-thumb {
             background-color: var(--grey-600);
             border-radius: 9em;
-            box-shadow: inset 1px 1px 10px --grey-600;
+            box-shadow: inset 1px 1px 10px var(--grey-600);
         }
         .MuiPaper-root::-webkit-scrollbar {
             width: 3px; /* ширина для вертикального скролла */
