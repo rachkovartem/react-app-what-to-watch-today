@@ -31,7 +31,7 @@ body::-webkit-scrollbar {
 body::-webkit-scrollbar-thumb {
     background-color: var(--grey-600);
     border-radius: 9em;
-    box-shadow: inset 1px 1px 10px --grey-600;
+    box-shadow: inset 1px 1px 10px var(--grey-600);
 }
 body::-webkit-scrollbar {
     width: 3px; /* ширина для вертикального скролла */
