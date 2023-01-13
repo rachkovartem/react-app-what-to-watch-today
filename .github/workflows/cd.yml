@@ -26,6 +26,8 @@ jobs:
           port: 22
           script: |
             cd /home/rycha/react-app-what-to-watch-today
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             git pull origin master
             git status
             npm install
