@@ -28,4 +28,5 @@ jobs:
             cd /home/rycha/react-app-what-to-watch-today
             git pull origin master
             git status
-            docker compose up -d --build front
+            npm install
+            npm run build
