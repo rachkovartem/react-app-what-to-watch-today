@@ -12,37 +12,49 @@ import ListItemText from "@mui/material/ListItemText";
 import SideMenuGenreFilter from "../sidemenuGenreFilter/SidemenuGenreFilter";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import { MouseEventHandler } from "react";
+import { useStore } from "effector-react";
+import { $isDrawerOpened, toggleDrawer } from "../../models/app";
 
 const drawerWidth = 240;
 
 function AppSidemenu(props: {
-  onClickDrawerToggle: MouseEventHandler;
-  drawerOpen: boolean;
   genres: () => Array<string>;
   filterSetter: { genre: unknown; date: (string) => void };
   filtersReset: () => void;
   filterGenre: unknown[];
   filterDate: string;
 }) {
-  const { drawerOpen, onClickDrawerToggle } = props;
+  const isDrawerOpened = useStore($isDrawerOpened);
 
-  const selectedButton = (text) => {
-    if (props.filterDate === text) {
-      return true;
-    } else {
-      return false;
-    }
+  const handleCloseDrawer = () => {
+    toggleDrawer(false);
   };
 
-  const drawer = (
-    <div>
+  const selectedButton = (text) => {
+    return props.filterDate === text;
+  };
+
+  return (
+    <Drawer
+      anchor="right"
+      variant="temporary"
+      open={isDrawerOpened}
+      onClose={handleCloseDrawer}
+      ModalProps={{
+        keepMounted: true,
+      }}
+      sx={{
+        display: "block",
+        left: "initial",
+        right: "0",
+        "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
+      }}
+    >
       <Typography
         noWrap
         component="div"
         sx={{
           textAlign: "center",
-          flexGrow: 1,
           mt: { xs: 3, md: 1 },
           mr: 1,
           ml: 1,
@@ -61,7 +73,7 @@ function AppSidemenu(props: {
             id={text}
           >
             {/* <ListItemIcon>
-              
+
             </ListItemIcon> */}
             <ListItemText primary={text} />
           </ListItem>
@@ -85,32 +97,7 @@ function AppSidemenu(props: {
           Сбросить фильтры
         </Button>
       </Stack>
-    </div>
-  );
-
-  const container = window.document.body;
-
-  return (
-    <div style={{ display: "none" }}>
-      <Drawer
-        anchor="right"
-        container={container}
-        variant="temporary"
-        open={drawerOpen}
-        onClose={onClickDrawerToggle}
-        ModalProps={{
-          keepMounted: true, // Better open performance on mobile.
-        }}
-        sx={{
-          display: "block",
-          left: "initial",
-          right: "0",
-          "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
-        }}
-      >
-        {drawer}
-      </Drawer>
-    </div>
+    </Drawer>
   );
 }
 

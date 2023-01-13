@@ -1,17 +1,16 @@
 import { useStore } from "effector-react";
 import { useState } from "react";
-import { $userFilmsList, Film } from "../../models/films";
+import { $userFilmsList, Film } from "../models/films";
 
-import FilmList from "../filmList/FilmList";
-import AppSidemenu from "../appSidemenu/AppSideMenu";
-import KinopoiskServices from "../../services/KinopoiskServices";
-import ErrorBoundary from "../errorBoundary/ErrorBoundary";
+import FilmList from "../components/filmList/FilmList";
+import AppSidemenu from "../components/appSidemenu/AppSideMenu";
+import KinopoiskServices from "../services/KinopoiskServices";
+import ErrorBoundary from "../components/errorBoundary/ErrorBoundary";
 
-import Search from "../search/Search";
-import NewFilmDialog from "../newFilmDialog/NewFilmDialog";
+import Search from "../components/search/Search";
+import NewFilmDialog from "../components/newFilmDialog/NewFilmDialog";
 
-const ToWatchList = (props) => {
-  const { drawerOpen, setDrawerOpen } = props;
+const Main = () => {
   const [filterDate, setFilterDate] = useState<string>("Всё время");
   const [filterGenre, setFilterGenre] = useState<Array<unknown>>([]);
   const [filterSearch, setFilterSearch] = useState("");
@@ -97,8 +96,6 @@ const ToWatchList = (props) => {
       <Search setFilterSearch={setFilterSearch} filterSearch={filterSearch} />
       <ErrorBoundary>
         <AppSidemenu
-          onClickDrawerToggle={() => setDrawerOpen((drawerOpen) => !drawerOpen)}
-          drawerOpen={drawerOpen}
           genres={genres}
           filterSetter={{ genre: filterGenreSetter, date: filterDateSetter }}
           filtersReset={filtersReset}
@@ -124,4 +121,4 @@ const ToWatchList = (props) => {
   );
 };
 
-export default ToWatchList;
+export default Main;

@@ -5,14 +5,14 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { updateUserData } from "../../models/auth";
 import { AuthService } from "../../services/AuthService";
 import { LoginModal } from "../loginModal/LoginModal";
-import { ToWatchList, Page404 } from "../pages";
+import { Main, Page404 } from "../../pages";
 import { SignUpModal } from "../signUpModal/SignUpModal";
 import Spinner from "../spinner/Spinner";
 
 import Header from "../header/Header";
 import Footer from "../footer/Footer";
 
-const AboutFilm = lazy(() => import("../pages/AboutFilm"));
+const AboutFilm = lazy(() => import("../../pages/AboutFilm"));
 
 const App = () => {
   const [AuthCheck] = useLazyQuery(AuthService.AUTH_CHECK);
@@ -89,7 +89,7 @@ const App = () => {
                 path="/"
                 element={
                   <div className="default-view scale">
-                    <ToWatchList
+                    <Main
                       drawerOpen={drawerOpen}
                       setDrawerOpen={setDrawerOpen}
                       setFilmsToWatch={setFilmsToWatch}

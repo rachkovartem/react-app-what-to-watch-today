@@ -17,6 +17,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import Logout from "@mui/icons-material/Logout";
+import { $isDrawerOpened, toggleDrawer } from "../../models/app";
 import {
   $isAuthenticated,
   $userData,
@@ -28,12 +29,9 @@ import { AuthService } from "../../services/AuthService";
 
 import UserProfile from "../userProfile/UserProfile";
 
-export default function Header({
-  domContentLoaded,
-  onClickDrawerToggle,
-  drawerOpen,
-}) {
+export default function Header({ domContentLoaded }) {
   const theme = useTheme();
+  const isDrawerOpened = useStore($isDrawerOpened);
   const isAuthenticated = useStore($isAuthenticated);
   const userData = useStore($userData);
   const [_, { loading }] = useMutation(AuthService.SIGNUP);
@@ -192,9 +190,9 @@ export default function Header({
               </nav>
               {location.pathname === "/" && (
                 <div
-                  onClick={onClickDrawerToggle}
+                  onClick={() => toggleDrawer(!isDrawerOpened)}
                   className={`header__hamburger ${
-                    drawerOpen ? "header__hamburger_active" : ""
+                    isDrawerOpened ? "header__hamburger_active" : ""
                   }`}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
