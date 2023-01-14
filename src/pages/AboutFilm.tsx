@@ -7,8 +7,9 @@ import Description from "../components/description/Description";
 import { Film } from "../models/films";
 
 const AboutFilm = () => {
-  const { loading, getFilmById, getImagesById } = KinopoiskService();
+  const { getFilmById, getImagesById } = KinopoiskService;
   const { id } = useParams();
+  const [loading, setLoading] = useState(true);
   const [images, setImages] = useState<{ items: { imageUrl: string }[] }>();
   const [imagesUpdated, setImagesUpdated] = useState(false);
   const [stringGenres, setStringGenres] = useState("");
@@ -19,7 +20,9 @@ const AboutFilm = () => {
   }, []);
 
   const updateFilm = (id) => {
-    getFilmById(id).then(filmUpdate);
+    getFilmById(id)
+      .then(filmUpdate)
+      .catch(() => setLoading(false));
   };
 
   const filmUpdate = (data) => {

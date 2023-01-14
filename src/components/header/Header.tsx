@@ -1,5 +1,5 @@
 import "./Header.scss";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { Avatar } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -25,6 +25,7 @@ import {
   $isAuthenticated,
   $userData,
   clearUserData,
+  logoutFx,
   toggleLoginModal,
   toggleSignupModal,
 } from "../../models/auth";
@@ -36,7 +37,6 @@ export default function Header() {
   const isAuthenticated = useStore($isAuthenticated);
   const userData = useStore($userData);
   const [_, { loading }] = useMutation(AuthService.SIGNUP);
-  const [LogoutFunction] = useLazyQuery(AuthService.LOGOUT);
   const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLDivElement>(null);
   const location = useLocation();
   const onClickSignUp = () => toggleSignupModal(true);
@@ -52,7 +52,7 @@ export default function Header() {
   };
 
   const handleClickLogout = async () => {
-    await LogoutFunction();
+    await logoutFx();
     clearUserData();
   };
 
