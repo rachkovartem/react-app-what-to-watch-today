@@ -20,11 +20,10 @@ const AboutFilm = lazy(() => import("../../pages/AboutFilm"));
 
 const App = () => {
   const location = useLocation();
-  const [AuthCheck] = useLazyQuery(AuthService.AUTH_CHECK);
 
   useEffect(() => {
     checkAuthFx();
-  }, [AuthCheck]);
+  }, []);
 
   return (
     <>
