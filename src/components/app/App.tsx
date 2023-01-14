@@ -12,8 +12,6 @@ import Footer from "../footer/Footer";
 import UserProfile from "../userProfile/UserProfile";
 import Page404 from "../../pages/Page404";
 import Main from "../../pages/Main";
-import { AuthService } from "../../services/AuthService";
-import { useLazyQuery } from "@apollo/client";
 import { checkAuthFx } from "../../models/auth";
 
 const AboutFilm = lazy(() => import("../../pages/AboutFilm"));
