@@ -21,6 +21,10 @@ export const checkAuthFx = createEffect(async () => {
   return result?.data?.profile;
 });
 
+export const logoutFx = createEffect(async () =>
+  apolloClient.query({ query: AuthService.LOGOUT })
+);
+
 $userData
   .on(updateUserData, (prevState, updatedState) => ({
     ...prevState,

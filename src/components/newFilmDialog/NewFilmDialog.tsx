@@ -37,14 +37,14 @@ const NewFilmDialog = () => {
     Array.isArray(films) ? films.map((film) => film.kinopoiskId) : []
   );
 
+  const [error, setError] = useState(false);
   const [title, setTitle] = useState("");
   const [filmOptions, setFilmOptions] = useState([]);
   const [userChoose, setUserChoose] = useState(null);
   const [searchInProgress, setSearchInProgress] = useState(false);
   const [alreadyExistAnchorEl, setAlreadyExistAnchorEl] = useState(null);
 
-  const { loading, error, clearError, getFilmByKeyWord, getFilmById } =
-    KinopoiskService();
+  const { getFilmByKeyWord, getFilmById } = KinopoiskService;
 
   const delay = 500;
 
@@ -94,12 +94,14 @@ const NewFilmDialog = () => {
   };
 
   const getFilmsAndSetState = (input) => {
+    setError(false);
     getFilmByKeyWord(input)
       .then((response) => {
         setSearchInProgress(true);
         setFilmOptions(response.films);
       })
       .catch(() => {
+        setError(true);
         setFilmOptions([]);
       })
       .finally(() => {
@@ -130,7 +132,7 @@ const NewFilmDialog = () => {
       return "";
     } else if (!searchInProgress && title === "") {
       return "Введите название фильма, чтобы найти его...";
-    } else if (!loading && !searchInProgress) {
+    } else if (!searchInProgress) {
       return "Не нашли такой фильм :(";
     }
   };
@@ -138,7 +140,6 @@ const NewFilmDialog = () => {
   const onInputChange = (newValue: string) => {
     setTitle(newValue);
     debouncedGetFilmsAndSetState(newValue);
-    clearError();
   };
 
   return (
@@ -180,7 +181,7 @@ const NewFilmDialog = () => {
                 />
               )}
               noOptionsText={noOptionText()}
-              loading={loadingCatcher(loading) || searchInProgress}
+              loading={loadingCatcher(searchInProgress)}
               loadingText={
                 error ? "Ошибка на сервере, попробуйте позже" : "Уже ищем..."
               }

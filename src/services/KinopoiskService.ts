@@ -1,61 +1,34 @@
-import { useHttp } from "../hooks/hook.http";
 import env from "../config/env";
+import axios from "axios";
+import { Film } from "../models/films";
 
-const KinopoiskService = () => {
-  const { loading, error, request, clearError } = useHttp();
+const kinopoiskAxiosInstance = axios.create({
+  baseURL: "https://kinopoiskapiunofficial.tech/api/",
+  headers: {
+    "X-API-KEY": env.X_API_KEY,
+  },
+});
 
-  const _apiURL = "https://kinopoiskapiunofficial.tech/api/";
-  const _apiOptions = {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "X-API-KEY": env.X_API_KEY,
-    },
-  };
-
-  const getFilmByKeyWord = async (word, page = 1) => {
-    return await request(
-      `${_apiURL}v2.1/films/search-by-keyword?keyword=${word}&page=${page}`,
-      _apiOptions.method,
-      _apiOptions.headers
+const KinopoiskService = {
+  getFilmByKeyWord: async (word, page = 1) => {
+    const response = await kinopoiskAxiosInstance.get(
+      `/v2.1/films/search-by-keyword?keyword=${word}&page=${page}`
     );
-  };
+    return response.data;
+  },
 
-  const getFilmById = async (id) => {
-    return await request(
-      `${_apiURL}v2.2/films/${id}`,
-      _apiOptions.method,
-      _apiOptions.headers
+  getFilmById: async (id) => {
+    const response = await kinopoiskAxiosInstance.get<Film>(`v2.2/films/${id}`);
+    return response.data;
+  },
+
+  getImagesById: async (id, type, timeout?, page = 1) => {
+    const response = await kinopoiskAxiosInstance.get(
+      `v2.2/films/${id}/images?type=${type}&page=${page}`,
+      { timeout }
     );
-  };
-
-  const getVideosById = async (id) => {
-    return await request(
-      `${_apiURL}v2.2/films/${id}/videos`,
-      _apiOptions.method,
-      _apiOptions.headers
-    );
-  };
-
-  const getImagesById = async (id, type, timeout?, page = 1) => {
-    return await request(
-      `${_apiURL}v2.2/films/${id}/images?type=${type}&page=${page}`,
-      _apiOptions.method,
-      _apiOptions.headers,
-      timeout
-    );
-  };
-
-  return {
-    loading,
-    error,
-    request,
-    clearError,
-    getFilmByKeyWord,
-    getFilmById,
-    getVideosById,
-    getImagesById,
-  };
+    return response.data;
+  },
 };
 
 export default KinopoiskService;

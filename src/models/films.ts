@@ -1,8 +1,7 @@
 import { createEffect, createEvent, createStore, sample } from "effector";
 import apolloClient from "../config/apollo-client";
 import { ApiService } from "../services/ApiService";
-import { $isAuthenticated } from "./auth";
-import { isArray } from "@apollo/client/cache/inmemory/helpers";
+import { $isAuthenticated, checkAuthFx, logoutFx } from "./auth";
 import KinopoiskService from "../services/KinopoiskService";
 
 export type Film = {
@@ -60,23 +59,7 @@ type FilterParams = {
   type?: FilmsTypes;
 };
 
-export const STOCK_FILMS = [
-  {
-    id: 435,
-  },
-  {
-    id: 326,
-  },
-  {
-    id: 3498,
-  },
-  {
-    id: 448,
-  },
-  {
-    id: 258687,
-  },
-];
+export const STOCK_FILMS = [435, 326, 3498, 448, 258687];
 
 const filterFilms = (films: Film[]) => {
   let filtered = [...films];
@@ -150,13 +133,13 @@ export const getFilmsFromServerFx = createEffect(async () => {
 export const getFilmsFromLSFx = createEffect(async () => {
   const films = JSON.parse(localStorage.getItem("movies"));
 
-  if (!isArray(films)) {
-    const result = Promise.all(
-      STOCK_FILMS.map((id) => KinopoiskService().getFilmById(id))
+  if (!films) {
+    const result = await Promise.all(
+      STOCK_FILMS.map((id) => KinopoiskService.getFilmById(id))
     );
-    console.log(result);
-    localStorage.setItem("movies", JSON.stringify(STOCK_FILMS));
-    return STOCK_FILMS;
+
+    localStorage.setItem("movies", JSON.stringify(result));
+    return result;
   }
 
   return films || [];
@@ -172,27 +155,36 @@ export const addFilmToServerFx = createEffect(async (kinopoiskId: number) => {
 
 export const addFilmToLSFx = createEffect((film: Film) => {
   const films = JSON.parse(localStorage.getItem("movies"));
-  films.concat(film);
-  localStorage.setItem("movies", JSON.stringify(films));
+  localStorage.setItem("movies", JSON.stringify([...films, film]));
 });
 
-export const deleteFilmFx = createEffect(async (kinopoiskId: number) => {
-  const result = await apolloClient.mutate({
-    mutation: ApiService.DELETE_FILM,
-    variables: { kinopoiskId },
-  });
+export const deleteFilmFromServerFx = createEffect(
+  async (kinopoiskId: number) => {
+    const result = await apolloClient.mutate({
+      mutation: ApiService.DELETE_FILM,
+      variables: { kinopoiskId },
+    });
 
-  return result.data;
+    return result.data;
+  }
+);
+
+export const deleteFilmFromLS = createEffect((kinopoiskId: number) => {
+  const filmsFromLS = JSON.parse(localStorage.getItem("movies"));
+  const newFilms = filmsFromLS.filter(
+    (film) => film.kinopoiskId !== kinopoiskId
+  );
+  localStorage.setItem("movies", JSON.stringify(newFilms));
 });
 
 export const addFilm = createEvent<Film>();
-export const deleteFilm = createEvent<string>();
+export const deleteFilm = createEvent<number>();
 export const filterUserFilms = createEvent<FilterParams>();
 export const resetFilmsFilter = createEvent();
 
 $userFilmsList
   .on(getFilmsFromServerFx.doneData, (_, data) => data)
-  .on(getFilmsFromLSFx, (_, data) => data);
+  .on(getFilmsFromLSFx.doneData, (_, data) => data);
 $filteredUserFilmList.on($userFilmsList, (_, data) => data);
 
 $filmsFilter
@@ -219,6 +211,11 @@ sample({
 });
 
 sample({
+  clock: [checkAuthFx.failData, logoutFx.doneData],
+  target: getFilmsFromLSFx,
+});
+
+sample({
   clock: $isAuthenticated,
   filter: (isAuthenticated) => !isAuthenticated,
   fn: () => [],
@@ -226,8 +223,29 @@ sample({
 });
 
 sample({
-  clock: [addFilmToServerFx.doneData, deleteFilmFx.doneData],
+  clock: deleteFilm,
+  source: $isAuthenticated,
+  filter: (isAuthenticated) => isAuthenticated,
+  fn: (_, clock) => clock,
+  target: deleteFilmFromServerFx,
+});
+
+sample({
+  clock: deleteFilm,
+  source: $isAuthenticated,
+  filter: (isAuthenticated) => !isAuthenticated,
+  fn: (_, clock) => clock,
+  target: deleteFilmFromLS,
+});
+
+sample({
+  clock: [addFilmToServerFx.doneData, deleteFilmFromServerFx.doneData],
   target: getFilmsFromServerFx,
+});
+
+sample({
+  clock: [addFilmToLSFx.doneData, deleteFilmFromLS.doneData],
+  target: getFilmsFromLSFx,
 });
 
 sample({

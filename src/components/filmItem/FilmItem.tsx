@@ -6,7 +6,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { Link } from "react-router-dom";
 import { memo } from "react";
 
-import { deleteFilmFx, Film, getFilmsFromServerFx } from "../../models/films";
+import { deleteFilm, Film, getFilmsFromServerFx } from "../../models/films";
 import { useStore } from "effector-react";
 import { Properties } from "csstype";
 import kinopoiskImg from "../../resources/img/kinopoisk.svg";
@@ -110,7 +110,7 @@ export const FilmItem = memo(
           </Typography>
         </div>
         <div
-          onClick={() => deleteFilmFx(film.kinopoiskId)}
+          onClick={() => deleteFilm(film.kinopoiskId)}
           className="film__delete-icon"
         >
           <svg
