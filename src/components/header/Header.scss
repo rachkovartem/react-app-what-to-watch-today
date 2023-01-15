@@ -33,7 +33,7 @@
 }
 
 .header__buttons-wrapper {
-    margin-left: 20px;
+    margin-left: 0;
 }
 
 .header__wrapper {
@@ -182,15 +182,18 @@
     
     .header__films-counter {
         display: none;
-    }  
-
-    .header__nav-ham-wrapper {
-        width: 100%;
-        justify-content: space-between;
     }
-
-    .header__wrapper {
+    .header__nav-ham-wrapper {
         justify-content: flex-end;
     }
+    .header__buttons-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .header__button {
+        height: 50%;
+    }
+
 }  
 

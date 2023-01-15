@@ -1,5 +1,4 @@
 import "./Header.scss";
-import { useMutation } from "@apollo/client";
 import { Avatar } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -29,14 +28,12 @@ import {
   toggleLoginModal,
   toggleSignupModal,
 } from "../../models/auth";
-import { AuthService } from "../../services/AuthService";
 
 export default function Header() {
   const theme = useTheme();
   const isDrawerOpened = useStore($isDrawerOpened);
   const isAuthenticated = useStore($isAuthenticated);
   const userData = useStore($userData);
-  const [_, { loading }] = useMutation(AuthService.SIGNUP);
   const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLDivElement>(null);
   const location = useLocation();
   const onClickSignUp = () => toggleSignupModal(true);
@@ -63,7 +60,7 @@ export default function Header() {
       <header className="header">
         <div className="container container_header">
           <div className="header__wrapper">
-            {!loading && isAuthenticated && (
+            {isAuthenticated && (
               <div className="header__button-avatar-wrapper">
                 <button
                   type="button"

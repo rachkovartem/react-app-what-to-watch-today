@@ -4,13 +4,6 @@
 }
 
 .login-modal__form {
-  & svg {
-    cursor: pointer;
-    position: absolute;
-    top: -20px;
-    right: -20px;
-
-  }
   width: 400px;
   background: var(--grey-900-40);
   -webkit-backdrop-filter: blur(24px);

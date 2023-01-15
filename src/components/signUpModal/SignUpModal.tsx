@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { CircularProgress, TextField, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import { useStore } from "effector-react";
 import {
@@ -8,19 +8,21 @@ import {
 } from "../../models/auth";
 
 import "./SignUpModal.scss";
-import Button from "@mui/material/Button";
 import { useForm } from "react-hook-form";
-import { useLazyQuery, useMutation } from "@apollo/client";
 import { AuthService } from "../../services/AuthService";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import Button from "@mui/material/Button";
 
 export const SignUpModal = () => {
-  const [SignUp] = useMutation(AuthService.SIGNUP);
-  const [Login] = useLazyQuery(AuthService.LOGIN);
   const open = useStore($isSignupModalOpened);
   const onClose = () => toggleSignupModal(false);
 
-  const { register, handleSubmit } = useForm({
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({
     defaultValues: {
       name: "",
       email: "",
@@ -33,21 +35,38 @@ export const SignUpModal = () => {
     email: string;
     password: string;
   }) => {
-    const signupResult = await SignUp({ variables: data });
-    const createdUser = signupResult.data.createUser;
-    if (createdUser) {
-      const loginResult = await Login({
-        variables: { email: data.email, password: data.password },
-      });
-      updateUserData(loginResult.data.login);
+    try {
+      const createdUser = await AuthService.signUp(data);
+      if (createdUser) {
+        const loginResult = await AuthService.login({
+          email: data.email,
+          password: data.password,
+        });
+        updateUserData(loginResult);
+        toggleSignupModal(false);
+      }
+    } catch (e) {
+      if (e.message.includes("emailAlreadyInUse")) {
+        setError("email", { message: "Почта уже используется" });
+      }
     }
   };
+
+  console.log(errors);
 
   return (
     <Modal open={open} onClose={onClose}>
       <div className="signup-modal">
         <form className="signup-modal__form" onSubmit={handleSubmit(onSubmit)}>
-          <HighlightOffIcon onClick={onClose} />
+          <HighlightOffIcon
+            sx={{
+              cursor: "pointer",
+              position: "absolute",
+              top: "-20px",
+              right: "-20px",
+            }}
+            onClick={onClose}
+          />
           <p>Имя</p>
           <TextField
             {...register("name")}
@@ -59,16 +78,33 @@ export const SignUpModal = () => {
             {...register("email")}
             className="signup-modal__input"
             name="email"
+            error={!!errors.email}
           />
           <p>Пароль</p>
           <TextField
             {...register("password")}
             className="signup-modal__input"
             name="password"
+            type="password"
           />
-          <Button className="signup-modal__button" type="submit">
+          <Button
+            className="signup-modal__button"
+            type="submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting && (
+              <CircularProgress
+                sx={{ color: "var(--primary-400)", mr: "10px" }}
+                size={30}
+              />
+            )}
             Зарегистрироваться
           </Button>
+          {Object.values(errors).map((error, index) => (
+            <Typography align="center" color="error" key={index}>
+              {error.message}
+            </Typography>
+          ))}
         </form>
       </div>
     </Modal>
