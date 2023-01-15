@@ -55,7 +55,7 @@ export const FilmItem = memo(
             src={imdbImg as unknown as string}
             alt="IMDB"
           />
-          <span className="rating">{film.ratingKinopoisk}</span>
+          <span className="rating">{film.ratingImdb}</span>
         </div>
         <Link
           key={`/film/${film.kinopoiskId}`}
