@@ -23,8 +23,9 @@ const style = {
   p: 3,
   "& .user-modal": {
     display: "grid",
-    gridTemplateColumns: "1fr 2fr",
-    gridTemplateRows: "1fr 1fr",
+    gridTemplateColumns: "70px 2fr",
+    gridTemplateRows: "70px 1fr",
+    rowGap: "10px",
     "& .user-modal__avatar": {
       width: "100%",
       height: "100%",

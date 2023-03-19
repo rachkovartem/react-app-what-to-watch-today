@@ -4,7 +4,7 @@ import "./FilmItem.scss";
 import Skeleton from "@mui/material/Skeleton";
 
 import { Link } from "react-router-dom";
-import { memo, useRef } from "react";
+import { memo } from "react";
 
 import { deleteFilm, Film, getFilmsFromServerFx } from "../../models/films";
 import { useStore } from "effector-react";
@@ -14,20 +14,16 @@ import imdbImg from "../../resources/img/IMDB.svg";
 import Typography from "@mui/material/Typography";
 
 function propsChecker(prevProps, nexProps) {
-  return prevProps.film === nexProps.film && prevProps.style === nexProps.style;
+  return (
+    JSON.stringify(prevProps.film) === JSON.stringify(nexProps.film) &&
+    JSON.stringify(prevProps.style) === JSON.stringify(nexProps.style)
+  );
 }
 
 export const FilmItem = memo(
-  ({
-    style,
-    film,
-  }: {
-    style?: Properties<string | number, string & {}>;
-    film: Film;
-  }) => {
+  ({ style, film }: { style?: Properties<string | number>; film: Film }) => {
     const loading = useStore(getFilmsFromServerFx.pending);
-    const descriptionRef = useRef<HTMLDivElement | null>(null);
-    const posterRef = useRef<HTMLImageElement | null>(null);
+
     const onDescrAction = (e) => {
       if (e._reactName === "onMouseLeave") {
         e.target.parentNode.children[4].style.zIndex = -1;
@@ -76,7 +72,6 @@ export const FilmItem = memo(
               </Skeleton>
             ) : (
               <img
-                ref={posterRef}
                 className="film__poster"
                 src={film.posterUrlPreview}
                 alt="Обложка"
@@ -97,7 +92,7 @@ export const FilmItem = memo(
         >
           Описание
         </div>
-        <div ref={descriptionRef} className="film__descr-text">
+        <div className="film__descr-text">
           <Typography
             sx={{
               overflow: "hidden",

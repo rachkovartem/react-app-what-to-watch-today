@@ -1,5 +1,5 @@
 import FilmList from "../components/filmList/FilmList";
-import AppSidemenu from "../components/appSidemenu/AppSideMenu";
+import AppSidemenu from "../components/sidemenu/AppSideMenu";
 import ErrorBoundary from "../components/errorBoundary/ErrorBoundary";
 
 import Search from "../components/search/Search";
