@@ -108,23 +108,6 @@ const filterFilms = (films: Film[]) => {
   return api;
 };
 
-export const $userFilmsList = createStore<Film[]>([]);
-export const $userFilmsGenres = $userFilmsList.map((films) =>
-  films.reduce((acc, film) => {
-    const filmGenres = film.genres
-      .map((genre) => genre.genre)
-      .filter((genre) => !acc.includes(genre));
-
-    return [...acc, ...filmGenres];
-  }, [])
-);
-export const $filteredUserFilmList = createStore<Film[]>([]);
-export const $filmsFilter = createStore<FilterParams>({
-  search: "",
-  genres: [],
-  type: "all",
-});
-
 export const getFilmsFromServerFx = createEffect(async () => {
   const result = await apolloClient.query({ query: ApiService.GET_FILMS });
   return result.data.getFilms;
@@ -181,6 +164,24 @@ export const addFilm = createEvent<Film>();
 export const deleteFilm = createEvent<number>();
 export const filterUserFilms = createEvent<FilterParams>();
 export const resetFilmsFilter = createEvent();
+
+export const $userFilmsList = createStore<Film[]>([]);
+export const $userFilmsGenres = $userFilmsList.map((films) =>
+  films.reduce((acc, film) => {
+    const filmGenres = film.genres
+      .map((genre) => genre.genre)
+      .filter((genre) => !acc.includes(genre));
+
+    return [...acc, ...filmGenres];
+  }, [])
+);
+export const $filteredUserFilmList = createStore<Film[]>([]);
+export const $filmsFilter = createStore<FilterParams>({
+  search: "",
+  genres: [],
+  type: "all",
+});
+export const $initialFilmsLoading = createStore(true);
 
 $userFilmsList
   .on(getFilmsFromServerFx.doneData, (_, data) => data)
@@ -262,4 +263,10 @@ sample({
   filter: (isAuthenticated) => !isAuthenticated,
   fn: (_, film) => film,
   target: addFilmToLSFx,
+});
+
+sample({
+  clock: [getFilmsFromServerFx.doneData, getFilmsFromServerFx.failData],
+  fn: () => false,
+  target: $initialFilmsLoading,
 });

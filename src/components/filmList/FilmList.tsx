@@ -1,82 +1,32 @@
 import "./FilmList.scss";
-import nextId from "react-id-generator";
 
-import { Transition, TransitionGroup } from "react-transition-group";
-import { cloneElement, useEffect, useState } from "react";
-import { Skeleton } from "@mui/material";
+import { Box } from "@mui/material";
 
-import poster from "../../resources/img/poster.jpg";
 import FilmItem from "../filmItem/FilmItem";
 import { useStore } from "effector-react";
 import {
   $filteredUserFilmList,
+  $initialFilmsLoading,
   getFilmsFromServerFx,
 } from "../../models/films";
 import { toggleAddModal } from "../../models/app";
+import { SkeletonFilms } from "./SkeletonFilms";
 
 const FilmList = () => {
   const filteredFilms = useStore($filteredUserFilmList);
   const loading = useStore(getFilmsFromServerFx.pending);
-  const [initialLoading, setInitialLoading] = useState(true);
-
-  const duration = 300;
-  const removeStyle = {
-    transition: `opacity ${duration}ms ease-in-out`,
-    opacity: 1,
-  };
-
-  const defaultStyle = {
-    transition: `opacity ${duration}ms ease-in-out`,
-    opacity: 0,
-  };
-
-  const transitionStyles = {
-    entering: { opacity: 1 },
-    entered: { opacity: 1 },
-    exiting: { opacity: 0 },
-    exited: { opacity: 0 },
-  };
-
-  useEffect(() => {
-    setInitialLoading(false);
-  }, []);
+  const initialLoading = useStore($initialFilmsLoading);
 
   return (
     <section className="film-list">
       <div className="container">
-        {filteredFilms.length > 0 && (!initialLoading || !loading) ? (
-          <TransitionGroup
-            className="film-list__grid"
-            childFactory={(child) =>
-              cloneElement(child, {
-                style: { removeStyle },
+        <Box className="film-list__grid">
+          {filteredFilms.length > 0 && !initialLoading
+            ? filteredFilms.map((film) => {
+                return <FilmItem key={film.webUrl} film={film} />;
               })
-            }
-          >
-            {filteredFilms.map((film) => {
-              return (
-                <Transition
-                  component="li"
-                  appear={false}
-                  in
-                  timeout={duration}
-                  key={nextId()}
-                >
-                  {(state) => (
-                    <FilmItem
-                      style={{
-                        ...defaultStyle,
-                        ...transitionStyles[state],
-                      }}
-                      key={nextId()}
-                      film={film}
-                    />
-                  )}
-                </Transition>
-              );
-            })}
-          </TransitionGroup>
-        ) : null}
+            : null}
+        </Box>
         {filteredFilms.length === 0 && !loading && !initialLoading ? (
           <div className="film-list__grid">
             <span className="film-list__notfound">Ничего не найдено</span>
@@ -115,154 +65,5 @@ const FilmList = () => {
     </section>
   );
 };
-
-const SkeletonFilms = () => (
-  <div className="film-list__grid">
-    <li className="film" style={{ minWidth: "100%" }}>
-      <div className="film__poster-link">
-        <Skeleton
-          sx={{
-            backgroundColor: "rgb(255 255 255 / 20%)",
-            borderRadius: "12px",
-            minWidth: "400px",
-          }}
-          variant="rectangular"
-        >
-          <img className="film__poster" src={poster} alt="Обложка" />
-        </Skeleton>
-      </div>
-      <Skeleton
-        sx={{
-          backgroundColor: "rgb(255 255 255 / 20%)",
-          borderRadius: "12px",
-          minWidth: "40%",
-          mt: "10px",
-        }}
-      >
-        <div className="film__title-link">
-          <h2 className="film__title">title</h2>
-        </div>
-      </Skeleton>
-      <Skeleton
-        sx={{
-          backgroundColor: "rgb(255 255 255 / 20%)",
-          borderRadius: "12px",
-          minWidth: "80%",
-          mt: "10px",
-        }}
-      >
-        <div className="film__descr">Desription</div>
-      </Skeleton>
-    </li>
-    <li className="film" style={{ minWidth: "100%" }}>
-      <div className="film__poster-link">
-        <Skeleton
-          sx={{
-            backgroundColor: "rgb(255 255 255 / 20%)",
-            borderRadius: "12px",
-            minWidth: "400px",
-          }}
-          variant="rectangular"
-        >
-          <img className="film__poster" src={poster} alt="Обложка" />
-        </Skeleton>
-      </div>
-      <Skeleton
-        sx={{
-          backgroundColor: "rgb(255 255 255 / 20%)",
-          borderRadius: "12px",
-          minWidth: "40%",
-          mt: "10px",
-        }}
-      >
-        <div className="film__title-link">
-          <h2 className="film__title">title</h2>
-        </div>
-      </Skeleton>
-      <Skeleton
-        sx={{
-          backgroundColor: "rgb(255 255 255 / 20%)",
-          borderRadius: "12px",
-          minWidth: "80%",
-          mt: "10px",
-        }}
-      >
-        <div className="film__descr">Desription</div>
-      </Skeleton>
-    </li>
-    <li className="film" style={{ minWidth: "100%" }}>
-      <div className="film__poster-link">
-        <Skeleton
-          sx={{
-            backgroundColor: "rgb(255 255 255 / 20%)",
-            borderRadius: "12px",
-            minWidth: "400px",
-          }}
-          variant="rectangular"
-        >
-          <img className="film__poster" src={poster} alt="Обложка" />
-        </Skeleton>
-      </div>
-      <Skeleton
-        sx={{
-          backgroundColor: "rgb(255 255 255 / 20%)",
-          borderRadius: "12px",
-          minWidth: "40%",
-          mt: "10px",
-        }}
-      >
-        <div className="film__title-link">
-          <h2 className="film__title">title</h2>
-        </div>
-      </Skeleton>
-      <Skeleton
-        sx={{
-          backgroundColor: "rgb(255 255 255 / 20%)",
-          borderRadius: "12px",
-          minWidth: "80%",
-          mt: "10px",
-        }}
-      >
-        <div className="film__descr">Desription</div>
-      </Skeleton>
-    </li>
-    <li className="film" style={{ minWidth: "100%" }}>
-      <div className="film__poster-link">
-        <Skeleton
-          sx={{
-            backgroundColor: "rgb(255 255 255 / 20%)",
-            borderRadius: "12px",
-            minWidth: "400px",
-          }}
-          variant="rectangular"
-        >
-          <img className="film__poster" src={poster} alt="Обложка" />
-        </Skeleton>
-      </div>
-      <Skeleton
-        sx={{
-          backgroundColor: "rgb(255 255 255 / 20%)",
-          borderRadius: "12px",
-          minWidth: "40%",
-          mt: "10px",
-        }}
-      >
-        <div className="film__title-link">
-          <h2 className="film__title">title</h2>
-        </div>
-      </Skeleton>
-      <Skeleton
-        sx={{
-          backgroundColor: "rgb(255 255 255 / 20%)",
-          borderRadius: "12px",
-          minWidth: "80%",
-          mt: "10px",
-        }}
-      >
-        <div className="film__descr">Desription</div>
-      </Skeleton>
-    </li>
-  </div>
-);
 
 export default FilmList;

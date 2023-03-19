@@ -22,7 +22,7 @@ const AboutFilm = () => {
   const updateFilm = (id) => {
     getFilmById(id)
       .then(filmUpdate)
-      .catch(() => setLoading(false));
+      .finally(() => setLoading(false));
   };
 
   const filmUpdate = (data) => {
@@ -31,7 +31,7 @@ const AboutFilm = () => {
     setStringGenres(genres.map((item) => item.genre).join(", "));
   };
 
-  const isType = (type) => {
+  const getType = (type) => {
     switch (type) {
       case "FILM":
         return "Фильм";
@@ -54,12 +54,18 @@ const AboutFilm = () => {
   };
 
   const getImageForBigPoster = async () => {
-    const values = ["WALLPAPER", "SCREENSHOT", "COVER", "SHOOTING", "STILL"];
-    let value = 0;
-    let res = await getImagesByType(values[value]);
-    while (res.items.length === 0 && values[value]) {
-      res = await getImagesByType(values[value]);
-      value++;
+    const imageTypes = [
+      "WALLPAPER",
+      "SCREENSHOT",
+      "COVER",
+      "SHOOTING",
+      "STILL",
+    ];
+    let counter = 0;
+    let res = await getImagesByType(imageTypes[counter]);
+    while (res.items.length === 0 && imageTypes[counter]) {
+      res = await getImagesByType(imageTypes[counter]);
+      counter++;
     }
 
     onImagesLoaded(res);
@@ -102,7 +108,7 @@ const AboutFilm = () => {
         description={film.description}
         ratingKinopoisk={film.ratingKinopoisk}
         ratingImdb={film.ratingImdb}
-        type={isType(film.type)}
+        type={getType(film.type)}
         year={film.year}
         genres={stringGenres}
         filmLength={film.filmLength}
