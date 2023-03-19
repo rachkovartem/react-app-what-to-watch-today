@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=block');
 @import 'normalize';
 @import 'variables';
 
@@ -53,7 +53,7 @@ html, body {
 
   min-height: 100%;
   position: relative;
-  
+
 }
 .main-view {
   margin: 0 auto;
@@ -123,7 +123,7 @@ body {
     opacity: 0;
     transform: scale(0.8);
   }
-  
+
   .scale-appear-active {
     opacity: 1;
     transform: scale(1);
@@ -135,12 +135,12 @@ body {
     transform: scale(1);
     transition: opacity 1000ms, transform 1000ms;
   }
-  
+
   .scale-enter {
     opacity: 0;
     transform: scale(0.8);
   }
-  
+
   .scale-enter-active {
     opacity: 1;
     transform: scale(1);
@@ -152,12 +152,12 @@ body {
     transform: scale(1);
     transition: opacity 1000ms, transform 1000ms;
   }
-  
+
   .scale-exit {
     opacity: 1;
     transform: scale(1);
   }
-  
+
   .scale-exit-active {
     opacity: 0;
     transform: scale(0.8);
@@ -175,23 +175,23 @@ body {
     left: 15px;
     right: 15px;
   }
-  
+
   .page-enter {
     opacity: 0;
     transform: scale(1.1);
   }
-  
+
   .page-enter-active {
     opacity: 1;
     transform: scale(1);
     transition: opacity var(--delay), transform var(--delay);
   }
-  
+
   .page-exit {
     opacity: 1;
     transform: scale(1);
   }
-  
+
   .page-exit-active {
     opacity: 0;
     transform: scale(0.9);

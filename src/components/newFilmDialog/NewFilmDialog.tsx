@@ -1,5 +1,5 @@
 import { useTheme } from "@mui/material/styles";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -95,9 +95,9 @@ const NewFilmDialog = () => {
 
   const getFilmsAndSetState = (input) => {
     setError(false);
+    setSearchInProgress(true);
     getFilmByKeyWord(input)
       .then((response) => {
-        setSearchInProgress(true);
         setFilmOptions(response.films);
       })
       .catch(() => {
@@ -126,8 +126,8 @@ const NewFilmDialog = () => {
     }
     return res;
   };
-
-  const noOptionText = () => {
+  console.log(searchInProgress);
+  const noOptionText = useMemo(() => {
     if (searchInProgress) {
       return "";
     } else if (!searchInProgress && title === "") {
@@ -135,7 +135,7 @@ const NewFilmDialog = () => {
     } else if (!searchInProgress) {
       return "Не нашли такой фильм :(";
     }
-  };
+  }, [searchInProgress, title]);
 
   const onInputChange = (newValue: string) => {
     setTitle(newValue);
@@ -180,10 +180,10 @@ const NewFilmDialog = () => {
                   variant="standard"
                 />
               )}
-              noOptionsText={noOptionText()}
+              noOptionsText={noOptionText}
               loading={loadingCatcher(searchInProgress)}
               loadingText={
-                error ? "Ошибка на сервере, попробуйте позже" : "Уже ищем..."
+                error ? "Ошибка на сервере, попробуйте позже" : "Идет поиск..."
               }
             />
             <TextField
