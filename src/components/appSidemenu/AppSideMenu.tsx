@@ -19,6 +19,7 @@ import {
   resetFilmsFilter,
 } from "../../models/films";
 import { ListItemButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 const filterValues: { title: string; value: FilmsTypes }[] = [
   { title: "Всё", value: "all" },
@@ -51,6 +52,10 @@ function AppSidemenu() {
         "& .MuiDrawer-paper": { boxSizing: "border-box", width: 320 },
       }}
     >
+      <CloseIcon
+        sx={{ position: "absolute", top: 10, left: 10, cursor: "pointer" }}
+        onClick={handleCloseDrawer}
+      />
       <Typography
         noWrap
         component="div"

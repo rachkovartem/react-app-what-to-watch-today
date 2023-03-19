@@ -1,5 +1,5 @@
 .film-list {
-    margin-top: 80px;
+    margin-top: 50px;
     min-width: 100%;
     min-height: 384px;
 }
@@ -27,7 +27,7 @@
     position: sticky;
     margin-left: auto;
     margin-top: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 50px;
     z-index: 5;
     right: 130px;
     bottom: 60px;
@@ -51,7 +51,7 @@
         border-color: var(--primary-500);
         transition:  var(--transition);
         opacity: 1;
-        
+
     }
     svg {
         width: 100%;
@@ -66,17 +66,17 @@
         right: 70px;
         bottom: 70px;
     }
-    
-} 
+
+}
 
 @media screen and (max-width: 768px) {
     .film-list__add-button {
         right: 50px;
         bottom: 50px;
     }
-    
-} 
-    
+
+}
+
 @media screen and (max-width: 425px) {
     .film-list__add-button {
         right: 30px;
@@ -84,8 +84,8 @@
         width: 50px;
         height: 50px;
     }
-    
-} 
+
+}
 
 @media screen and (max-width: 1023px) {
     .film-list__grid {
